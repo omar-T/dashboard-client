@@ -1,11 +1,16 @@
-import React, { Component } from 'react'
+import React from 'react'
+import {Redirect} from 'react-router-dom'
 
-export default class Homepage extends Component {
-    render() {
+const Homepage = ({currentAdmin}) => {
+    if(!currentAdmin.isAuthenticated){
+        debugger
         return (
-            <div>
-                
-            </div>
+            <Redirect to='/login'/>
         )
     }
+    return (
+        <div>Welcome to the dashboard!</div>
+    );
 }
+
+export default Homepage;
