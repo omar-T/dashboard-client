@@ -1,5 +1,5 @@
 import React from 'react'
-import {Switch, Route, withRouter} from 'react-router-dom'
+import {Switch, Route, withRouter, Redirect} from 'react-router-dom'
 import {connect} from 'react-redux'
 import Homepage from '../components/Homepage'
 import LoginForm from '../components/loginForm'
@@ -42,6 +42,7 @@ const Main = props => {
                         );
                     }}
                 />
+                <Redirect to='/'/>
             </Switch>
         </div>
     );
