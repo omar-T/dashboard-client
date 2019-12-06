@@ -13,13 +13,19 @@ code {
     monospace;
 }
 
-.login {
+.login, .signup {
   background-color: #eee;
   height: 100vh;
 }
 
-.login {
+.login, .signup {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.signup .card {
+  min-width: 350px;
+  max-width: 350px;
 }

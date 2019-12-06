@@ -4,11 +4,11 @@ import {connect} from 'react-redux'
 import Homepage from '../components/Homepage'
 import LoginForm from '../components/loginForm'
 import SignupForm from '../components/signupForm'
-import {signinAdmin} from '../store/actions/auth'
+import {signinAdmin, createAdmin} from '../store/actions/auth'
 import {removeError} from '../store/actions/errors'
 
 const Main = props => {
-    const {signinAdmin, errors, removeError, currentAdmin} = props;
+    const {signinAdmin, createAdmin, errors, removeError, currentAdmin} = props;
     return (
         <div>
             <Switch>
@@ -21,6 +21,7 @@ const Main = props => {
                     exact path='/login' render={props => {
                         return(
                             <LoginForm
+                                currentAdmin={currentAdmin}
                                 removeError={removeError}
                                 errors={errors}
                                 onAuth={signinAdmin}
@@ -35,7 +36,7 @@ const Main = props => {
                             <SignupForm
                                 removeError={removeError}
                                 errors={errors}
-                                onAuth={signinAdmin}
+                                onAuth={createAdmin}
                                 {...props}
                             />
                         );
@@ -53,4 +54,4 @@ function mapStateToProps(state){
     }
 }
 
-export default withRouter(connect(mapStateToProps, {signinAdmin, removeError})(Main));
+export default withRouter(connect(mapStateToProps, {signinAdmin, createAdmin, removeError})(Main));

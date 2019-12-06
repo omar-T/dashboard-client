@@ -33,7 +33,24 @@ export function signinAdmin(adminData){
                     resolve(); // indicate the API call succeded
                 })
                 .catch(err => {
-                    console.log(err);
+                    dispatch(addError(err.message));
+                    reject(); // indicate the API call failed
+                });
+        });
+    }
+}
+
+export function createAdmin(adminData){
+    return dispatch => {
+        // wrap our thunk in a promise so we can wait for the API call
+        return new Promise((resolve, reject) => {
+            return apiCall('post', 'api/auth/signup', adminData)
+                .then(({message}) => {
+                    dispatch(signupAdmin(message));
+                    dispatch(removeError);
+                    resolve(); // indicate the API call succeded
+                })
+                .catch(err => {
                     dispatch(addError(err.message));
                     reject(); // indicate the API call failed
                 });

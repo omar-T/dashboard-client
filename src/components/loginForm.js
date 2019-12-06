@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {Link} from 'react-router-dom'
+// import {connect} from 'react-redux'
 
 export default class loginForm extends Component {
     constructor(props){
@@ -27,16 +28,29 @@ export default class loginForm extends Component {
             });
     }
 
+    // componentDidMount(){
+    //     setTimeout(() => this.props.currentAdmin.message = '', 3000);
+    // }
+
     render() {
         const {email} = this.state;
-        const {errors, history, removeError} = this.props;
+        const {currentAdmin, errors, history, removeError} = this.props;
+        if(errors.message !== null){
+            const unlisten = history.listen(() => {
+                removeError();
+                unlisten(); // to stop listening and removing error
+            })
+        }
         return (
             <div className='login'>
                 {errors.message && 
                     <div className='alert alert-danger'>{errors.message}</div>
                 }
-                <div className='row'>
-                    <div className='card '>
+                {currentAdmin.message &&
+                    <div className='alert alert-success'>{currentAdmin.message}</div>
+                }
+                <div className='row '>
+                    <div className='card'>
                         <div className='card-body'>
                             <form onSubmit={this.handleSubmit}>
                                 <h1>Login</h1>
@@ -77,7 +91,7 @@ export default class loginForm extends Component {
                             </form>
                             <div>
                                 <p>
-                                    You don't have an account ? register 
+                                    You don't have an account ? Register 
                                     <Link to='/signup'> here</Link>
                                 </p>
                             </div>
@@ -88,3 +102,11 @@ export default class loginForm extends Component {
         )
     }
 }
+
+// function mapStateToProps(state){
+//     return {
+//         currentAdmin: state.currentAdmin
+//     }
+// }
+
+// export default connect(mapStateToProps)(loginForm);

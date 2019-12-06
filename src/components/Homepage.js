@@ -3,7 +3,6 @@ import {Redirect} from 'react-router-dom'
 
 const Homepage = ({currentAdmin}) => {
     if(!currentAdmin.isAuthenticated){
-        debugger
         return (
             <Redirect to='/login'/>
         )
