@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import {Link} from 'react-router-dom'
-// import {connect} from 'react-redux'
 
 export default class loginForm extends Component {
     constructor(props){
         super(props);
         this.state = {
             email: '',
-            password: ''
+            password: '',
+            message: ''
         }
     }
 
@@ -28,26 +28,20 @@ export default class loginForm extends Component {
             });
     }
 
-    // componentDidMount(){
-    //     setTimeout(() => this.props.currentAdmin.message = '', 3000);
-    // }
-
     render() {
         const {email} = this.state;
-        const {currentAdmin, errors, history, removeError} = this.props;
+        const {errors, history, removeError} = this.props;
         if(errors.message !== null){
             const unlisten = history.listen(() => {
                 removeError();
                 unlisten(); // to stop listening and removing error
             })
         }
+        
         return (
             <div className='login'>
                 {errors.message && 
                     <div className='alert alert-danger'>{errors.message}</div>
-                }
-                {currentAdmin.message &&
-                    <div className='alert alert-success'>{currentAdmin.message}</div>
                 }
                 <div className='row '>
                     <div className='card'>
@@ -102,11 +96,3 @@ export default class loginForm extends Component {
         )
     }
 }
-
-// function mapStateToProps(state){
-//     return {
-//         currentAdmin: state.currentAdmin
-//     }
-// }
-
-// export default connect(mapStateToProps)(loginForm);

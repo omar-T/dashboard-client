@@ -8,7 +8,9 @@ const Homepage = ({currentAdmin}) => {
         )
     }
     return (
-        <div>Welcome to the dashboard!</div>
+        <div>
+            
+        </div>
     );
 }
 

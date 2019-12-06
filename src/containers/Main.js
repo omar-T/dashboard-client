@@ -21,7 +21,6 @@ const Main = props => {
                     exact path='/login' render={props => {
                         return(
                             <LoginForm
-                                currentAdmin={currentAdmin}
                                 removeError={removeError}
                                 errors={errors}
                                 onAuth={signinAdmin}
@@ -34,6 +33,7 @@ const Main = props => {
                     exact path='/signup' render={props => {
                         return(
                             <SignupForm
+                                message={currentAdmin.message}
                                 removeError={removeError}
                                 errors={errors}
                                 onAuth={createAdmin}

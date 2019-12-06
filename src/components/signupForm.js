@@ -7,7 +7,7 @@ export default class signupForm extends Component {
             name: '',
             surname: '',
             email: '',
-            password: '',
+            password: ''
         }
     }
 
@@ -21,7 +21,13 @@ export default class signupForm extends Component {
         e.preventDefault();
         this.props.onAuth(this.state)
             .then(() => {
-                this.props.history.push('/login');
+                this.props.history.push('/signup');
+                this.setState({
+                    name: '',
+                    surname: '',
+                    email: '',
+                    password: ''
+                })
             })
             .catch(() => {
                 return;
@@ -29,8 +35,8 @@ export default class signupForm extends Component {
     }
 
     render() {
-        const {name, surname, email} = this.state;
-        const {errors, history, removeError} = this.props;
+        const {name, surname, email, password} = this.state;
+        const {message, errors, history, removeError} = this.props;
         if(errors.message !== null){
             const unlisten = history.listen(() => {
                 removeError();
@@ -41,6 +47,9 @@ export default class signupForm extends Component {
             <div className='signup'>
                 {errors.message && 
                     <div className='alert alert-danger'>{errors.message}</div>
+                }
+                {message && 
+                    <div className='alert alert-success'>{message}</div>
                 }
                 <div className='row '>
                     <div className='card'>
@@ -78,7 +87,7 @@ export default class signupForm extends Component {
                                 </div>
                                 <div className='input-group-prepend mb-3'>
                                     <span className='input-group-text'>
-                                        <i class="far fa-envelope-open"></i>
+                                        <i className="far fa-envelope-open"></i>
                                     </span>
                                     <input 
                                         className='form-control' 
@@ -101,11 +110,12 @@ export default class signupForm extends Component {
                                         name='password'
                                         required
                                         onChange={this.handleChange}
+                                        value={password}
                                     />
                                 </div>
                                 <div className='row mb-3'>
                                     <div className='col-6'>
-                                        <button className='btn btn-primary px-4'>Sign up</button>
+                                        <button className='btn btn-success px-4'>Sign up</button>
                                     </div>
                                 </div>
                             </form>
