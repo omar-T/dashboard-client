@@ -29,7 +29,28 @@
   color: #333;
 } */
 
-.wrapper {
+.container-fluid {
+    padding: 0;
+}
+
+.navbar-brand {
+    padding: 0;
+    width: 90px;
+    height: 50px;
+}
+
+.logout {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: rgba(255,255,255,.5);
+}
+
+.logout:hover {
+    color: rgba(255,255,255,.75);
+}
+
+/* .wrapper {
     display: flex;
 }
 
@@ -90,4 +111,4 @@
     #sidebar.active {
         margin-left: 0;
     }
-}
+} */

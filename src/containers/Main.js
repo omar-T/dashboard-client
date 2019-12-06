@@ -42,7 +42,6 @@ const Main = props => {
                         );
                     }}
                 />
-                <Redirect to='/'/>
             </Switch>
         </div>
     );
