@@ -6,6 +6,7 @@ import {setAuthorizationToken, loginAdmin} from '../store/actions/auth'
 import jwtDecode from 'jwt-decode'
 import Main from './Main'
 import Navbar from './Navbar'
+import SideNavbar from './SideNavbar'
 
 const store = configureStore();
 
@@ -23,8 +24,11 @@ const App = () => (
   <Provider store={store}>
     <Router>
         <Navbar/>
-        <div className='wrapper'>
-          <Main/>
+        <div className='container-fluid'>
+          <div className='row'>
+            <SideNavbar/>
+            <Main/>
+          </div>
         </div>
     </Router>
   </Provider>

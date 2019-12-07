@@ -33,3 +33,8 @@ code {
   min-width: 350px;
   max-width: 350px;
 }
+
+/* .wrapper {
+    display: flex;
+    justify-content: space-between;
+} */
