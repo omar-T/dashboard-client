@@ -1,5 +1,6 @@
 import React from 'react'
 import {Switch, Route, withRouter} from 'react-router-dom'
+import './Homepage.css'
 
 const Homepage = () => {
     return (

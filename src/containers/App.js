@@ -4,7 +4,7 @@ import {BrowserRouter as Router} from 'react-router-dom'
 import Main from './Main'
 import Navbar from './Navbar'
 import SideNavbar from './SideNavbar'
-import Homepage from '../components/Homepage'
+import Homepage from './Homepage'
 
 const App = (props) => {
   const {currentAdmin} = props;
