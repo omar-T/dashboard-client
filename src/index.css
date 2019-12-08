@@ -34,6 +34,27 @@ code {
   max-width: 350px;
 }
 
+.login .form-control, .signup .form-control{
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border: 1px solid #e4e7ea;
+}
+
+.login .input-group-text, .signup .input-group-text {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  background-color: #f0f3f5;
+  border: 1px solid #e4e7ea;
+}
+
+.login form input:focus, .signup form input:focus {
+  transition: 0.2s linear;
+}
+
+.input-group-text.email {
+  width: 40px;
+}
+
 .main {
   background-color: rgb(235, 235, 235);
   padding-top: 70px;

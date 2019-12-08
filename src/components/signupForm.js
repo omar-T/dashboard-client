@@ -86,7 +86,7 @@ export default class signupForm extends Component {
                                     />
                                 </div>
                                 <div className='input-group-prepend mb-3'>
-                                    <span className='input-group-text'>
+                                    <span className='input-group-text email'>
                                         <i className="far fa-envelope-open"></i>
                                     </span>
                                     <input 

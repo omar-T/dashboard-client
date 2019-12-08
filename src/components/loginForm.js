@@ -43,7 +43,7 @@ export default class loginForm extends Component {
                 {errors.message && 
                     <div className='alert alert-danger'>{errors.message}</div>
                 }
-                <div className='row '>
+                <div className='row'>
                     <div className='card'>
                         <div className='card-body'>
                             <form onSubmit={this.handleSubmit}>
@@ -51,8 +51,8 @@ export default class loginForm extends Component {
                                 <p className='text-muted'>Sign In to your account</p>
                                 
                                 <div className='input-group-prepend mb-3'>
-                                    <span className='input-group-text'>
-                                        <i className="far fa-user"></i>
+                                    <span className='input-group-text email'>
+                                        <i className="far fa-envelope-open"></i>
                                     </span>
                                     <input 
                                         className='form-control' 
