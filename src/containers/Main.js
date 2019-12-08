@@ -1,7 +1,6 @@
 import React from 'react'
-import {Switch, Route, withRouter} from 'react-router-dom'
+import {Switch, Route, Redirect, withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
-import Homepage from '../components/Homepage'
 import LoginForm from '../components/loginForm'
 import SignupForm from '../components/signupForm'
 import {signinAdmin, createAdmin} from '../store/actions/auth'
@@ -12,8 +11,8 @@ const Main = props => {
     return (
         <Switch>
             <Route 
-                exact path='/' render={props => 
-                    <Homepage currentAdmin={currentAdmin} {...props}/>
+                exact path='/' render={() => 
+                    <Redirect to='/login'/>
                 }
             />
             <Route

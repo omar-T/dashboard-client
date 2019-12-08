@@ -1,37 +1,37 @@
 import React from 'react'
-import {Provider} from 'react-redux'
-import {configureStore} from '../store'
+import {connect} from 'react-redux'
 import {BrowserRouter as Router} from 'react-router-dom'
-import {setAuthorizationToken, loginAdmin} from '../store/actions/auth'
-import jwtDecode from 'jwt-decode'
 import Main from './Main'
 import Navbar from './Navbar'
 import SideNavbar from './SideNavbar'
+import Homepage from '../components/Homepage'
 
-const store = configureStore();
+const App = (props) => {
+  const {currentAdmin} = props;
+  if(!currentAdmin.isAuthenticated){
+    return (
+      <Router>
+        <Main/>
+      </Router>
+    );
+  }
+  return (
+    <Router>
+      <Navbar/>
+      <div className='container-fluid'>
+        <div className='row flex-nowrap'>
+          <SideNavbar currentAdmin={currentAdmin}/>
+          <Homepage/>
+        </div>
+      </div>
+    </Router>
+  );
+}
 
-if(localStorage.jwtToken){
-  setAuthorizationToken(localStorage.jwtToken);
-  // prevent someone from manually eampering with the key of jwtToken in localStorage
-  try{
-    store.dispatch(loginAdmin(jwtDecode(localStorage.jwtToken)));
-  }catch(err){
-    store.dispatch(loginAdmin({}));
+function mapStateToProps(state){
+  return {
+    currentAdmin: state.currentAdmin
   }
 }
 
-const App = () => (
-  <Provider store={store}>
-    <Router>
-        <Navbar/>
-        <div className='container-fluid'>
-          <div className='row flex-nowrap'>
-            <SideNavbar/>
-            <Main/>
-          </div>
-        </div>
-    </Router>
-  </Provider>
-);
-
-export default App;
+export default connect(mapStateToProps)(App);

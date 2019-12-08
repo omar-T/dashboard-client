@@ -18,30 +18,26 @@ class Navbar extends Component {
     render() {
         const {currentAdmin} = this.props;
         return (
-            <div>
-            {currentAdmin.isAuthenticated && 
-                <nav className='navbar navbar-light fixed-top p-0 px-3 top-navbar'>
-                    <img className='navbar-brand p-0' src={Logo} alt='Dashboard Home'/>
-                    <ul className='navbar-nav ml-4 mr-auto'>
-                        <li className='nav-item'>
-                            <button className='navbar-toggler' type="button" onClick={this.handleCollapse} id="sidebarCollapse" >
-                                <span className="navbar-toggler-icon"></span>
-                            </button>
-                        </li>
-                    </ul>
-                    <ul className='navbar-nav flex-row'>
-                        <li className='nav-item mx-3'>
-                            <Link className='nav-link'>{`${currentAdmin.admin.name} ${currentAdmin.admin.surname}`}</Link>
-                        </li>
-                        <li className='nav-item'>
-                            <button onClick={this.logout} className='logout nav-link'>
-                                <i className="fas fa-sign-out-alt"></i> Logout
-                            </button>
-                        </li>
-                    </ul>
-                </nav>
-            }
-            </div>
+            <nav className='navbar navbar-light fixed-top p-0 px-3 top-navbar'>
+                <img className='navbar-brand p-0' src={Logo} alt='Dashboard Home'/>
+                <ul className='navbar-nav ml-4 mr-auto'>
+                    <li className='nav-item'>
+                        <button className='navbar-toggler' type="button" onClick={this.handleCollapse} id="sidebarCollapse" >
+                            <span className="navbar-toggler-icon"></span>
+                        </button>
+                    </li>
+                </ul>
+                <ul className='navbar-nav flex-row'>
+                    <li className='nav-item mx-3'>
+                        <Link to='' className='nav-link'>{`${currentAdmin.admin.name} ${currentAdmin.admin.surname}`}</Link>
+                    </li>
+                    <li className='nav-item'>
+                        <button onClick={this.logout} className='logout nav-link'>
+                            <i className="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </li>
+                </ul>
+            </nav>
         )
     }
 }

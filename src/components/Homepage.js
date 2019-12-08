@@ -1,28 +1,33 @@
 import React from 'react'
-import {Redirect} from 'react-router-dom'
+import {Switch, Route, withRouter} from 'react-router-dom'
 
-const Homepage = ({currentAdmin}) => {
-    if(!currentAdmin.isAuthenticated){
-        return (
-            <Redirect to='/login'/>
-        )
-    }
+const Homepage = () => {
     return (
         <div className='px-4 main'>
-            <div className='d-flex justify-content-between'>
-                <div>
-                    Hi
-                </div>
-                <div>
-                    admin
-                </div>
-                <div>
-                    daashboar
-                </div>
-            </div>
-           welcome Home !
+            <Switch>
+                <Route
+                    exact path='/' render={() => (
+                        <div>Weclome dashboard</div>
+                    )}
+                />
+                <Route
+                    exact path='/admins' render={() => (
+                        <div>Weclome admins</div>
+                    )}
+                />
+                <Route
+                    exact path='/users' render={() => (
+                        <div>Weclome users</div>
+                    )}
+                />
+                <Route
+                    exact path='/docs' render={() => (
+                        <div>Weclome docs</div>
+                    )}
+                />
+            </Switch>
         </div>
     );
 }
 
-export default Homepage;
+export default withRouter(Homepage);
