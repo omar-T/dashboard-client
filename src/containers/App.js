@@ -25,7 +25,7 @@ const App = () => (
     <Router>
         <Navbar/>
         <div className='container-fluid'>
-          <div className='row'>
+          <div className='row flex-nowrap'>
             <SideNavbar/>
             <Main/>
           </div>

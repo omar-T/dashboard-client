@@ -34,7 +34,8 @@ code {
   max-width: 350px;
 }
 
-/* .wrapper {
-    display: flex;
-    justify-content: space-between;
-} */
+.main {
+  background-color: rgb(235, 235, 235);
+  padding-top: 70px;
+  width: 100%;
+}
