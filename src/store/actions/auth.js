@@ -1,18 +1,12 @@
 import {apiCall, setTokenHeader} from '../../services/api'
-import {LOGIN_ADMIN, SIGNUP_ADMIN} from '../actionTypes'
+import {LOGIN_ADMIN} from '../actionTypes'
 import {addError, removeError} from './errors'
+import {addSuccess, removeSuccess} from './successes'
 
 export function loginAdmin(admin){
     return {
         type: LOGIN_ADMIN,
         admin
-    }
-}
-
-export function signupAdmin(message){
-    return {
-        type: SIGNUP_ADMIN,
-        message
     }
 }
 
@@ -33,6 +27,7 @@ export function signinAdmin(adminData){
                     resolve(); // indicate the API call succeded
                 })
                 .catch(err => {
+                    dispatch(removeSuccess);
                     dispatch(addError(err.message));
                     reject(); // indicate the API call failed
                 });
@@ -46,11 +41,12 @@ export function createAdmin(adminData){
         return new Promise((resolve, reject) => {
             return apiCall('post', 'api/auth/signup', adminData)
                 .then(({message}) => {
-                    dispatch(signupAdmin(message));
                     dispatch(removeError);
+                    dispatch(addSuccess(message));
                     resolve(); // indicate the API call succeded
                 })
                 .catch(err => {
+                    dispatch(removeSuccess);
                     dispatch(addError(err.message));
                     reject(); // indicate the API call failed
                 });

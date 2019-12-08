@@ -28,20 +28,36 @@ export default class loginForm extends Component {
             });
     }
 
+    componentDidMount(){
+        if(this.props.successes.message){
+            setTimeout(() => {
+                this.props.removeSuccess()
+            }, 4000);
+        }
+    }
+
     render() {
         const {email} = this.state;
-        const {errors, history, removeError} = this.props;
+        const {errors, successes, history, removeError, removeSuccess} = this.props;
         if(errors.message !== null){
             const unlisten = history.listen(() => {
                 removeError();
                 unlisten(); // to stop listening and removing error
             })
         }
-        
+        if(successes.message !== null){
+            const unlisten = history.listen(() => {
+                removeSuccess();
+                unlisten(); // to stop listening and removing success
+            })
+        }
         return (
             <div className='login'>
                 {errors.message && 
                     <div className='alert alert-danger'>{errors.message}</div>
+                }
+                {successes.message && 
+                    <div className='alert alert-success'>{successes.message}</div>
                 }
                 <div className='row'>
                     <div className='card'>

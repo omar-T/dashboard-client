@@ -5,9 +5,10 @@ import LoginForm from '../components/loginForm'
 import SignupForm from '../components/signupForm'
 import {signinAdmin, createAdmin} from '../store/actions/auth'
 import {removeError} from '../store/actions/errors'
+import {removeSuccess} from '../store/actions/successes'
 
 const Main = props => {
-    const {signinAdmin, createAdmin, errors, removeError, currentAdmin} = props;
+    const {signinAdmin, createAdmin, removeError, removeSuccess, errors, successes} = props;
     return (
         <Switch>
             <Route 
@@ -20,6 +21,8 @@ const Main = props => {
                     return(
                         <LoginForm
                             removeError={removeError}
+                            removeSuccess={removeSuccess}
+                            successes={successes}
                             errors={errors}
                             onAuth={signinAdmin}
                             {...props}
@@ -31,7 +34,6 @@ const Main = props => {
                 exact path='/signup' render={props => {
                     return(
                         <SignupForm
-                            message={currentAdmin.message}
                             removeError={removeError}
                             errors={errors}
                             onAuth={createAdmin}
@@ -47,8 +49,9 @@ const Main = props => {
 function mapStateToProps(state){
     return {
         currentAdmin: state.currentAdmin,
-        errors: state.errors
+        errors: state.errors,
+        successes: state.successes
     }
 }
 
-export default withRouter(connect(mapStateToProps, {signinAdmin, createAdmin, removeError})(Main));
+export default withRouter(connect(mapStateToProps, {signinAdmin, createAdmin, removeError, removeSuccess})(Main));

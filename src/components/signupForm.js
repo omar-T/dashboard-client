@@ -21,13 +21,7 @@ export default class signupForm extends Component {
         e.preventDefault();
         this.props.onAuth(this.state)
             .then(() => {
-                this.props.history.push('/signup');
-                this.setState({
-                    name: '',
-                    surname: '',
-                    email: '',
-                    password: ''
-                })
+                this.props.history.push('/login');
             })
             .catch(() => {
                 return;
@@ -36,7 +30,7 @@ export default class signupForm extends Component {
 
     render() {
         const {name, surname, email, password} = this.state;
-        const {message, errors, history, removeError} = this.props;
+        const {errors, history, removeError} = this.props;
         if(errors.message !== null){
             const unlisten = history.listen(() => {
                 removeError();
@@ -48,10 +42,7 @@ export default class signupForm extends Component {
                 {errors.message && 
                     <div className='alert alert-danger'>{errors.message}</div>
                 }
-                {message && 
-                    <div className='alert alert-success'>{message}</div>
-                }
-                <div className='row '>
+                <div className='row'>
                     <div className='card'>
                         <div className='card-body'>
                             <form onSubmit={this.handleSubmit}>
