@@ -50,6 +50,12 @@ class AdminsTable extends Component {
             password: this.state.newPassword
         })
             .then(() => {
+                this.setState({
+                    newName: '',
+                    newSurname: '',
+                    newEmail: '',
+                    newPassword: ''
+                });
                 this.props.fetchAdmins();
             })
             .catch(() => {
