@@ -39,10 +39,10 @@ export const removeAdmin = (admin_id) => {
 
 export const updateAdmin = (admin) => {
     return dispatch => {
+        console.log(admin);
         return apiCall('put', `/api/admins/${admin._id}`, admin)
-            .then(({success}) => {
-                console.log(admin);
-                dispatch(update(admin));
+            .then(({updatedAdmin, success}) => {
+                dispatch(update(updatedAdmin));
                 dispatch(addSuccess(success.message));
                 dispatch(removeError);
             })

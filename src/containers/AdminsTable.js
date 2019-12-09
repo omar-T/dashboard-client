@@ -4,15 +4,9 @@ import {fetchAdmins, removeAdmin, updateAdmin} from '../store/actions/admins'
 import {removeSuccess} from '../store/actions/successes'
 
 class AdminsTable extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            name: '',
-            surname: '',
-            email: '',
-            password: ''
-        }
-    }
+    // constructor(props){
+    //     super(props);
+    // }
 
     componentDidMount(){
         this.props.fetchAdmins();
@@ -32,13 +26,12 @@ class AdminsTable extends Component {
         });
     }
 
-    handleSubmit = (e) => {
-        e.preventDefault();
-        
+    handleSubmit = (admin_id) => {
+        this.props.updateAdmin({...this.state, _id: admin_id});
     }
 
     render() {
-        const {name, surname, email, password} = this.state;
+        // const {password} = this.state;
         const {admins, successes, removeAdmin, updateAdmin} = this.props;
         let adminTDS = admins.map(admin => (
             <tr key={admin._id}>
@@ -53,7 +46,7 @@ class AdminsTable extends Component {
                                 <div className="modal-header">
                                     <h5 className="modal-title" id="deleteAdminLabel">WARNING</h5>
                                     <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
+                                        <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div className="modal-body">
@@ -66,17 +59,17 @@ class AdminsTable extends Component {
                             </div>
                         </div>
                     </div>
-                    <button className='btn btn-outline-success mr-3' data-toggle='modal' data-target='#updateAdmin'>Update</button>
-                    <div className="modal fade" id="updateAdmin" tabIndex="-1" role="dialog" aria-labelledby="updateAdminLabel" aria-hidden="true">
+                    <button className='btn btn-outline-success mr-3' data-toggle='modal' data-target={`#updateAdmin_${admin._id}`}>Update</button>
+                    <div className="modal fade" id={`updateAdmin_${admin._id}`} tabIndex="-1" role="dialog" aria-labelledby="updateAdminLabel" aria-hidden="true">
                         <div className="modal-dialog" role="document">
                             <div className="modal-content">
                                 <div className="modal-header">
                                     <h5 className="modal-title" id="updateAdminLabel">Update Admin Form</h5>
                                     <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
+                                        <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
-                                <form onSubmit={this.handleSubmit}>
+                                <form>
                                     <div className="modal-body">
                                             <div className='input-group-prepend mb-3'>
                                                 <span className='input-group-text'>
@@ -89,7 +82,7 @@ class AdminsTable extends Component {
                                                     name='name'
                                                     required
                                                     onChange={this.handleChange}
-                                                    value={name || admin.name}
+                                                    defaultValue={admin.name}
                                                 />
                                             </div>
                                             <div className='input-group-prepend mb-3'>
@@ -103,7 +96,7 @@ class AdminsTable extends Component {
                                                     name='surname'
                                                     required
                                                     onChange={this.handleChange}
-                                                    value={surname || admin.surname}
+                                                    defaultValue={admin.surname}
                                                 />
                                             </div>
                                             <div className='input-group-prepend mb-3'>
@@ -117,7 +110,7 @@ class AdminsTable extends Component {
                                                     name='email'
                                                     required
                                                     onChange={this.handleChange}
-                                                    value={email || admin.email}
+                                                    defaultValue={admin.email}
                                                 />
                                             </div>
                                             <div className='input-group-prepend mb-4'>
@@ -131,13 +124,13 @@ class AdminsTable extends Component {
                                                     name='password'
                                                     required
                                                     onChange={this.handleChange}
-                                                    value={password}
+                                                    // value={password}
                                                 />
                                             </div>
                                     </div>
                                     <div className="modal-footer">
-                                        <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button className="btn btn-success" data-dismiss='modal'>Update Admin</button>
+                                        <button className="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button onClick={this.handleSubmit.bind(this, admin._id)} className="btn btn-success" data-dismiss='modal'>Update Admin</button>
                                     </div>
                                 </form>
                             </div>
