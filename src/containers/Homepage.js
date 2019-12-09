@@ -1,6 +1,7 @@
 import React from 'react'
 import {Switch, Route, withRouter} from 'react-router-dom'
 import './Homepage.css'
+import AdminsTable from './AdminsTable'
 
 const Homepage = () => {
     return (
@@ -12,9 +13,11 @@ const Homepage = () => {
                     )}
                 />
                 <Route
-                    exact path='/admins' render={() => (
-                        <div>Weclome admins</div>
-                    )}
+                    path='/admins' render={(props) => {
+                        return (
+                            <AdminsTable {...props}/>
+                        )
+                    }}
                 />
                 <Route
                     exact path='/users' render={() => (
