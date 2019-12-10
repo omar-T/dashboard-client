@@ -53,13 +53,14 @@ class AdminsTable extends Component {
             });
     }
 
-    handleUpdate = (admin_id) => {
+    handleUpdate = (admin_id, accessToken) => {
         this.props.updateAdmin({
             name: this.state.name,
             surname: this.state.surname,
             email: this.state.email,
             password: this.state.password,
-            _id: admin_id
+            _id: admin_id,
+            accessToken
         });
     }
 
@@ -72,7 +73,7 @@ class AdminsTable extends Component {
                 <td>{admin.surname}</td>
                 <td>{admin.email}</td>
                 <td>
-                    <button className='btn btn-outline-danger mr-3' data-toggle='modal' data-target={`#deleteAdmin_${admin._id}`}>Delete</button>
+                    <button className='btn btn-outline-danger mr-1' data-toggle='modal' data-target={`#deleteAdmin_${admin._id}`}>Delete</button>
                     <div className="modal fade" id={`deleteAdmin_${admin._id}`} tabIndex="-1" role="dialog" aria-labelledby="deleteAdminLabel" aria-hidden="true">
                         <div className="modal-dialog" role="document">
                             <div className="modal-content">
@@ -92,7 +93,7 @@ class AdminsTable extends Component {
                             </div>
                         </div>
                     </div>
-                    <button className='btn btn-outline-success mr-3' data-toggle='modal' data-target={`#updateAdmin_${admin._id}`}>Update</button>
+                    <button className='btn btn-outline-success mr-1' data-toggle='modal' data-target={`#updateAdmin_${admin._id}`}>Update</button>
                     <div className="modal fade" id={`updateAdmin_${admin._id}`} tabIndex="-1" role="dialog" aria-labelledby="updateAdminLabel" aria-hidden="true">
                         <div className="modal-dialog" role="document">
                             <div className="modal-content">
@@ -162,17 +163,23 @@ class AdminsTable extends Component {
                                     </div>
                                     <div className="modal-footer">
                                         <button className="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button onClick={this.handleUpdate.bind(this, admin._id)} className="btn btn-success" data-dismiss='modal'>Update Admin</button>
+                                        <button onClick={this.handleUpdate.bind(this, admin._id, admin.accessToken)} className="btn btn-success" data-dismiss='modal'>Update Admin</button>
                                     </div>
                                 </form>
                             </div>
                         </div>
                     </div>
                     {admin.isActive && 
-                        <button className='btn btn-outline-danger' onClick={updateAdmin.bind(this, {...admin, isActive: !admin.isActive})}>Deactivate</button>
+                        <button className='btn btn-outline-danger mr-1' onClick={updateAdmin.bind(this, {...admin, isActive: !admin.isActive})}>Deactivate</button>
                     }
                     {!admin.isActive &&
-                        <button className='btn btn-outline-warning' onClick={updateAdmin.bind(this, {...admin, isActive: !admin.isActive})}>Activate</button>
+                        <button className='btn btn-outline-warning mr-1' onClick={updateAdmin.bind(this, {...admin, isActive: !admin.isActive})}>Activate</button>
+                    }
+                    {admin.isSuper && 
+                        <button className='btn btn-outline-dark' onClick={updateAdmin.bind(this, {...admin, isSuper: !admin.isSuper})}>Normal</button>
+                    }
+                    {!admin.isSuper &&
+                        <button className='btn btn-outline-primary' onClick={updateAdmin.bind(this, {...admin, isSuper: !admin.isSuper})}>Super</button>
                     }
                 </td>
             </tr>
