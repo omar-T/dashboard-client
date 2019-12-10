@@ -1,15 +1,17 @@
 import React from 'react'
 import {Switch, Route, withRouter} from 'react-router-dom'
+import {connect} from 'react-redux'
 import './Homepage.css'
 import AdminsTable from './AdminsTable'
 import UsersTable from './UsersTable'
+import {} from '../store/actions/logs'
 
 const Homepage = () => {
     return (
         <div className='px-4 main'>
             <Switch>
                 <Route
-                    exact path='/' render={() => (
+                    exact path='/' render={(props) => (
                         <div>Weclome dashboard</div>
                     )}
                 />
@@ -33,4 +35,10 @@ const Homepage = () => {
     );
 }
 
-export default withRouter(Homepage);
+function mapStateToProps(state){
+    return {
+        logs: state.logs
+    }
+}
+
+export default withRouter(connect(mapStateToProps, {})(Homepage));
