@@ -3,13 +3,12 @@ import {Bar} from 'react-chartjs-2'
 
 export default class MostActiveUsersChart extends Component {
     setData = () => {
-        let countData = [];
-        this.props.users.map(u => {
+        let countData = this.props.users.map(u => {
             let docsCount = this.props.logs.filter(l => l.userId === u._id);
-            countData.push({
+            return{
                 ...u,
                 count: docsCount.length
-            });
+            };
         });
         countData.sort((a, b) => {
             const countA = a.count;
