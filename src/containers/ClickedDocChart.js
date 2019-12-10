@@ -1,13 +1,8 @@
 import React, { Component } from 'react'
-import {connect} from 'react-redux'
-import {fetchLogs} from '../store/actions/logs'
 import Moment from 'moment'
 import {Line} from 'react-chartjs-2'
 
 class LogChart extends Component {
-    componentDidMount(){
-        this.props.fetchLogs();
-    }
 
     getDates = () => {
         let dateLabels = [];
@@ -23,18 +18,16 @@ class LogChart extends Component {
         let labels = this.getDates();
         let data = [];
         labels.forEach(d => {
-            console.log(Moment(d).format('YYYY-MM-DD'));
             const logData = this.props.logs.filter(l => Moment(l.createdAt).format('YYYY-MM-DD') === Moment(d).format('YYYY-MM-DD'));
-            // console.log(logData.length);
             data.push(logData.length);
         });
         return {
             labels,
             datasets: [
                 {
-                    label: 'Log Count',
+                    label: 'Document Count',
                     borderColor: 'rgba(190, 229, 235, 1)',
-                    backgroundColor: 'rgba(190, 229, 235, 0.1)',
+                    backgroundColor: 'rgba(190, 229, 235, 0.2)',
                     data
                 }
             ]
@@ -42,9 +35,10 @@ class LogChart extends Component {
     }
 
     render() {
-        // this.setData();
         return (
-            <div className='container bg-light p-4'>
+            <div className='col-4 bg-light p-4'>
+                <h4>Total clicked documents for last 5 days</h4>
+                <hr/>
                 <Line 
                     data={this.setData}
                     options={{
@@ -69,7 +63,7 @@ class LogChart extends Component {
                             yAxes: [{
                                 ticks: {
                                     beginAtZero: true,
-                                    maxTicksLimit: 5
+                                    maxTicksLimit: 6
                                 }
                             }]
                         }
@@ -80,10 +74,4 @@ class LogChart extends Component {
     }
 }
 
-function mapStateToProps(state){
-    return {
-        logs: state.logs
-    }
-}
-
-export default connect(mapStateToProps, {fetchLogs})(LogChart);
+export default LogChart;

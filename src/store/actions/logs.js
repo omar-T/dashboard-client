@@ -13,7 +13,6 @@ export const fetchLogs = () => {
             .then(res => {
                 dispatch(removeError);
                 dispatch(loadLogs(res));
-                console.log(res);
             })
             .catch(err => {
                 dispatch(addError(err));

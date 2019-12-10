@@ -196,7 +196,7 @@ class UsersTable extends Component {
                                             name='newSurname'
                                             required
                                             onChange={this.handleChange}
-                                            defaultValue={newSurname}
+                                            value={newSurname}
                                         />
                                     </div>
                                     <div className='input-group-prepend mb-3'>
@@ -210,7 +210,7 @@ class UsersTable extends Component {
                                             name='newEmail'
                                             required
                                             onChange={this.handleChange}
-                                            defaultValue={newEmail}
+                                            value={newEmail}
                                         />
                                     </div>
                                 </div>
