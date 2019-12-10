@@ -2,6 +2,7 @@ import React from 'react'
 import {Switch, Route, withRouter} from 'react-router-dom'
 import './Homepage.css'
 import AdminsTable from './AdminsTable'
+import UsersTable from './UsersTable'
 
 const Homepage = () => {
     return (
@@ -20,8 +21,8 @@ const Homepage = () => {
                     }}
                 />
                 <Route
-                    exact path='/users' render={() => (
-                        <div>Weclome users</div>
+                    exact path='/users' render={(props) => (
+                        <UsersTable {...props}/>
                     )}
                 />
                 <Route

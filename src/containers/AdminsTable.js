@@ -32,16 +32,6 @@ class AdminsTable extends Component {
         });
     }
 
-    handleUpdate = (admin_id) => {
-        this.props.updateAdmin({
-            name: this.state.name,
-            surname: this.state.surname,
-            email: this.state.email,
-            password: this.state.password,
-            _id: admin_id
-        });
-    }
-
     handleAdd = () => {
         this.props.createAdmin({
             name: this.state.newName,
@@ -61,6 +51,16 @@ class AdminsTable extends Component {
             .catch(() => {
                 return;
             });
+    }
+
+    handleUpdate = (admin_id) => {
+        this.props.updateAdmin({
+            name: this.state.name,
+            surname: this.state.surname,
+            email: this.state.email,
+            password: this.state.password,
+            _id: admin_id
+        });
     }
 
     render() {
@@ -258,7 +258,7 @@ class AdminsTable extends Component {
                         </div>
                     </div>
                 </div>
-                <h2>Admin Table</h2>
+                <h2>Admins Table</h2>
                 <hr/>
                 <table className='table table-responsive-sm table-hover mb-0'>
                     <thead className='thead-dark'>
@@ -285,4 +285,4 @@ function mapStateToProps(state){
     }
 }
 
-export default connect(mapStateToProps, {fetchAdmins, removeAdmin, updateAdmin, removeSuccess, createAdmin})(AdminsTable);
+export default connect(mapStateToProps, {fetchAdmins, createAdmin, removeAdmin, updateAdmin, removeSuccess})(AdminsTable);

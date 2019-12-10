@@ -39,7 +39,6 @@ export const removeAdmin = (admin_id) => {
 
 export const updateAdmin = (admin) => {
     return dispatch => {
-        console.log(admin);
         return apiCall('put', `/api/admins/${admin._id}`, admin)
             .then(({updatedAdmin, success}) => {
                 dispatch(update(updatedAdmin));

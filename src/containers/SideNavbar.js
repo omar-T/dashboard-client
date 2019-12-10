@@ -17,16 +17,20 @@ class SideNavbar extends Component {
                                 <i className="fas fa-home mr-2"></i> <span>Dashboard</span>
                             </Link>
                         </li>
-                        <li className='nav-item py-2'>
-                            <Link to='/admins' className='nav-link ml-3'>
-                                <i className="fas fa-users-cog mr-2"></i> <span>Admins</span>
-                            </Link>
-                        </li>
-                        <li className='nav-item py-2'>
-                            <Link to='/users' className='nav-link ml-3'>
-                                <i className="fas fa-users mr-2"></i> <span>Users</span>
-                            </Link>
-                        </li>
+                        {currentAdmin.admin.isSuper && 
+                            <div>
+                                <li className='nav-item py-2'>
+                                    <Link to='/admins' className='nav-link ml-3'>
+                                        <i className="fas fa-users-cog mr-2"></i> <span>Admins</span>
+                                    </Link>
+                                </li>
+                                <li className='nav-item py-2'>
+                                    <Link to='/users' className='nav-link ml-3'>
+                                        <i className="fas fa-users mr-2"></i> <span>Users</span>
+                                    </Link>
+                                </li>
+                            </div>
+                        }
                         <li className='nav-item py-2'>
                             <Link to='/docs' className='nav-link ml-3'>
                                 <i className="far fa-file-alt fa-lg mr-2"></i> <span>Docs</span>
