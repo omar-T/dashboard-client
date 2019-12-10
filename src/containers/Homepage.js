@@ -14,11 +14,9 @@ const Homepage = () => {
                     )}
                 />
                 <Route
-                    path='/admins' render={(props) => {
-                        return (
-                            <AdminsTable {...props}/>
-                        )
-                    }}
+                    path='/admins' render={(props) => (
+                        <AdminsTable {...props}/>
+                    )}
                 />
                 <Route
                     exact path='/users' render={(props) => (
