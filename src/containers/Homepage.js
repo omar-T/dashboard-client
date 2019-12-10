@@ -23,16 +23,18 @@ class Homepage extends Component {
                 <Switch>
                     <Route
                         exact path='/' render={(props) => (
-                            <div className='row'>
-                                <ClickedDocChart 
-                                    logs={logs} 
-                                    {...props}
-                                />
-                                <MostActiveUsersChart 
-                                    logs={logs} 
-                                    users={users} 
-                                    {...props}
-                                />
+                            <div className='container-fluid'>
+                                <div className='row'>
+                                    <ClickedDocChart 
+                                        logs={logs} 
+                                        {...props}
+                                    />
+                                    <MostActiveUsersChart 
+                                        logs={logs} 
+                                        users={users} 
+                                        {...props}
+                                    />
+                                </div>
                             </div>
                         )}
                     />

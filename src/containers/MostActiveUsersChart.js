@@ -40,28 +40,30 @@ export default class MostActiveUsersChart extends Component {
     render() {
         this.setData();
         return (
-            <div className='col-4 bg-light p-4 mx-3'>
-                <h4>Most Active Users</h4>
-                <hr/>
-                <Bar
-                    data={this.setData}
-                    options={{
-                        responsive: true,
-                        scales: {
-                            xAxes: [{
-                                gridLines: {
-                                    drawOnChartArea: false
-                                }
-                            }],
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero: true,
-                                    maxTicksLimit: 6
-                                }
-                            }]
-                        }
-                    }}
-                />
+            <div className='col-sm-6 col-lg-4'>
+                <div className='bg-light p-4'>
+                    <h4>Most Active Users</h4>
+                    <hr/>
+                    <Bar
+                        data={this.setData}
+                        options={{
+                            responsive: true,
+                            scales: {
+                                xAxes: [{
+                                    gridLines: {
+                                        drawOnChartArea: false
+                                    }
+                                }],
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true,
+                                        maxTicksLimit: 6
+                                    }
+                                }]
+                            }
+                        }}
+                    />
+                </div>
             </div>
         )
     }

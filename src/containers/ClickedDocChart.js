@@ -36,39 +36,41 @@ class LogChart extends Component {
 
     render() {
         return (
-            <div className='col-4 bg-light p-4'>
-                <h4>Total clicked documents for last 5 days</h4>
-                <hr/>
-                <Line 
-                    data={this.setData}
-                    options={{
-                        responsive: true,
-                        scales: {
-                            xAxes: [{
-                                gridLines: {
-                                    drawOnChartArea: false
-                                },
-                                display: true,
-                                type: 'time',
-                                distribution: 'series',
-                                time: {
-                                    tooltipFormat: 'DD-MM-YYYY',
-                                    unit: 'day',
-                                    stepSize: 1,
-                                    displayFormats: {
-                                        day: 'DD MMM'
+            <div className='col-sm-6 col-lg-4'>
+                <div className='bg-light p-4'>
+                    <h4>Total clicked documents for last 5 days</h4>
+                    <hr/>
+                    <Line 
+                        data={this.setData}
+                        options={{
+                            responsive: true,
+                            scales: {
+                                xAxes: [{
+                                    gridLines: {
+                                        drawOnChartArea: false
+                                    },
+                                    display: true,
+                                    type: 'time',
+                                    distribution: 'series',
+                                    time: {
+                                        tooltipFormat: 'DD-MM-YYYY',
+                                        unit: 'day',
+                                        stepSize: 1,
+                                        displayFormats: {
+                                            day: 'DD MMM'
+                                        }
                                     }
-                                }
-                            }],
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero: true,
-                                    maxTicksLimit: 6
-                                }
-                            }]
-                        }
-                    }}
-                />
+                                }],
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true,
+                                        maxTicksLimit: 6
+                                    }
+                                }]
+                            }
+                        }}
+                    />
+                </div>
             </div>
         )
     }
