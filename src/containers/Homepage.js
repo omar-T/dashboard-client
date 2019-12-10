@@ -1,10 +1,9 @@
 import React from 'react'
 import {Switch, Route, withRouter} from 'react-router-dom'
-import {connect} from 'react-redux'
 import './Homepage.css'
 import AdminsTable from './AdminsTable'
 import UsersTable from './UsersTable'
-import {} from '../store/actions/logs'
+import LogChart from './LogChart'
 
 const Homepage = () => {
     return (
@@ -12,7 +11,7 @@ const Homepage = () => {
             <Switch>
                 <Route
                     exact path='/' render={(props) => (
-                        <div>Weclome dashboard</div>
+                        <LogChart {...props}/>
                     )}
                 />
                 <Route
@@ -35,10 +34,4 @@ const Homepage = () => {
     );
 }
 
-function mapStateToProps(state){
-    return {
-        logs: state.logs
-    }
-}
-
-export default withRouter(connect(mapStateToProps, {})(Homepage));
+export default withRouter(Homepage);
