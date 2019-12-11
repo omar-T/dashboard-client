@@ -11,6 +11,9 @@ class UsersTable extends Component {
             newName: '',
             newSurname: '',
             newEmail: '',
+            name: '',
+            surname: '',
+            email: '',
             dataFiveDays: {},
             dataFourWeeks: {},
             chartOwner: ''
@@ -36,10 +39,11 @@ class UsersTable extends Component {
     }
 
     handleAdd = () => {
+        const {newName, newSurname, newEmail} = this.state;
         this.props.createUser({
-            name: this.state.newName,
-            surname: this.state.newSurname,
-            email: this.state.newEmail
+            name: newName,
+            surname: newSurname,
+            email: newEmail
         })
             .then(() => {
                 this.setState({
@@ -54,12 +58,26 @@ class UsersTable extends Component {
             });
     }
 
+    hanldeState = (user) => {
+        this.setState({
+            name: user.name,
+            surname: user.surname,
+            email: user.email
+        });
+    }
+
     handleUpdate = (user_id) => {
+        const {name, surname, email} = this.state;
         this.props.updateUser({
-            name: this.state.name,
-            surname: this.state.surname,
-            email: this.state.email,
+            name,
+            surname,
+            email,
             _id: user_id
+        });
+        this.setState({
+            name: '',
+            surname: '',
+            email: ''
         });
     }
 
@@ -125,7 +143,7 @@ class UsersTable extends Component {
     }
 
     render() {
-        const {newName, newSurname, newEmail, dataFiveDays, dataFourWeeks, chartOwner} = this.state;
+        const {name, surname, email, newName, newSurname, newEmail, dataFiveDays, dataFourWeeks, chartOwner} = this.state;
         const {users, successes, removeUser} = this.props;
         let userTDS = users.map(user => (
             <tr key={user._id}>
@@ -153,7 +171,7 @@ class UsersTable extends Component {
                             </div>
                         </div>
                     </div>
-                    <button className='btn btn-outline-success mr-1 mb-1 mb-md-0' data-toggle='modal' data-target={`#updateUser_${user._id}`}>Update</button>
+                    <button onClick={this.hanldeState.bind(this, user)} className='btn btn-outline-success mr-1 mb-1 mb-md-0' data-toggle='modal' data-target={`#updateUser_${user._id}`}>Update</button>
                     <div className="modal fade" id={`updateUser_${user._id}`} tabIndex="-1" role="dialog" aria-labelledby="updateUserLabel" aria-hidden="true">
                         <div className="modal-dialog" role="document">
                             <div className="modal-content">
@@ -176,7 +194,7 @@ class UsersTable extends Component {
                                                 name='name'
                                                 required
                                                 onChange={this.handleChange}
-                                                defaultValue={user.name}
+                                                value={name}
                                             />
                                         </div>
                                         <div className='input-group-prepend mb-3'>
@@ -190,7 +208,7 @@ class UsersTable extends Component {
                                                 name='surname'
                                                 required
                                                 onChange={this.handleChange}
-                                                defaultValue={user.surname}
+                                                value={surname}
                                             />
                                         </div>
                                         <div className='input-group-prepend mb-3'>
@@ -204,7 +222,7 @@ class UsersTable extends Component {
                                                 name='email'
                                                 required
                                                 onChange={this.handleChange}
-                                                defaultValue={user.email}
+                                                value={email}
                                             />
                                         </div>
                                     </div>

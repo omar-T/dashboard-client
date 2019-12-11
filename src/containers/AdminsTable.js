@@ -11,7 +11,11 @@ class AdminsTable extends Component {
             newName: '',
             newSurname: '',
             newEmail: '',
-            newPassword: ''
+            newPassword: '',
+            name: '',
+            surname: '',
+            email: '',
+            password: ''
         }
     }
 
@@ -54,19 +58,34 @@ class AdminsTable extends Component {
             });
     }
 
+    hanldeState = (admin) => {
+        this.setState({
+            name: admin.name,
+            surname: admin.surname,
+            email: admin.email
+        });
+    }
+
     handleUpdate = (admin_id, accessToken) => {
+        const {name, surname, email, password} = this.state;
         this.props.updateAdmin({
-            name: this.state.name,
-            surname: this.state.surname,
-            email: this.state.email,
-            password: this.state.password,
+            name,
+            surname,
+            email,
+            password,
             _id: admin_id,
             accessToken
+        });
+        this.setState({
+            name: '',
+            surname: '',
+            email: '',
+            password: ''
         });
     }
     
     render() {
-        const {newName, newSurname, newEmail} = this.state;
+        const {name, surname, email, newName, newSurname, newEmail} = this.state;
         const {admins, successes, removeAdmin, updateAdmin} = this.props;
         let adminTDS = admins.map(admin => (
             <tr key={admin._id}>
@@ -94,7 +113,7 @@ class AdminsTable extends Component {
                             </div>
                         </div>
                     </div>
-                    <button className='btn btn-outline-success mr-1 mb-1 mb-lg-0' data-toggle='modal' data-target={`#updateAdmin_${admin._id}`}>Update</button>
+                    <button onClick={this.hanldeState.bind(this, admin)} className='btn btn-outline-success mr-1 mb-1 mb-lg-0' data-toggle='modal' data-target={`#updateAdmin_${admin._id}`}>Update</button>
                     <div className="modal fade" id={`updateAdmin_${admin._id}`} tabIndex="-1" role="dialog" aria-labelledby="updateAdminLabel" aria-hidden="true">
                         <div className="modal-dialog" role="document">
                             <div className="modal-content">
@@ -117,7 +136,7 @@ class AdminsTable extends Component {
                                                     name='name'
                                                     required
                                                     onChange={this.handleChange}
-                                                    defaultValue={admin.name}
+                                                    value={name}
                                                 />
                                             </div>
                                             <div className='input-group-prepend mb-3'>
@@ -131,7 +150,7 @@ class AdminsTable extends Component {
                                                     name='surname'
                                                     required
                                                     onChange={this.handleChange}
-                                                    defaultValue={admin.surname}
+                                                    value={surname}
                                                 />
                                             </div>
                                             <div className='input-group-prepend mb-3'>
@@ -145,7 +164,7 @@ class AdminsTable extends Component {
                                                     name='email'
                                                     required
                                                     onChange={this.handleChange}
-                                                    defaultValue={admin.email}
+                                                    value={email}
                                                 />
                                             </div>
                                             <div className='input-group-prepend mb-4'>
