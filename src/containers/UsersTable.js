@@ -123,7 +123,7 @@ class UsersTable extends Component {
             chartOwner: `${userName} ${userSurname}`
         });
     }
-    
+
     render() {
         const {newName, newSurname, newEmail, dataFiveDays, dataFourWeeks, chartOwner} = this.state;
         const {users, successes, removeUser} = this.props;
@@ -337,7 +337,7 @@ class UsersTable extends Component {
                                         yAxes: [{
                                             ticks: {
                                                 beginAtZero: true,
-                                                maxTicksLimit: 6
+                                                maxTicksLimit: 5
                                             }
                                         }]
                                     }
@@ -374,7 +374,7 @@ class UsersTable extends Component {
                                         yAxes: [{
                                             ticks: {
                                                 beginAtZero: true,
-                                                maxTicksLimit: 6
+                                                maxTicksLimit: 5
                                             }
                                         }]
                                     }

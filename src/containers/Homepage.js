@@ -4,7 +4,8 @@ import {connect} from 'react-redux'
 import './Homepage.css'
 import AdminsTable from './AdminsTable'
 import UsersTable from './UsersTable'
-import ClickedDocChart from './ClickedDocChart'
+import FiveDaysDocChart from './FiveDaysDocChart'
+import FourWeeksDocChart from './FourWeeksDocChart'
 import MostActiveUsersChart from './MostActiveUsersChart'
 import {fetchLogs} from '../store/actions/logs'
 import {fetchUsers} from '../store/actions/users'
@@ -24,7 +25,22 @@ class Homepage extends Component {
                         exact path='/' render={(props) => (
                             <div className='container-fluid'>
                                 <div className='row'>
-                                    <ClickedDocChart 
+                                    <div className='col-4'>
+                                        <div className='card bg-light'>
+                                            <div className='card-body'>
+                                                <span className='float-right'><i className="fas fa-users fa-4x"></i></span>
+                                                <h4 className='card-title'>Total Users</h4>
+                                                <h3 className='card-text'>{users.length}</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className='row my-3'>
+                                    <FiveDaysDocChart 
+                                        logs={logs} 
+                                        {...props}
+                                    />
+                                    <FourWeeksDocChart 
                                         logs={logs} 
                                         {...props}
                                     />

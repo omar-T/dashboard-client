@@ -4,18 +4,18 @@ import {Line} from 'react-chartjs-2'
 
 class LogChart extends Component {
 
-    getDates = () => {
+    getDates = (diff, type) => {
         let dateLabels = [];
         const end = Moment();
-        let start = Moment().subtract(4, 'days');
-        for(let m = start; m.diff(end, 'days') <= 0; m.add(1, 'days')){
+        let start = Moment().subtract(diff, type);
+        for(let m = start; m.diff(end, type) <= 0; m.add(1, type)){
             dateLabels.push(new Date(m));
         }
         return dateLabels;
     }
 
     setData = () => {
-        let labels = this.getDates();
+        let labels = this.getDates(4, 'days');
         let data = [];
         labels.forEach(d => {
             const logData = this.props.logs.filter(l => Moment(l.createdAt).format('YYYY-MM-DD') === Moment(d).format('YYYY-MM-DD'));
@@ -36,9 +36,9 @@ class LogChart extends Component {
 
     render() {
         return (
-            <div className='col-12 col-lg-6 mb-2 mb-lg-0'>
+            <div className='col-12 col-lg-6 col-xl-4 mb-2 mb-lg-0'>
                 <div className='bg-light p-4'>
-                    <h4>User Activity For Last 5 Days</h4>
+                    <h4>Users Activity For Last 5 Days</h4>
                     <hr/>
                     <Line 
                         data={this.setData}

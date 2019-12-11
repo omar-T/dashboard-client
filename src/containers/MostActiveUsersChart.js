@@ -39,7 +39,7 @@ export default class MostActiveUsersChart extends Component {
     render() {
         this.setData();
         return (
-            <div className='col-12 col-lg-6 mb-2 mb-lg-0'>
+            <div className='col-12 col-lg-6 col-xl-4 mb-2 mb-lg-0'>
                 <div className='bg-light p-4'>
                     <h4>Most Active Users</h4>
                     <hr/>
