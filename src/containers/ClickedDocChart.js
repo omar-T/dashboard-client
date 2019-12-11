@@ -36,9 +36,9 @@ class LogChart extends Component {
 
     render() {
         return (
-            <div className='col-sm-6 col-lg-4'>
+            <div className='col-12 col-lg-6 mb-2 mb-lg-0'>
                 <div className='bg-light p-4'>
-                    <h4>Total clicked documents for last 5 days</h4>
+                    <h4>User Activity For Last 5 Days</h4>
                     <hr/>
                     <Line 
                         data={this.setData}

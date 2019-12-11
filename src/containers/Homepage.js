@@ -17,7 +17,6 @@ class Homepage extends Component {
     
     render(){
         const {logs, users} = this.props;
-        console.log(users);
         return (
             <div className='px-4 main'>
                 <Switch>

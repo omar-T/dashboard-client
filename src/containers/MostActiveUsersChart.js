@@ -21,7 +21,7 @@ export default class MostActiveUsersChart extends Component {
             }
             return 0;
         });
-        let activeUsers = countData.slice(0, 2);
+        let activeUsers = countData.slice(0, 4);
         let labels = activeUsers.map(au => `${au.name} ${au.surname}`);
         let data = activeUsers.map(au => au.count);
         return {
@@ -39,7 +39,7 @@ export default class MostActiveUsersChart extends Component {
     render() {
         this.setData();
         return (
-            <div className='col-sm-6 col-lg-4'>
+            <div className='col-12 col-lg-6 mb-2 mb-lg-0'>
                 <div className='bg-light p-4'>
                     <h4>Most Active Users</h4>
                     <hr/>
