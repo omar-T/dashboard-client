@@ -94,6 +94,7 @@ class UsersTable extends Component {
     handleUserChart = (user_id, userName, userSurname) => {
         let labels = this.getDates(4, 'days');
         let labels2 = this.getDates(4, 'weeks');
+        
         let userLogs = this.props.logs.filter(l => l.userId === user_id);
 
         let docsCount = labels.map(d => {
