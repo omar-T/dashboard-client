@@ -2,13 +2,14 @@ import React, {Component} from 'react'
 import {Switch, Route, withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import './Homepage.css'
+import {fetchLogs} from '../store/actions/logs'
+import {fetchUsers} from '../store/actions/users'
 import AdminsTable from './AdminsTable'
 import UsersTable from './UsersTable'
 import FiveDaysDocChart from './FiveDaysDocChart'
 import FourWeeksDocChart from './FourWeeksDocChart'
 import MostActiveUsersChart from './MostActiveUsersChart'
-import {fetchLogs} from '../store/actions/logs'
-import {fetchUsers} from '../store/actions/users'
+import Doc from '../components/Doc'
 
 class Homepage extends Component {
     componentDidMount(){
@@ -64,8 +65,8 @@ class Homepage extends Component {
                         )}
                     />
                     <Route
-                        exact path='/docs' render={() => (
-                            <div>Weclome docs</div>
+                        exact path='/docs' render={(props) => (
+                            <Doc {...props}/>
                         )}
                     />
                 </Switch>

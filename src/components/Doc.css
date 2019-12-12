@@ -1,0 +1,16 @@
+.form-control {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border: 1px solid #e4e7ea;
+}
+  
+.input-group-text {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    background-color: #f0f3f5;
+    border: 1px solid #e4e7ea;
+}
+  
+input:focus {
+    transition: 0.2s linear;
+}
