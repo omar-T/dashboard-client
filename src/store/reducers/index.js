@@ -5,6 +5,7 @@ import successes from './successes'
 import admins from './admins'
 import users from './users'
 import logs from './logs'
+import ictihatDocs from './ictihatDocs'
 
 const rootReducer = combineReducers({
     errors,
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
     currentAdmin,
     admins,
     users,
-    logs
+    logs,
+    ictihatDocs
 });
 
 export default rootReducer;

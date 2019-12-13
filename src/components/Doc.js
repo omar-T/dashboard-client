@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import './Doc.css'
-import $ from 'jquery'
-import axios from 'axios'
+// import $ from 'jquery'
+// import axios from 'axios'
+import {connect} from 'react-redux'
 import SearchData from './SearchData'
 import Pagination from './Pagination'
+import {fetchDocs} from '../store/actions/docs'
 
-export default class Doc extends Component {
+class Doc extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -23,7 +25,7 @@ export default class Doc extends Component {
         });
     }
 
-    handleKeyPress = async (e) => {
+    handleKeyPress = (e) => {
         this.setState({
             page: 1
         });
@@ -34,27 +36,34 @@ export default class Doc extends Component {
                     startSearch: true,
                     loading: true
                 });
-                const res = await axios.get(`https://aislaw-dev2.herokuapp.com/search/ictihat?query=${search}&page=${page}`);
-                this.setState({
-                    ictihatDocs: res.data,
-                    loading: false
-                });
-                console.log(search);
-                console.log(res.data);
+                this.props.fetchDocs(search, page)
+                    .then(() => {
+                        console.log(this.props.ictihatDocs);
+                        this.setState({
+                            ictihatDocs: this.props.ictihatDocs,
+                            loading: false
+                        });
+                    })
+                    .catch(() => {
+                        return;
+                    });
             }
         }
     }
 
-    handleClickedPage = async (num) => {
-        console.log(num);
+    handleClickedPage = (num) => {
         const {search} = this.state;
-        console.log($('.page-link'));
-        const res = await axios.get(`https://aislaw-dev2.herokuapp.com/search/ictihat?query=${search}&page=${num}`);
-        console.log(res.data);
-        this.setState({
-            ictihatDocs: res.data,
-            page: num
-        });
+        this.props.fetchDocs(search, num)
+            .then(() => {
+                console.log(this.props.ictihatDocs);
+                this.setState({
+                    ictihatDocs: this.props.ictihatDocs,
+                    page: num
+                })
+            })
+            .catch(() => {
+                return;
+            });
     }
 
     render() {
@@ -98,3 +107,11 @@ export default class Doc extends Component {
         )
     }
 }
+
+function mapStateToProps(state){
+    return {
+        ictihatDocs: state.ictihatDocs
+    }
+}
+
+export default connect(mapStateToProps, {fetchDocs})(Doc);

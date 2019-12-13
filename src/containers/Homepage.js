@@ -10,6 +10,7 @@ import FiveDaysDocChart from './FiveDaysDocChart'
 import FourWeeksDocChart from './FourWeeksDocChart'
 import MostActiveUsersChart from './MostActiveUsersChart'
 import Doc from '../components/Doc'
+import DocsEdit from '../components/DocsEdit'
 
 class Homepage extends Component {
     componentDidMount(){
@@ -55,7 +56,7 @@ class Homepage extends Component {
                         )}
                     />
                     <Route
-                        path='/admins' render={(props) => (
+                        exact path='/admins' render={(props) => (
                             <AdminsTable {...props}/>
                         )}
                     />
@@ -67,6 +68,11 @@ class Homepage extends Component {
                     <Route
                         exact path='/docs' render={(props) => (
                             <Doc {...props}/>
+                        )}
+                    />
+                    <Route
+                        path='/docs/:docId' render={(props) => (
+                            <DocsEdit {...props}/>
                         )}
                     />
                 </Switch>

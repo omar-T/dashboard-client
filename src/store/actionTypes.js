@@ -21,5 +21,9 @@ export const ADD_USER = 'ADD_USER'
 export const UPDATE_USER = 'UPDATE_USER'
 export const DELETE_USER = 'DELETE_USER'
 
-// actions for logs
+// action for logs
 export const LOAD_LOGS = 'LOAD_LOGS'
+
+// actions for docs
+export const LOAD_DOCS = 'LOAD_DOCS'
+export const GET_DOC = 'GET_DOC'
