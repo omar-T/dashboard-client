@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import './Doc.css'
-// import $ from 'jquery'
-// import {apiCall} from '../services/api'
+import $ from 'jquery'
 import axios from 'axios'
 import SearchData from './SearchData'
 import Pagination from './Pagination'
@@ -49,6 +48,7 @@ export default class Doc extends Component {
     handleClickedPage = async (num) => {
         console.log(num);
         const {search} = this.state;
+        console.log($('.page-link'));
         const res = await axios.get(`https://aislaw-dev2.herokuapp.com/search/ictihat?query=${search}&page=${num}`);
         console.log(res.data);
         this.setState({
