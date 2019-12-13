@@ -6,9 +6,9 @@ export const loadDocs = ictihatDocs => ({
     ictihatDocs
 });
 
-export const getDoc = doc => ({
+export const getDoc = id => ({
     type: GET_DOC,
-    doc
+    id
 });
 
 export const fetchDocs = (search, page) => {

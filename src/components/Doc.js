@@ -19,6 +19,15 @@ class Doc extends Component {
         }
     }
 
+    componentDidMount(){
+        const {ictihatDocs} = this.props;
+        if(!!Object.keys(ictihatDocs).length){
+            this.setState({
+                ictihatDocs
+            });
+        }
+    }
+
     handleChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
@@ -38,7 +47,6 @@ class Doc extends Component {
                 });
                 this.props.fetchDocs(search, page)
                     .then(() => {
-                        console.log(this.props.ictihatDocs);
                         this.setState({
                             ictihatDocs: this.props.ictihatDocs,
                             loading: false
@@ -55,7 +63,6 @@ class Doc extends Component {
         const {search} = this.state;
         this.props.fetchDocs(search, num)
             .then(() => {
-                console.log(this.props.ictihatDocs);
                 this.setState({
                     ictihatDocs: this.props.ictihatDocs,
                     page: num
@@ -67,7 +74,7 @@ class Doc extends Component {
     }
 
     render() {
-        const {search, startSearch, loading, ictihatDocs, page} = this.state;
+        const {search, loading, ictihatDocs, page} = this.state;
         return (
             <div className='container-fluid'>
                 <div className='container'>
@@ -88,7 +95,7 @@ class Doc extends Component {
                         />
                     </div>
                 </div>
-                {startSearch && 
+                {(ictihatDocs !== '') &&
                     <div>
                         <h2>Founded Docs</h2>
                         <SearchData 

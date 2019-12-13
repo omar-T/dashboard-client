@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 
 const SearchData = ({ictihatDocs, loading}) => {
     if(loading){
@@ -7,9 +8,9 @@ const SearchData = ({ictihatDocs, loading}) => {
     return (
         <ul className='list-group mb-4'>
             {ictihatDocs.docs.map(doc => (
-                <li key={doc.karar_id} className='list-group-item'>
+                <Link to={`/docs/${doc.karar_id}`} key={doc.karar_id} className='list-group-item'>
                     {doc.baslik}
-                </li>
+                </Link>
             ))}
         </ul>
     )

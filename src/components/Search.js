@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 
-class DocsEdit extends Component {
+class Search extends Component {
     render() {
         return (
             <div>
-                welcome home
+                
             </div>
         )
     }
 }
 
-export default DocsEdit;
+export default Search;

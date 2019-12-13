@@ -5,7 +5,8 @@ export default (state = {}, action) => {
         case LOAD_DOCS:
             return {...action.ictihatDocs};
         case GET_DOC:
-            return {...state, doc: action.doc}
+            let doc = this.state.ictihatDocs.docs.find(doc => doc.karar_id === action.id);
+            return {...state, doc}
         default:
             return state;
     }
