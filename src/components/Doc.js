@@ -99,6 +99,7 @@ class Doc extends Component {
                     <div>
                         <h2>Founded Docs</h2>
                         <SearchData 
+                            {...this.props}
                             ictihatDocs={ictihatDocs}
                             loading={loading}
                         />
