@@ -11,8 +11,9 @@ class Doc extends Component {
     constructor(props){
         super(props);
         this.state = {
-            search: '',
+            search: localStorage.searchData || '',
             loading: false,
+            startSearch: false,
             ictihatDocs: '',
             page: 1
         }
@@ -38,29 +39,31 @@ class Doc extends Component {
             page: 1
         });
         const {search, page} = this.state;
-        if(e.which === 13){
-            if(this.state.search !== ''){
-                this.setState({
-                    loading: true
-                });
-                this.props.fetchDocs(search, page)
-                    .then(() => {
-                        this.setState({
-                            ictihatDocs: this.props.ictihatDocs,
-                            loading: false
-                        });
-                    })
-                    .catch(() => {
-                        return;
+        if(e.which === 13 && this.state.search !== ''){
+            this.setState({
+                loading: true,
+                startSearch: true
+            });
+            this.props.fetchDocs(search, page)
+                .then(() => {
+                    console.log(this.props.ictihatDocs);
+                    this.setState({
+                        ictihatDocs: this.props.ictihatDocs,
+                        loading: false,
                     });
-            }
+                })
+                .catch(() => {
+                    return;
+                });
         }
     }
 
     handleClickedPage = (num) => {
         const {search} = this.state;
+        console.log(search, num);
         this.props.fetchDocs(search, num)
             .then(() => {
+                console.log(this.props.ictihatDocs);
                 this.setState({
                     ictihatDocs: this.props.ictihatDocs,
                     page: num
@@ -72,7 +75,7 @@ class Doc extends Component {
     }
 
     render() {
-        const {search, loading, ictihatDocs, page} = this.state;
+        const {search, loading, startSearch, ictihatDocs, page} = this.state;
         return (
             <div className='container-fluid'>
                 <div className='container'>
@@ -93,7 +96,7 @@ class Doc extends Component {
                         />
                     </div>
                 </div>
-                {(ictihatDocs !== '') &&
+                {(startSearch || (ictihatDocs !== '')) &&
                     <div>
                         <h2>Founded Docs</h2>
                         <SearchData 

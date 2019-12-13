@@ -18,7 +18,7 @@ const SearchData = ({ictihatDocs, loading, history}) => {
                     <div className='row'>
                         <div className='col-md-12'>
                             <div className='float-right'>
-                                <button onClick={handleClick.bind(this, doc)} className='btn btn-info float-right' data-toggle="collapse" data-target={`#collapseDoc_${doc.karar_id}`} aria-expanded="false" aria-controls="collapseExample">
+                                <button onClick={handleClick.bind(this, doc)} className='btn btn-info float-right'>
                                     View Details
                                 </button>
                             </div>
