@@ -12,7 +12,6 @@ class Doc extends Component {
         super(props);
         this.state = {
             search: '',
-            startSearch: false,
             loading: false,
             ictihatDocs: '',
             page: 1
@@ -42,7 +41,6 @@ class Doc extends Component {
         if(e.which === 13){
             if(this.state.search !== ''){
                 this.setState({
-                    startSearch: true,
                     loading: true
                 });
                 this.props.fetchDocs(search, page)
@@ -79,7 +77,7 @@ class Doc extends Component {
             <div className='container-fluid'>
                 <div className='container'>
                     <div className='input-group-prepend mb-3'>
-                        <span className='input-group-text email'>
+                        <span className='input-group-text'>
                             <i className="fas fa-search"></i>
                         </span>
                         <input

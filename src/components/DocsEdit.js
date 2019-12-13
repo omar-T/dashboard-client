@@ -4,16 +4,17 @@ import {connect} from 'react-redux'
 
 class DocsEdit extends Component {
 
-    componentDidMount(){
-        const {doc} = this.props.location.state;
-        console.log(doc);
-    }
+    // componentDidMount(){
+    //     const {doc} = this.props.location.state;
+    //     console.log(doc);
+    // }
 
     render() {
-
+        const {doc} = this.props.location.state;
+        console.log(doc);
         return (
-            <div>
-                welcome home
+            <div className='container-fluid bg-light'>
+                {doc.baslik}
             </div>
         )
     }
