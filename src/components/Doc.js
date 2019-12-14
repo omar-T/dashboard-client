@@ -6,12 +6,13 @@ import {connect} from 'react-redux'
 import SearchData from './SearchData'
 import Pagination from './Pagination'
 import {fetchDocs} from '../store/actions/ictihatDocs'
+import {addError, removeError} from '../store/actions/errors'
 
 class Doc extends Component {
     constructor(props){
         super(props);
         this.state = {
-            search: localStorage.searchData || '',
+            search: '',
             loading: false,
             startSearch: false,
             ictihatDocs: '',
@@ -21,35 +22,53 @@ class Doc extends Component {
 
     componentDidMount(){
         const {ictihatDocs} = this.props;
+        console.log(ictihatDocs);
         if(!!Object.keys(ictihatDocs).length){
             this.setState({
                 ictihatDocs
             });
         }
+        // if(this.props.errors.message){
+        //     setTimeout(() => {
+        //         this.props.removeError()
+        //     }, 4000);
+        // }
     }
 
+    componentDidUpdate(){
+        if(this.props.errors.message){
+            setTimeout(() => {
+                this.props.removeError()
+            }, 4000);
+        }
+    }
+    
     handleChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
         });
     }
 
+    handleSubmit = (e) => {
+        e.preventDefault();
+    }
+
     handleKeyPress = (e) => {
-        this.setState({
-            page: 1
-        });
         const {search, page} = this.state;
-        if(e.which === 13 && this.state.search !== ''){
+        const {ictihatDocs, fetchDocs} = this.props;
+        if(e.which === 13 && search !== ''){
             this.setState({
+                page: 1,
                 loading: true,
                 startSearch: true
             });
-            this.props.fetchDocs(search, page)
+            fetchDocs(search, page)
                 .then(() => {
-                    console.log(this.props.ictihatDocs);
+                    console.log(ictihatDocs);
                     this.setState({
-                        ictihatDocs: this.props.ictihatDocs,
+                        ictihatDocs: ictihatDocs,
                         loading: false,
+                        startSearch: false
                     });
                 })
                 .catch(() => {
@@ -60,41 +79,51 @@ class Doc extends Component {
 
     handleClickedPage = (num) => {
         const {search} = this.state;
-        console.log(search, num);
-        this.props.fetchDocs(search, num)
-            .then(() => {
-                console.log(this.props.ictihatDocs);
-                this.setState({
-                    ictihatDocs: this.props.ictihatDocs,
-                    page: num
+        const {ictihatDocs, fetchDocs, addError} = this.props;
+        if(search !== ''){
+            fetchDocs(search, num)
+                .then(() => {
+                    console.log(ictihatDocs);
+                    this.setState({
+                        ictihatDocs,
+                        page: num
+                    })
                 })
-            })
-            .catch(() => {
-                return;
-            });
+                .catch(() => {
+                    return;
+                });
+        }else{
+            addError('Please Fill The Search Field !');
+        }
     }
 
     render() {
         const {search, loading, startSearch, ictihatDocs, page} = this.state;
+        const {errors} = this.props;
         return (
             <div className='container-fluid'>
+                {errors.message && 
+                    <div className='alert alert-danger'>{errors.message}</div>
+                }
                 <div className='container'>
-                    <div className='input-group-prepend mb-3'>
-                        <span className='input-group-text'>
-                            <i className="fas fa-search"></i>
-                        </span>
-                        <input
-                            className='form-control'
-                            id='search'
-                            type='text'
-                            placeholder='Search...'
-                            name='search'
-                            required
-                            onChange={this.handleChange}
-                            onKeyPress={this.handleKeyPress}
-                            value={search}
-                        />
-                    </div>
+                    <form onSubmit={this.handleSubmit}>
+                        <div className='input-group-prepend mb-3'>
+                            <span className='input-group-text'>
+                                <i className="fas fa-search"></i>
+                            </span>
+                            <input
+                                className='form-control'
+                                id='search'
+                                type='text'
+                                placeholder='Search...'
+                                name='search'
+                                required
+                                onChange={this.handleChange}
+                                onKeyPress={this.handleKeyPress}
+                                value={search}
+                            />
+                        </div>
+                    </form>
                 </div>
                 {(startSearch || (ictihatDocs !== '')) &&
                     <div>
@@ -119,8 +148,9 @@ class Doc extends Component {
 
 function mapStateToProps(state){
     return {
-        ictihatDocs: state.ictihatDocs
+        ictihatDocs: state.ictihatDocs,
+        errors: state.errors
     }
 }
 
-export default connect(mapStateToProps, {fetchDocs})(Doc);
+export default connect(mapStateToProps, {fetchDocs, addError, removeError})(Doc);
