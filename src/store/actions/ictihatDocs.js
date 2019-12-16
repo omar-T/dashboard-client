@@ -16,6 +16,7 @@ export const fetchDocs = (search, page) => {
         return new Promise((resolve, reject) => {
             return apiCall('get', `https://aislaw-dev2.herokuapp.com/search/ictihat?query=${search}&page=${page}`)
                 .then(res => {
+                    console.log(`https://aislaw-dev2.herokuapp.com/search/ictihat?query=${search}&page=${page}`);
                     localStorage.setItem('searchData', search);
                     dispatch(loadDocs(res));
                     resolve();

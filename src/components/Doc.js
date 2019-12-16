@@ -55,7 +55,7 @@ class Doc extends Component {
 
     handleKeyPress = (e) => {
         const {search, page} = this.state;
-        const {ictihatDocs, fetchDocs} = this.props;
+        const {fetchDocs} = this.props;
         if(e.which === 13 && search !== ''){
             this.setState({
                 page: 1,
@@ -64,9 +64,9 @@ class Doc extends Component {
             });
             fetchDocs(search, page)
                 .then(() => {
-                    console.log(ictihatDocs);
+                    const {ictihatDocs} = this.props;
                     this.setState({
-                        ictihatDocs: ictihatDocs,
+                        ictihatDocs,
                         loading: false,
                         startSearch: false
                     });
@@ -79,11 +79,11 @@ class Doc extends Component {
 
     handleClickedPage = (num) => {
         const {search} = this.state;
-        const {ictihatDocs, fetchDocs, addError} = this.props;
+        const {fetchDocs, addError} = this.props;
         if(search !== ''){
             fetchDocs(search, num)
                 .then(() => {
-                    console.log(ictihatDocs);
+                    const {ictihatDocs} = this.props;
                     this.setState({
                         ictihatDocs,
                         page: num
