@@ -13,7 +13,7 @@ const Pagination = ({numFound, page, handleClickedPage}) => {
             backgroundColor: '#007bff'
         };
         let classes = page === number ? style : {};
-
+        
         if (number === 1 || number === numFound || (number >= page - 3 && number <= page + 10)) {
             return (
                 <li key={number} onClick={() => handleClickedPage(number)}>
