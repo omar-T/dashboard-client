@@ -1,9 +1,9 @@
 import {apiCall} from '../../services/api'
 import {LOAD_DOCS, GET_DOC} from '../actionTypes'
 
-export const loadDocs = ictihatDocs => ({
+export const loadDocs = foundDocs => ({
     type: LOAD_DOCS,
-    ictihatDocs
+    foundDocs
 });
 
 export const getDoc = id => ({
@@ -11,12 +11,13 @@ export const getDoc = id => ({
     id
 });
 
-export const fetchDocs = (search, page) => {
+export const fetchDocs = (type, search, page) => {
     return dispatch => {
         return new Promise((resolve, reject) => {
-            return apiCall('get', `https://aislaw-dev2.herokuapp.com/search/ictihat?query=${search}&page=${page}`)
+            return apiCall('get', `https://aislaw-dev2.herokuapp.com/search/${type}?query=${search}&page=${page}`)
                 .then(res => {
-                    console.log(`https://aislaw-dev2.herokuapp.com/search/ictihat?query=${search}&page=${page}`);
+                    console.log(`https://aislaw-dev2.herokuapp.com/search/${type}?query=${search}&page=${page}`);
+                    console.log(res);
                     localStorage.setItem('searchData', search);
                     dispatch(loadDocs(res));
                     resolve();

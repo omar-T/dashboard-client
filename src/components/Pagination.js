@@ -21,7 +21,7 @@ const Pagination = ({numFound, page, handleClickedPage}) => {
                 </li>
             );
         }else{
-            return 1;
+            return null;
         }
     });
 

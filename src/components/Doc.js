@@ -16,18 +16,21 @@ class Doc extends Component {
             loading: false,
             startSearch: false,
             ictihatDocs: '',
-            page: 1
+            mevzuatDocs: '',
+            page: 1,
+            type: 'ictihat',
+            isChanged: false
         }
     }
 
     componentDidMount(){
-        const {ictihatDocs} = this.props;
-        console.log(ictihatDocs);
-        if(!!Object.keys(ictihatDocs).length){
-            this.setState({
-                ictihatDocs
-            });
-        }
+        // const {foundDocs} = this.props;
+        // console.log(foundDocs);
+        // if(!!Object.keys(foundDocs).length){
+        //     this.setState({
+        //         ictihatDocs: foundDocs
+        //     });
+        // }
         // if(this.props.errors.message){
         //     setTimeout(() => {
         //         this.props.removeError()
@@ -54,19 +57,29 @@ class Doc extends Component {
     }
 
     handleKeyPress = (e) => {
-        const {search, page} = this.state;
+        const {search, page, type} = this.state;
         const {fetchDocs} = this.props;
         if(e.which === 13 && search !== ''){
             this.setState({
                 page: 1,
                 loading: true,
-                startSearch: true
+                startSearch: true,
+                isChanged: false
             });
-            fetchDocs(search, page)
+            fetchDocs(type, search, page)
                 .then(() => {
-                    const {ictihatDocs} = this.props;
+                    const {foundDocs} = this.props;
+                    console.log(foundDocs);
+                    if(type === 'ictihat'){
+                        this.setState({
+                            ictihatDocs: foundDocs
+                        });
+                    }else{
+                        this.setState({
+                            mevzuatDocs: foundDocs,
+                        });
+                    }
                     this.setState({
-                        ictihatDocs,
                         loading: false,
                         startSearch: false
                     });
@@ -78,14 +91,14 @@ class Doc extends Component {
     }
 
     handleClickedPage = (num) => {
-        const {search} = this.state;
+        const {search, type} = this.state;
         const {fetchDocs, addError} = this.props;
         if(search !== ''){
-            fetchDocs(search, num)
+            fetchDocs(type, search, num)
                 .then(() => {
-                    const {ictihatDocs} = this.props;
+                    const {foundDocs} = this.props;
                     this.setState({
-                        ictihatDocs,
+                        ictihatDocs: foundDocs,
                         page: num
                     })
                 })
@@ -97,8 +110,20 @@ class Doc extends Component {
         }
     }
 
+    handleType = (e) => {
+        const {type} = this.state;
+        if(e.target.name !== type){
+            document.querySelector(`button[name=${type}]`).classList.remove('active');
+            document.querySelector(`button[name=${e.target.name}]`).classList.add('active');
+        }
+        this.setState({
+            type: e.target.name,
+            isChanged: true
+        });
+    }
+
     render() {
-        const {search, loading, startSearch, ictihatDocs, page} = this.state;
+        const {search, loading, startSearch, ictihatDocs, mevzuatDocs, page, type, isChanged} = this.state;
         const {errors} = this.props;
         return (
             <div className='container-fluid'>
@@ -106,36 +131,51 @@ class Doc extends Component {
                     <div className='alert alert-danger'>{errors.message}</div>
                 }
                 <div className='container'>
-                    <form onSubmit={this.handleSubmit}>
-                        <div className='input-group-prepend mb-3'>
-                            <span className='input-group-text'>
-                                <i className="fas fa-search"></i>
-                            </span>
-                            <input
-                                className='form-control'
-                                id='search'
-                                type='text'
-                                placeholder='Search...'
-                                name='search'
-                                required
-                                onChange={this.handleChange}
-                                onKeyPress={this.handleKeyPress}
-                                value={search}
-                            />
-                        </div>
-                    </form>
+                    <nav className='navbar navbar-light'>
+                        <form className='w-100 mr-auto' onSubmit={this.handleSubmit}>
+                            <div className='input-group-prepend mb-3'>
+                                <span className='input-group-text'>
+                                    <i className="fas fa-search"></i>
+                                </span>
+                                <input
+                                    className='form-control'
+                                    id='search'
+                                    type='text'
+                                    placeholder='Search...'
+                                    name='search'
+                                    required
+                                    onChange={this.handleChange}
+                                    onKeyPress={this.handleKeyPress}
+                                    value={search}
+                                />
+                            </div>
+                        </form>
+                        <ul className='searchType navbar-nav flex-row'>
+                            <li className='nav-item mx-1'>
+                                <button onClick={this.handleType} name='ictihat' className='nav-link active search-type'>Ictihat</button>
+                            </li>
+                            <li className='nav-item active'>
+                                <span className='nav-link'>/</span>
+                            </li>
+                            <li className='nav-item'>
+                                <button onClick={this.handleType} name='mevzuat' className='nav-link search-type'>Mevzuat</button>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
-                {(startSearch || (ictihatDocs !== '')) &&
+                {(startSearch || (ictihatDocs !== '') || (mevzuatDocs !== '')) &&
                     <div>
                         <h2>Founded Docs</h2>
                         <SearchData 
                             {...this.props}
-                            ictihatDocs={ictihatDocs}
+                            type={type}
+                            isChanged={isChanged}
+                            foundDocs={type === 'ictihat' ? ictihatDocs : mevzuatDocs}
                             loading={loading}
                         />
                         
                         <Pagination 
-                            numFound={ictihatDocs.numFound}
+                            numFound={type === 'ictihat' ? ictihatDocs.numFound : mevzuatDocs.numFound}
                             page={page}
                             handleClickedPage={this.handleClickedPage}
                         />
@@ -148,7 +188,7 @@ class Doc extends Component {
 
 function mapStateToProps(state){
     return {
-        ictihatDocs: state.ictihatDocs,
+        foundDocs: state.foundDocs,
         errors: state.errors
     }
 }
