@@ -6,9 +6,10 @@ const SearchData = ({loading, foundDocs, type, isChanged, history}) => {
         return <h2>Loading...</h2>
     }
 
-    const handleClick = (doc) => {
-        history.push(`/docs/${doc.karar_id}`, {
-            doc
+    const handleClick = (doc, docId) => {
+        history.push(`/docs/${docId}`, {
+            doc,
+            type
         });
     }
     console.log(foundDocs);
@@ -21,26 +22,19 @@ const SearchData = ({loading, foundDocs, type, isChanged, history}) => {
                         <div className='row'>
                             <div className='col-md-12'>
                                 <div className='float-right'>
-                                    <button onClick={handleClick.bind(this, doc)} className='btn btn-info float-right'>
+                                    <button onClick={handleClick.bind(this, doc, doc.karar_id)} className='btn btn-info float-right'>
                                         View Details
                                     </button>
                                 </div>
                                 <p>{doc.baslik}</p>
                             </div>
                         </div>
-                        {/* <div className='collapse' id={`collapseDoc_${doc.karar_id}`}>
-                            <div className='card'>
-                                <div className='card-body'>
-                                    {doc.baslik}
-                                </div>
-                            </div>
-                        </div> */}
                     </li> : 
                     <li key={doc.kanun_id} className='list-group-item font-weight-bold mb-2'>
                         <div className='row'>
                             <div className='col-md-12'>
                                 <div className='float-right'>
-                                    <button onClick={handleClick.bind(this, doc)} className='btn btn-info float-right'>
+                                    <button onClick={handleClick.bind(this, doc, doc.kanun_id)} className='btn btn-info float-right'>
                                         View Details
                                     </button>
                                 </div>
