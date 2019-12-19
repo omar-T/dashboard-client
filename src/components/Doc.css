@@ -24,3 +24,7 @@ button[name='ictihat'], button[name='mevzuat'] {
 .navbar .searchType.navbar-nav li {
     font-size: 1.2rem;
 }
+
+.border-success {
+    border-width: 2px !important;
+}
