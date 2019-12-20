@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 
 const SearchData = ({loading, foundDocs, type, isChanged, history}) => {
     console.log(loading);
@@ -6,12 +7,6 @@ const SearchData = ({loading, foundDocs, type, isChanged, history}) => {
         return <h2>Loading...</h2>
     }
 
-    const handleClick = (doc, docId) => {
-        history.push(`/docs/${docId}`, {
-            doc,
-            type
-        });
-    }
     console.log(foundDocs);
     if(foundDocs.numFound !== 0 && !isChanged){
         return (
@@ -22,9 +17,18 @@ const SearchData = ({loading, foundDocs, type, isChanged, history}) => {
                         <div className='row'>
                             <div className='col-md-12'>
                                 <div className='float-right'>
-                                    <button onClick={handleClick.bind(this, doc, doc.karar_id)} className='btn btn-info float-right'>
+                                    <Link 
+                                        className='btn btn-info float-right'
+                                        to={{
+                                            pathname: `/docs/${doc.karar_id}`,
+                                            state: {
+                                                doc,
+                                                type
+                                            }
+                                        }}
+                                    >
                                         View Details
-                                    </button>
+                                    </Link>
                                 </div>
                                 <p>{doc.baslik}</p>
                             </div>
@@ -34,9 +38,18 @@ const SearchData = ({loading, foundDocs, type, isChanged, history}) => {
                         <div className='row'>
                             <div className='col-md-12'>
                                 <div className='float-right'>
-                                    <button onClick={handleClick.bind(this, doc, doc.kanun_id)} className='btn btn-info float-right'>
+                                    <Link 
+                                        className='btn btn-info float-right'
+                                        to={{
+                                            pathname: `/docs/${doc.karar_id}`,
+                                            state: {
+                                                doc,
+                                                type
+                                            }
+                                        }}
+                                    >
                                         View Details
-                                    </button>
+                                    </Link>
                                 </div>
                                 <p>{doc.mevzuat_name}</p>
                             </div>

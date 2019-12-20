@@ -5,7 +5,7 @@ import './Doc.css'
 import {connect} from 'react-redux'
 import SearchData from './SearchData'
 import Pagination from './Pagination'
-import {fetchDocs} from '../store/actions/ictihatDocs'
+import {fetchDocs} from '../store/actions/foundDocs'
 import {addError, removeError} from '../store/actions/errors'
 
 class Doc extends Component {

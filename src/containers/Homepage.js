@@ -17,7 +17,7 @@ class Homepage extends Component {
         this.props.fetchLogs();
         this.props.fetchUsers();
     }
-    
+
     render(){
         const {logs, users} = this.props;
         return (

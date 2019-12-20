@@ -17,13 +17,13 @@ export const fetchDocs = (type, search, page) => {
             return apiCall('get', `https://aislaw-dev2.herokuapp.com/search/${type}?query=${search}&page=${page}`)
                 .then(res => {
                     console.log(`https://aislaw-dev2.herokuapp.com/search/${type}?query=${search}&page=${page}`);
-                    console.log(res);
+                    // console.log(res);
                     localStorage.setItem('searchData', search);
                     dispatch(loadDocs(res));
                     resolve();
                 })
                 .catch(err => {
-                    console.log(err)
+                    console.log(err);
                     reject();
                 });
         });

@@ -27,3 +27,8 @@ export const LOAD_LOGS = 'LOAD_LOGS'
 // actions for docs
 export const LOAD_DOCS = 'LOAD_DOCS'
 export const GET_DOC = 'GET_DOC'
+
+// actions for doc relations
+export const LOAD_RELATIONS = 'LOAD_RELATIONS'
+export const ADD_RELATION = 'ADD_RELATION'
+export const DELETE_RELATION = 'DELETE_RELATION'

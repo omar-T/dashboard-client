@@ -6,6 +6,7 @@ import admins from './admins'
 import users from './users'
 import logs from './logs'
 import foundDocs from './foundDocs'
+import docRelations from './docRelations'
 
 const rootReducer = combineReducers({
     errors,
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
     admins,
     users,
     logs,
-    foundDocs
+    foundDocs,
+    docRelations
 });
 
 export default rootReducer;
