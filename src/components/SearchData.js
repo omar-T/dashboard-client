@@ -1,7 +1,7 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 
-const SearchData = ({loading, foundDocs, type, isChanged, history}) => {
+const SearchData = ({loading, foundDocs, type, isChanged}) => {
     console.log(loading);
     if(loading){
         return <h2>Loading...</h2>
@@ -41,7 +41,7 @@ const SearchData = ({loading, foundDocs, type, isChanged, history}) => {
                                     <Link 
                                         className='btn btn-info float-right'
                                         to={{
-                                            pathname: `/docs/${doc.karar_id}`,
+                                            pathname: `/docs/${doc.kanun_id}`,
                                             state: {
                                                 doc,
                                                 type

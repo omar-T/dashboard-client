@@ -10,7 +10,8 @@ import FiveDaysDocChart from './FiveDaysDocChart'
 import FourWeeksDocChart from './FourWeeksDocChart'
 import MostActiveUsersChart from './MostActiveUsersChart'
 import Doc from '../components/Doc'
-import DocsEdit from '../components/DocsEdit'
+import IctihatDocsEdit from '../components/IctihatDocsEdit'
+import MevzuatDocsEdit from '../components/MevzuatDocsEdit'
 
 class Homepage extends Component {
     componentDidMount(){
@@ -71,9 +72,15 @@ class Homepage extends Component {
                         )}
                     />
                     <Route
-                        path='/docs/:docId' render={(props) => (
-                            <DocsEdit {...props}/>
-                        )}
+                        path='/docs/:docId' render={(props) => {
+                            const {type} = this.props.location.state;
+                            console.log(type);
+                            if(type === 'ictihat'){
+                                return <IctihatDocsEdit {...props}/>
+                            }else{
+                                return <MevzuatDocsEdit {...props}/>
+                            }
+                        }}
                     />
                 </Switch>
             </div>

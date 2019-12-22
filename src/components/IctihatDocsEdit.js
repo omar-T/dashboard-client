@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import './DocsEdit.css'
+import './IctihatDocsEdit.css'
 import ContentEditable from 'react-contenteditable'
 // import SanitizeHtml from 'sanitize-html'
 import {connect} from 'react-redux'
 import Autocomplete from './Autocomplete'
 import mevzuatArr from '../mevzuatArr.json'
 import {fetchRelationsModel, removeRelation} from '../store/actions/docRelations'
+import {handleGetMevzuatDoc} from '../store/actions/foundDocs'
 
 class DocsEdit extends Component {
     constructor(props){
@@ -16,48 +17,34 @@ class DocsEdit extends Component {
             editable: true,
             ictihatRelation: '',
             ictihatMev: '',
-            mevDocId: '',
-            mevDocEntries: ['omar', 'laith']
+            // mevDocId: '',
+            mevDocEntries: []
         }
     }
 
     componentDidMount(){
         const {docId} = this.props.match.params;
-        const {doc, type} = this.props.location.state;
-        if(type === 'ictihat'){
-            console.log(docId);
-            let ictihatMev = [];
-            this.props.fetchRelationsModel(docId)
-                .then(() => {
-                    console.log(this.props.docRelations);
-                    ictihatMev = [...this.props.docRelations.mevzuat];
-                    console.log(ictihatMev);
-                    this.setState({
-                        ictihatMev,
-                        head: doc.baslik,
-                        text: doc.text.split("\n").join('</br></br>')
-                    });
-                })
-                .catch((err) => {
-                    console.log(err);
-                    this.setState({
-                        head: doc.baslik,
-                        text: doc.text.split("\n").join('</br></br>')
-                    });
+        const {doc} = this.props.location.state;
+        console.log(docId);
+        let ictihatMev = [];
+        this.props.fetchRelationsModel(docId)
+            .then(() => {
+                console.log(this.props.docRelations);
+                ictihatMev = [...this.props.docRelations.mevzuat];
+                console.log(ictihatMev);
+                this.setState({
+                    ictihatMev,
+                    head: doc.baslik,
+                    text: doc.text.split("\n").join('</br></br>')
                 });
-        }else{
-            this.setState({
-                head: doc.mevzuat_name,
-                text: doc.ozet.split("\n").join('</br></br>')
+            })
+            .catch((err) => {
+                console.log(err);
+                this.setState({
+                    head: doc.baslik,
+                    text: doc.text.split("\n").join('</br></br>')
+                });
             });
-        }
-    }
-
-    handleClick = (mevDocId) => {
-        console.log(mevDocId);
-        this.setState({
-            mevDocId
-        });
     }
 
     removeRelation = (mev_type, mev_id, madde_id) => {
@@ -65,30 +52,51 @@ class DocsEdit extends Component {
         console.log(mev_type);
         console.log(mev_id);
         console.log(madde_id);
-        // this.props.removeRelation(madde_id)
         this.props.removeRelation(docId, mev_type, mev_id, madde_id)
             .then(() => {
                 console.log('after remove');
+                console.log(this.props.docRelations);
                 this.setState({
                     ictihatMev: this.props.docRelations.mevzuat
                 });
-                console.log(this.props.docRelations);
             })
             .catch(err => {
                 return;
             });
     }
 
+    handleClick = (mevDocId) => {
+        console.log(mevDocId);
+        this.props.handleGetMevzuatDoc(mevDocId)
+            .then(() => {
+                const {mevDoc} = this.props.foundDocs;
+                console.log(mevDoc.text);
+                let mevDocEntries = mevDoc.text.filter(txt => txt.type === 'madde');
+                console.log(mevDocEntries);
+                this.setState({
+                    mevDocEntries
+                });
+            })
+            .catch(err => {
+                return;
+            });
+    }
+
+    handleAddNewRelation = () => {
+        const {mevDoc} = this.props.foundDocs;
+        const select = document.querySelector('#inputGroupSelectEntry');
+        const maddeId = select.value;
+        const maddeTitle = select.options[select.selectedIndex].innerText;
+        console.log(mevDoc, maddeId, maddeTitle);
+    }
+
     render() {
         const {head, text, editable, ictihatMev, mevDocEntries} = this.state;
-        const mevDocOptions = mevDocEntries.map((entry,index) => (
-            <option key={index} value={index}>{entry}</option>
-        ));
         let ictihatMevList = '';
         if(ictihatMev !== ''){
             ictihatMevList = ictihatMev.map((mev, index) => (
                 <li key={index}>
-                    <button data-toggle='modal' data-target={`#showRelations_${index}`}>{mev.type} ({mev.content.length})</button>
+                    <button className='show-relation' data-toggle='modal' data-target={`#showRelations_${index}`}>{mev.type} ({mev.content.length})</button>
                     <div className="modal fade" id={`showRelations_${index}`} tabIndex="-1" role="dialog" aria-labelledby="showRelationsLabel" aria-hidden="true">
                         <div className="modal-dialog" role="document">
                             <div className="modal-content">
@@ -109,7 +117,7 @@ class DocsEdit extends Component {
                                                     {cont.maddeList.map(madde => (
                                                         <li key={madde.id}>
                                                             {madde.title} 
-                                                            <button onClick={this.removeRelation.bind(this, mev.type, cont.mevId, madde.id)} className='delete-relation-button ml-3'>X</button>
+                                                            <button className='delete-relation-button ml-3' onClick={this.removeRelation.bind(this, mev.type, cont.mevId, madde.id)} data-dismiss="modal">X</button>
                                                         </li>
                                                     ))}
                                                 </ul>
@@ -117,15 +125,16 @@ class DocsEdit extends Component {
                                         ))}
                                     </ul>
                                 </div>
-                                <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </li>
             ));
         }
+        const mevDocOptions = mevDocEntries.map(entry => (
+            <option key={entry.id} value={entry.id}>{entry.title}</option>
+        ));
+        console.log(mevDocOptions.length);
         return (
             <div className='container-fluid bg-white'>
                 <div className='row py-3'>
@@ -133,7 +142,7 @@ class DocsEdit extends Component {
                         <h4>Relations:</h4>
                         {(ictihatMevList.length === 0) && (ictihatMevList !== '') ? 
                             <div><em>No Relations Found</em></div> :
-                            <ul>
+                            <ul className='relation-list'>
                                 {ictihatMevList}
                             </ul>
                         }
@@ -156,11 +165,14 @@ class DocsEdit extends Component {
                                 <div className='d-flex flex-column col-6 col-lg-4'>
                                     <label htmlFor='inputGroupSelectEntry'>Choose Entry:</label>
                                     <select className='custom-select' id='inputGroupSelectEntry'>
-                                        {mevDocOptions}
+                                        {mevDocOptions.length !== 0 ?
+                                            mevDocOptions : 
+                                            <option>Please Search First...</option>
+                                        }
                                     </select>
                                 </div>
                                 <div className='d-flex col-6 col-lg-4 mt-2 mt-lg-0'>
-                                    <button className='btn btn-success align-self-end'>Add New Relation</button>
+                                    <button className='btn btn-success align-self-end' onClick={this.handleAddNewRelation}>Add New Relation</button>
                                 </div>
                             </div>
                         </div>
@@ -183,8 +195,8 @@ class DocsEdit extends Component {
 function mapStateToProps(state){
     return {
         docRelations: state.docRelations,
-        ictihatDocs: state.ictihatDocs
+        foundDocs: state.foundDocs
     }
 }
 
-export default connect(mapStateToProps, {fetchRelationsModel, removeRelation})(DocsEdit);
+export default connect(mapStateToProps, {fetchRelationsModel, removeRelation, handleGetMevzuatDoc})(DocsEdit);

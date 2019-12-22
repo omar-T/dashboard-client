@@ -16,11 +16,12 @@
 
 .suggestions li {
     padding: 0.5rem;
+    font-size: 0.8rem;
 }
 
 .suggestion-active,
 .suggestions li:hover {
-    background-color: #407bd3;
+    background-color: #112638;
     color: #fff;
     cursor: pointer;
     font-weight: 700;
@@ -32,4 +33,5 @@
 
 input#mevSearch {
     height: 37px;
+    transition: 0.2s all linear;
 }

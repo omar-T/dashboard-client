@@ -1,0 +1,36 @@
+.show-relation {
+    background-color: transparent;
+    color: rgba(17, 38, 56, 0.75);
+    border: none;
+    font-weight: bold;
+    transition: 0.2s all linear;
+}
+
+.show-relation:hover {
+    color: rgba(17, 38, 56, 1);
+    text-decoration: underline;
+}
+
+.ictihat-mevzuat-list ul {
+    list-style: none;
+    transition: 0.2s all linear;
+}
+
+.delete-relation-button {
+    font-size: 1.2rem;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: #c0392b;
+    font-weight: bold;
+    transition: all 0.3s;
+    opacity: 0.8;
+}
+
+.delete-relation-button:focus, .show-relation:focus {
+    outline: none;
+}
+
+.delete-relation-button:hover {
+    color: #e74c3c;
+}

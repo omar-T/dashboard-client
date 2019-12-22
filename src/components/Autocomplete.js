@@ -46,7 +46,7 @@ class Autocomplete extends Component {
     };
 
     // Event fired when the user clicks on a suggestion
-    handleClick = (docId, e) => {
+    handleClickMev = (docId, e) => {
         const {handleClick} = this.props;
         // Update the user input and reset the rest of the state
         this.setState({
@@ -110,7 +110,7 @@ class Autocomplete extends Component {
     };
 
     render() {
-        const {onChange, handleClick, onKeyDown, state: {
+        const {onChange, handleClickMev, onKeyDown, state: {
             activeSuggestion,
             filteredSuggestions,
             showSuggestions,
@@ -135,7 +135,7 @@ class Autocomplete extends Component {
                                 <li 
                                     className={className}
                                     key={suggestion.id}
-                                    onClick={handleClick.bind(this, suggestion.id)}
+                                    onClick={handleClickMev.bind(this, suggestion.id)}
                                     data-key={suggestion.id}
                                 >
                                     {suggestion.name}
@@ -156,7 +156,7 @@ class Autocomplete extends Component {
         return (
             <Fragment>
                 <input
-                    className='pl-2'
+                    className='px-2'
                     id='mevSearch'
                     type='text'
                     placeholder='Search...'

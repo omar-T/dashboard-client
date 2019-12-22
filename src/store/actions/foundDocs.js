@@ -1,14 +1,14 @@
 import {apiCall} from '../../services/api'
-import {LOAD_DOCS, GET_DOC} from '../actionTypes'
+import {LOAD_DOCS, GET_MEV_DOC} from '../actionTypes'
 
 export const loadDocs = foundDocs => ({
     type: LOAD_DOCS,
     foundDocs
 });
 
-export const getDoc = id => ({
-    type: GET_DOC,
-    id
+export const getMevzuatDoc = mevDoc => ({
+    type: GET_MEV_DOC,
+    mevDoc
 });
 
 export const fetchDocs = (type, search, page) => {
@@ -20,6 +20,23 @@ export const fetchDocs = (type, search, page) => {
                     // console.log(res);
                     localStorage.setItem('searchData', search);
                     dispatch(loadDocs(res));
+                    resolve();
+                })
+                .catch(err => {
+                    console.log(err);
+                    reject();
+                });
+        });
+    }
+}
+
+export const handleGetMevzuatDoc = (docId) => {
+    return dispatch => {
+        return new Promise((resolve, reject) => {
+            return apiCall('get', `https://aislaw-dev2.herokuapp.com/docs/dev/mevzuat/${docId}`)
+                .then(res => {
+                    console.log(res.response);
+                    dispatch(getMevzuatDoc(res.response));
                     resolve();
                 })
                 .catch(err => {
