@@ -30,5 +30,6 @@ export const GET_MEV_DOC = 'GET_MEV_DOC'
 
 // actions for doc relations
 export const LOAD_RELATIONS = 'LOAD_RELATIONS'
+export const EMPTY_DOC_RELATIONS = 'EMPTY_DOC_RELATIONS'
 export const ADD_RELATION = 'ADD_RELATION'
 export const DELETE_RELATION = 'DELETE_RELATION'

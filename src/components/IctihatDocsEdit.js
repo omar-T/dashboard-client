@@ -5,7 +5,8 @@ import ContentEditable from 'react-contenteditable'
 import {connect} from 'react-redux'
 import Autocomplete from './Autocomplete'
 import mevzuatArr from '../mevzuatArr.json'
-import {fetchRelationsModel, removeRelation} from '../store/actions/docRelations'
+import {addError, removeError} from '../store/actions/errors'
+import {fetchRelationsModel, emptyDocRelations, addRelation, removeRelation} from '../store/actions/docRelations'
 import {handleGetMevzuatDoc} from '../store/actions/foundDocs'
 
 class DocsEdit extends Component {
@@ -15,10 +16,10 @@ class DocsEdit extends Component {
             head: '',
             text: '',
             editable: true,
-            ictihatRelation: '',
+            loading: false,
             ictihatMev: '',
-            // mevDocId: '',
-            mevDocEntries: []
+            mevDocEntries: [],
+            isAdded: false
         }
     }
 
@@ -26,25 +27,39 @@ class DocsEdit extends Component {
         const {docId} = this.props.match.params;
         const {doc} = this.props.location.state;
         console.log(docId);
-        let ictihatMev = [];
+        this.setState({
+            loading: true
+        });
         this.props.fetchRelationsModel(docId)
             .then(() => {
                 console.log(this.props.docRelations);
-                ictihatMev = [...this.props.docRelations.mevzuat];
+                let ictihatMev = [...this.props.docRelations.mevzuat];
                 console.log(ictihatMev);
                 this.setState({
+                    loading: false,
                     ictihatMev,
                     head: doc.baslik,
                     text: doc.text.split("\n").join('</br></br>')
                 });
             })
             .catch((err) => {
+                const {emptyDocRelations} = this.props;
                 console.log(err);
+                emptyDocRelations();
                 this.setState({
+                    loading: false,
                     head: doc.baslik,
                     text: doc.text.split("\n").join('</br></br>')
                 });
             });
+    }
+
+    componentDidUpdate(){
+        if(this.props.errors.message){
+            setTimeout(() => {
+                this.props.removeError()
+            }, 4000);
+        }
     }
 
     removeRelation = (mev_type, mev_id, madde_id) => {
@@ -83,15 +98,53 @@ class DocsEdit extends Component {
     }
 
     handleAddNewRelation = () => {
+        const {docId} = this.props.match.params;
+        const {docRelations, addRelation, addError} = this.props;
         const {mevDoc} = this.props.foundDocs;
+        const {ictihatMev} = this.state;
         const select = document.querySelector('#inputGroupSelectEntry');
         const maddeId = select.value;
         const maddeTitle = select.options[select.selectedIndex].innerText;
-        console.log(mevDoc, maddeId, maddeTitle);
+        
+        if(+maddeId === 0){
+            return addError('Please Search For A Doc First !');
+        }
+        console.log(ictihatMev);
+        if(ictihatMev !== ''){
+            let foundMev = ictihatMev.find(mev => mev.type === mevDoc.type);
+            console.log(foundMev, ' after first find');
+            if(foundMev){
+                let foundContent = foundMev.content.find(cont => cont.mevId === mevDoc.id);
+                console.log(foundContent);
+                if(foundContent){
+                    let foundMadde = foundContent.maddeList.find(madde => madde.id === maddeId);
+                    console.log(foundMadde);
+                    if(foundMadde){
+                        return addError('The Choosen Entry Is already Found... Please Choose Another.');
+                    }
+                }
+            }
+            // console.log(foundMadde, ' after two finds');
+            // if(foundMadde){
+            //     return addError('The Choosen Entry Is already Found... Please Choose Another.');
+            // }
+        }
+        addRelation(docId, docRelations, mevDoc, maddeId, maddeTitle)
+            .then(() => {
+                console.log(this.props.docRelations);
+                let ictihatMev = [...this.props.docRelations.mevzuat];
+                this.setState({
+                    ictihatMev
+                });
+            })
+            .catch(err => {
+                return;
+            });
     }
 
     render() {
-        const {head, text, editable, ictihatMev, mevDocEntries} = this.state;
+        const {head, text, editable, ictihatMev, mevDocEntries, loading} = this.state;
+        const {docRelations, errors} = this.props;
         let ictihatMevList = '';
         if(ictihatMev !== ''){
             ictihatMevList = ictihatMev.map((mev, index) => (
@@ -134,17 +187,21 @@ class DocsEdit extends Component {
         const mevDocOptions = mevDocEntries.map(entry => (
             <option key={entry.id} value={entry.id}>{entry.title}</option>
         ));
-        console.log(mevDocOptions.length);
         return (
             <div className='container-fluid bg-white'>
+                {errors.message && 
+                    <div className='alert alert-danger'>{errors.message}</div>
+                }
                 <div className='row py-3'>
                     <div className='col-4'>
                         <h4>Relations:</h4>
-                        {(ictihatMevList.length === 0) && (ictihatMevList !== '') ? 
-                            <div><em>No Relations Found</em></div> :
-                            <ul className='relation-list'>
-                                {ictihatMevList}
-                            </ul>
+                        {loading ? 
+                            <div>Loading...</div> : 
+                            (Object.keys(docRelations).length === 0 || ictihatMev === '') ? 
+                                <div><em>No Relations Found</em></div> :
+                                <ul className='relation-list'>
+                                    {ictihatMevList}
+                                </ul>
                         }
                     </div>
                 </div>
@@ -167,7 +224,7 @@ class DocsEdit extends Component {
                                     <select className='custom-select' id='inputGroupSelectEntry'>
                                         {mevDocOptions.length !== 0 ?
                                             mevDocOptions : 
-                                            <option>Please Search First...</option>
+                                            <option value='0'>Please Search First...</option>
                                         }
                                     </select>
                                 </div>
@@ -194,9 +251,10 @@ class DocsEdit extends Component {
 
 function mapStateToProps(state){
     return {
+        errors: state.errors,
         docRelations: state.docRelations,
         foundDocs: state.foundDocs
     }
 }
 
-export default connect(mapStateToProps, {fetchRelationsModel, removeRelation, handleGetMevzuatDoc})(DocsEdit);
+export default connect(mapStateToProps, {fetchRelationsModel, emptyDocRelations, addRelation, removeRelation, handleGetMevzuatDoc, addError, removeError})(DocsEdit);

@@ -23,7 +23,7 @@
     outline: none;
     color: #c0392b;
     font-weight: bold;
-    transition: all 0.3s;
+    transition: 0.2s all linear;
     opacity: 0.8;
 }
 
