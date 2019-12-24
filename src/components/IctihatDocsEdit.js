@@ -124,10 +124,6 @@ class DocsEdit extends Component {
                     }
                 }
             }
-            // console.log(foundMadde, ' after two finds');
-            // if(foundMadde){
-            //     return addError('The Choosen Entry Is already Found... Please Choose Another.');
-            // }
         }
         addRelation(docId, docRelations, mevDoc, maddeId, maddeTitle)
             .then(() => {
@@ -174,6 +170,7 @@ class DocsEdit extends Component {
                                                         </li>
                                                     ))}
                                                 </ul>
+                                                <hr/>
                                             </li>
                                         ))}
                                     </ul>

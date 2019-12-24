@@ -31,11 +31,38 @@ export default (state = {}, action) => {
             }
             let foundMevzuat = state.mevzuat.find(mev => mev.type === mevDoc.type);
             if(foundMevzuat){
-                let foundContent = foundMevzuat.content.find(cont => cont.mevId);
+                let foundContent = foundMevzuat.content.find(cont => cont.mevId === mevDoc.id);
                 if(foundContent){
-                    
+                    let newMevzuat = state.mevzuat.map(mev => {
+                        if(mev.type === mevDoc.type){
+                            let newContent = mev.content.map(cont => {
+                                if(cont.mevId === mevDoc.id){
+                                    cont.maddeList.push({
+                                        id: maddeId,
+                                        title: maddeTitle
+                                    });
+                                    return {...cont};
+                                }
+                                return {...cont};
+                            });
+                            return {
+                                ...mev, 
+                                content: [...newContent]
+                            }
+                        }
+                        return {...mev}
+                    });
+                    console.log('NEW MEVZUAT: ', newMevzuat);
+                    console.log('New State', {
+                        ...state,
+                        mevzuat: [...newMevzuat]
+                    });
+                    return {
+                        ...state,
+                        mevzuat: [...newMevzuat]
+                    }
                 }
-                console.log(foundMevzuat);
+                console.log('FOUND MEVZUAT: ', foundMevzuat);
                 let newMevzuat = state.mevzuat.map(mev => {
                     if(mev.type === mevDoc.type){
                         return {
@@ -60,7 +87,6 @@ export default (state = {}, action) => {
                     mevzuat: [...newMevzuat]
                 }
             }
-            console.log(foundMevzuat);
             return {
                 ...state,
                 mevzuat: [...state.mevzuat, ...mevzuat],
