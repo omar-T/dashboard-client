@@ -185,7 +185,7 @@ class DocsEdit extends Component {
             <option key={entry.id} value={entry.id}>{entry.title}</option>
         ));
         return (
-            <div className='container-fluid bg-white'>
+            <div className='container-fluid bg-white py-3'>
                 {errors.message && 
                     <div className='alert alert-danger'>{errors.message}</div>
                 }
