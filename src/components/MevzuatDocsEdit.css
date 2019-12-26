@@ -35,3 +35,8 @@
     outline: none;
     color: rgba(17, 38, 56, 1);
 }
+
+.text_area_field {
+    height: 180px;
+    padding: 10px;
+}

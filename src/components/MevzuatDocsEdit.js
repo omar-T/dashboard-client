@@ -5,6 +5,7 @@ import './MevzuatDocsEdit.css'
 // import SanitizeHtml from 'sanitize-html'
 import {connect} from 'react-redux'
 import {handleGetMevzuatDoc} from '../store/actions/foundDocs'
+import AddTextFieldForm from './AddTextFieldForm'
 
 class MevzuatDocsEdit extends Component {
     constructor(props){
@@ -31,6 +32,19 @@ class MevzuatDocsEdit extends Component {
                 return;
             });
         console.log(docId);
+    }
+
+    // shouldComponentUpdate(nextProps, nextState) {
+    //     // Only update if bricks change
+    //     return nextState.blocks.length > this.state.blocks.length;
+    // }
+
+    handleChange = (e) => {
+        // console.log(e.target.name);
+        // console.log(e.target.value);
+        this.setState({
+            [e.target.name]: e.target.value
+        });
     }
 
     toggleEditable = () => {
@@ -150,6 +164,10 @@ class MevzuatDocsEdit extends Component {
         }
     }
 
+    handleAddNewTextField = (state, e) => {
+        console.log(state[Object.keys(state)[0]]);
+    }
+
     prepareTitleText = (t) => {
         const {editable} = this.state;
         let mainTitle = t.text.map((pt, index) => {
@@ -187,15 +205,21 @@ class MevzuatDocsEdit extends Component {
 
     prepareMaddeText = (t, prefix) => {
         const {editable} = this.state;
-        let maddeText = t.text.map((mt, index) => {
-            const txt = `<span'>${mt.text}</span>`;
+        let txtId = t.id.replace(':', '_');
+        let maddeText = t.text.map((mt, index, arr) => {
+            const txt = `<span>${mt.text}</span>`;
             return (
                 <Fragment>
                     {!editable &&
                         <div className='float-right pt-1 pr-1'>
                             <button className='btn btn-outline-success btn-sm mr-1' onClick={this.handleUpdate.bind(this, t.id, t.type, index)}>Update</button>
                             <button className='btn btn-outline-danger btn-sm mr-1' onClick={this.handleDelete.bind(this, t.id, 'text', index)}>Delete</button>
-                            <button className='btn btn-outline-primary btn-sm'>Add New Madde</button>
+                            {arr.length - 1 === index && 
+                                <AddTextFieldForm
+                                    txtId={txtId}
+                                    handleAdd={this.handleAddNewTextField}
+                                />
+                            }
                         </div>
                     }
                     <ContentEditable
@@ -261,7 +285,7 @@ class MevzuatDocsEdit extends Component {
     render() {
         const {head, text, editable} = this.state;
         const {mevDoc} = this.props.foundDocs;
-        console.log(text);
+        // console.log(text);
         let mevText = text.map(t => {
             switch(t.type){
                 case 'parent_title':
@@ -283,7 +307,7 @@ class MevzuatDocsEdit extends Component {
                     return (<br/>);
             }
         });
-        console.log(mevText);
+        // console.log(mevText);
         return (
             <div className='container-fluid'>
                 <div className='container bg-white py-2'>
