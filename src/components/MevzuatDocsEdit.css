@@ -1,3 +1,37 @@
 .editable {
     padding: 20px;
 }
+
+.index {
+    height: 300px;
+    overflow: scroll;
+    background-color: rgb(248, 248, 248);
+    padding: 10px;
+}
+
+.index .index-link{
+    color: rgb(28, 61, 88);
+    cursor: pointer;
+}
+
+.index .index-link:hover {
+    text-decoration: underline;
+}
+
+.doc_navbar {
+    font-size: 1.2rem;    
+}
+
+.index-button {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    font-weight: 500;
+    color: rgba(17, 38, 56, 0.7);
+}
+
+
+.index-button:focus, .index-button:hover {
+    outline: none;
+    color: rgba(17, 38, 56, 1);
+}
