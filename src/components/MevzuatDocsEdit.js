@@ -82,6 +82,73 @@ class MevzuatDocsEdit extends Component {
         }
     }
 
+    handleUpdate = (t_id, prefix, index) => {
+        const {text} = this.state;
+        let newText = [];
+        console.log(t_id, prefix, index);
+        switch(prefix){
+            case 'title':
+                const newTitle = document.querySelector(`[name='${t_id}_title']`).innerText;
+                console.log(newTitle);
+                newText = text.map(txt => {
+                    if(txt.id === t_id){
+                        return {
+                            ...txt,
+                            title: newTitle
+                        }
+                    }
+                    return {...txt}
+                });
+                return this.setState({
+                    text: newText
+                });
+            case 'madde_baslik':
+                const newMaddeBaslik = document.querySelector(`[name='${t_id}_madde_baslik']`).innerText;
+                console.log(newMaddeBaslik);
+                newText = text.map(txt => {
+                    if(txt.id === t_id){
+                        return {
+                            ...txt,
+                            madde_baslik: {
+                                ...txt.madde_baslik,
+                                text: newMaddeBaslik
+                            }
+                        }
+                    }
+                    return {...txt}
+                });
+                return this.setState({
+                    text: newText
+                });
+            default:
+                const updatedText = document.querySelector(`[name='${t_id}_${index}_${prefix}']`).innerText;
+                console.log(updatedText);
+                newText = text.map(txt => {
+                    if(txt.id === t_id){
+                        let newTxt = txt.text.map((t, i) => {
+                            console.log(txt);
+                            if(i === index){
+                                console.log('Txt ', t);
+                                return {
+                                    ...t,
+                                    text: updatedText
+                                }
+                            }
+                            return {...t}
+                        });
+                        return {
+                            ...txt,
+                            text: newTxt
+                        }
+                    }
+                    return {...txt}
+                });
+                return this.setState({
+                    text: newText
+                });
+        }
+    }
+
     prepareTitleText = (t) => {
         const {editable} = this.state;
         let mainTitle = t.text.map((pt, index) => {
@@ -90,10 +157,11 @@ class MevzuatDocsEdit extends Component {
                     <Fragment>
                         {!editable &&
                             <div className='float-right pt-1 pr-1'>
-                                <button className='btn btn-outline-success btn-sm mr-1'>Update</button>
+                                <button className='btn btn-outline-success btn-sm mr-1' onClick={this.handleUpdate.bind(this, t.id, t.type, index)}>Update</button>
                                 <button className='btn btn-outline-danger btn-sm' onClick={this.handleDelete.bind(this, t.id, 'text', index)}>Delete</button>
                             </div>
                         }
+                        
                         <ContentEditable
                             key={index}
                             className='editable'
@@ -101,13 +169,14 @@ class MevzuatDocsEdit extends Component {
                             id={index}
                             html={title}
                             disabled={editable}
+                            name={`${t.id}_${index}_${t.type}`}
                         />
                     </Fragment>
                 )
         });
         // console.log('Parent Title: ', mainTitle);
         return (
-            <div key={t.id} id={t.id}>
+            <div key={t.id} id={t.id} onChange={this.handleChange}>
                 {mainTitle}
                 <br/>
             </div>
@@ -117,12 +186,12 @@ class MevzuatDocsEdit extends Component {
     prepareMaddeText = (t, prefix) => {
         const {editable} = this.state;
         let maddeText = t.text.map((mt, index) => {
-            const txt = `<span>${mt.text}</span>`;
+            const txt = `<span'>${mt.text}</span>`;
             return (
                 <Fragment>
                     {!editable &&
                         <div className='float-right pt-1 pr-1'>
-                            <button className='btn btn-outline-success btn-sm mr-1'>Update</button>
+                            <button className='btn btn-outline-success btn-sm mr-1' onClick={this.handleUpdate.bind(this, t.id, t.type, index)}>Update</button>
                             <button className='btn btn-outline-danger btn-sm' onClick={this.handleDelete.bind(this, t.id, 'text', index)}>Delete</button>
                         </div>
                     }
@@ -133,6 +202,8 @@ class MevzuatDocsEdit extends Component {
                         id={index}
                         html={txt}
                         disabled={editable}
+                        name={`${t.id}_${index}_${t.type}`}
+                        onChange={this.handleChange}
                     />
                 </Fragment>
             )
@@ -141,7 +212,7 @@ class MevzuatDocsEdit extends Component {
             <div key={t.id} id={t.id}>
                 {!editable &&
                     <div className='float-right pt-1 pr-1'>
-                        <button className='btn btn-outline-success btn-sm mr-1'>Update</button>
+                        <button className='btn btn-outline-success btn-sm mr-1' onClick={this.handleUpdate.bind(this, t.id, 'title')}>Update</button>
                         <button className='btn btn-outline-danger btn-sm' onClick={this.handleDelete.bind(this, t.id, 'title')}>Delete</button>
                     </div>
                 }
@@ -151,13 +222,15 @@ class MevzuatDocsEdit extends Component {
                     tagName='h4'
                     html={t.title}
                     disabled={editable}
+                    name={`${t.id}_title`}
+                    onChange={this.handleChange}
                 />
                 <hr/>
                 {t.madde_baslik &&
                     <Fragment>
                         {!editable && 
                             <div className='float-right pt-1 pr-1'>
-                                <button className='btn btn-outline-success btn-sm mr-1'>Update</button>
+                                <button className='btn btn-outline-success btn-sm mr-1' onClick={this.handleUpdate.bind(this, t.id, 'madde_baslik')}>Update</button>
                                 <button className='btn btn-outline-danger btn-sm' onClick={this.handleDelete.bind(this, t.id, 'madde_baslik')}>Delete</button>
                             </div>
                         }
@@ -167,6 +240,8 @@ class MevzuatDocsEdit extends Component {
                             tagName='h5'
                             html={t.madde_baslik.text}
                             disabled={editable}
+                            name={`${t.id}_madde_baslik`}
+                            onChange={this.handleChange}
                         />
                     </Fragment>
                 }
@@ -202,18 +277,20 @@ class MevzuatDocsEdit extends Component {
         });
         console.log(mevText);
         return (
-            <div className='container-fluid bg-white py-3'>
-                <div>
-                    <h4>
-                        <strong>{head}</strong>
-                        {editable ?
-                            <button className='btn btn-outline-dark float-right' onClick={this.toggleEditable}>Enable Editing</button> :
-                            <button className='btn btn-outline-danger float-right' onClick={this.toggleEditable}>Disable Editing</button>
-                        }
-                    </h4>
+            <div className='container-fluid'>
+                <div className='container bg-white py-3'>
+                    {head !== '' &&
+                        <h4>
+                            <strong>{head}</strong>
+                            {editable ?
+                                <button className='btn btn-outline-dark float-right' onClick={this.toggleEditable}>Enable Editing</button> :
+                                <button className='btn btn-outline-danger float-right' onClick={this.toggleEditable}>Disable Editing</button>
+                            }
+                        </h4>
+                    }
+                    <hr/>
+                    {mevText}
                 </div>
-                <hr/>
-                {mevText}
             </div>
         )
     }
