@@ -6,6 +6,7 @@ import './MevzuatDocsEdit.css'
 import {connect} from 'react-redux'
 import {handleGetMevzuatDoc} from '../store/actions/foundDocs'
 import AddTextFieldForm from './AddTextFieldForm'
+import AddNewMaddeBaslikForm from './AddNewMaddeBaslikForm'
 
 class MevzuatDocsEdit extends Component {
     constructor(props){
@@ -39,13 +40,13 @@ class MevzuatDocsEdit extends Component {
     //     return nextState.blocks.length > this.state.blocks.length;
     // }
 
-    handleChange = (e) => {
-        // console.log(e.target.name);
-        // console.log(e.target.value);
-        this.setState({
-            [e.target.name]: e.target.value
-        });
-    }
+    // handleChange = (e) => {
+    //     console.log(e.target.name);
+    //     console.log(e.target.value);
+    //     this.setState({
+    //         [e.target.name]: e.target.value
+    //     });
+    // }
 
     toggleEditable = () => {
         this.setState({
@@ -164,8 +165,48 @@ class MevzuatDocsEdit extends Component {
         }
     }
 
-    handleAddNewTextField = (state, e) => {
-        console.log(state[Object.keys(state)[0]]);
+    handleAddNewTextField = (newTextField, txtId, index, e) => {
+        const {text} = this.state;
+        txtId = txtId.replace('_', ':');
+        console.log(newTextField, txtId, index);
+        let newText = text.map(txt => {
+            if(txt.id === txtId){
+                txt.text.push({
+                    text: newTextField,
+                    'degisiklik/mulga': null,
+                    dps: null
+                });
+            }
+            return {...txt}
+        });
+        console.log(newText);
+        this.setState({
+            text: newText
+        });
+    }
+
+    handleAddNewMaddeBaslik = (madde_baslik, txtId, e) => {
+        const {text} = this.state;
+        txtId = txtId.replace('_', ':');
+        console.log(madde_baslik, txtId);
+        let newText = text.map(txt => {
+            if(txt.id === txtId){
+                const newMaddeBaslik = {
+                    text: madde_baslik,
+                    'degisiklik/mulga': null, 
+                    dps: null
+                }
+                return {
+                    ...txt,
+                    madde_baslik: newMaddeBaslik
+                }
+            }
+            return {...txt}
+        });
+        console.log(newText);
+        this.setState({
+            text: newText
+        });
     }
 
     prepareTitleText = (t) => {
@@ -178,7 +219,7 @@ class MevzuatDocsEdit extends Component {
                             <div className='float-right pt-1 pr-1'>
                                 <button className='btn btn-outline-success btn-sm mr-1' onClick={this.handleUpdate.bind(this, t.id, t.type, index)}>Update</button>
                                 <button className='btn btn-outline-danger btn-sm mr-1' onClick={this.handleDelete.bind(this, t.id, 'text', index)}>Delete</button>
-                                <button className='btn btn-outline-primary btn-sm'>Add New Madde</button>
+                                {/* <button className='btn btn-outline-primary btn-sm'>Add New Madde</button> */}
                             </div>
                         }
                         
@@ -217,6 +258,7 @@ class MevzuatDocsEdit extends Component {
                             {arr.length - 1 === index && 
                                 <AddTextFieldForm
                                     txtId={txtId}
+                                    index={arr.length}
                                     handleAdd={this.handleAddNewTextField}
                                 />
                             }
@@ -243,9 +285,21 @@ class MevzuatDocsEdit extends Component {
             <div key={t.id} id={t.id}>
                 {!editable &&
                     <div className='float-right pt-1 pr-1'>
-                        <button className='btn btn-outline-success btn-sm mr-1' onClick={this.handleUpdate.bind(this, t.id, 'title')}>Update</button>
-                        <button className='btn btn-outline-danger btn-sm mr-1' onClick={this.handleDelete.bind(this, t.id, 'title')}>Delete</button>
-                        <button className='btn btn-outline-primary btn-sm'>Add New Madde</button>
+                        <button className='btn btn-outline-success btn-sm' onClick={this.handleUpdate.bind(this, t.id, 'title')}>Update</button>
+                        <button className='btn btn-outline-danger btn-sm mx-1' onClick={this.handleDelete.bind(this, t.id, 'title')}>Delete</button>
+                        {t.text.length === 0 && 
+                            <AddTextFieldForm
+                                txtId={txtId}
+                                index={t.text.length}
+                                handleAdd={this.handleAddNewTextField}
+                            />
+                        }
+                        {t.madde_baslik === null && 
+                            <AddNewMaddeBaslikForm
+                                txtId={txtId}
+                                handleAdd={this.handleAddNewMaddeBaslik}
+                            />
+                        }
                     </div>
                 }
                 <ContentEditable
@@ -263,7 +317,13 @@ class MevzuatDocsEdit extends Component {
                             <div className='float-right pt-1 pr-1'>
                                 <button className='btn btn-outline-success btn-sm mr-1' onClick={this.handleUpdate.bind(this, t.id, 'madde_baslik')}>Update</button>
                                 <button className='btn btn-outline-danger btn-sm mr-1' onClick={this.handleDelete.bind(this, t.id, 'madde_baslik')}>Delete</button>
-                                <button className='btn btn-outline-primary btn-sm'>Add New Madde</button>
+                                {t.text.length === 0 && 
+                                    <AddTextFieldForm
+                                        txtId={txtId}
+                                        index={t.text.length}
+                                        handleAdd={this.handleAddNewTextField}
+                                    />
+                                }
                             </div>
                         }
                         <ContentEditable
@@ -285,7 +345,7 @@ class MevzuatDocsEdit extends Component {
     render() {
         const {head, text, editable} = this.state;
         const {mevDoc} = this.props.foundDocs;
-        // console.log(text);
+        console.log(text);
         let mevText = text.map(t => {
             switch(t.type){
                 case 'parent_title':
@@ -311,11 +371,16 @@ class MevzuatDocsEdit extends Component {
         return (
             <div className='container-fluid'>
                 <div className='container bg-white py-2'>
-                    <nav className='navbar doc_navbar pl-0'>
-                        <ul className='navbar-nav mr-auto'>
+                    <nav className='navbar doc_navbar pl-0 pb-0 mb-2'>
+                        <ul className='navbar-nav mr-auto flex-row'>
                             <li className='nav-item'>
                                 <button className='nav-link index-button' data-toggle="collapse" data-target="#collapseIndex" aria-expanded="true" aria-controls="collapseIndex">
                                     Indexes
+                                </button>
+                            </li>
+                            <li className='nav-item mx-3'>
+                                <button className='nav-link index-button' data-toggle="collapse" data-target="#collapseAddIndex" aria-expanded="true" aria-controls="collapseAddIndex">
+                                    Add Index
                                 </button>
                             </li>
                         </ul>
@@ -338,13 +403,36 @@ class MevzuatDocsEdit extends Component {
                             </ul>
                         </div>
                     }
+                    {mevDoc &&
+                        <div id="collapseAddIndex" className="collapse">
+                            <nav className='mb-2'>
+                                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                    <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Add Madde</a>
+                                    <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Add Ek Madde</a>
+                                    <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Add Gecici Madde</a>
+                                </div>
+                            </nav>
+                                <div class="tab-content" id="nav-tabContent">
+                                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                                    <label htmlFor='inputGroupSelect01'>
+                                        Addable Maddeler:
+                                    </label>
+                                    <select className="custom-select" id="inputGroupSelect01">
+                                        {/* {companyList} */}
+                                    </select>
+                                </div>
+                                <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">Laith</div>
+                                <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">Emad</div>
+                            </div>
+                        </div>
+                    }
                     {/* <h5 className='font-weight-bold' data-toggle="collapse" data-target="#collapseIndex" aria-expanded="true" aria-controls="collapseIndex">Indexes:</h5> */}
                     
                 </div>
                 <div className='container bg-white my-2 py-3'>
                     {head !== '' &&
                         <h5>
-                            <strong>{head}</strong>
+                            <strong className='doc-title '>{head}</strong>
                             {editable ?
                                 <button className='btn btn-outline-dark float-right' onClick={this.toggleEditable}>Enable Editing</button> :
                                 <button className='btn btn-outline-danger float-right' onClick={this.toggleEditable}>Disable Editing</button>

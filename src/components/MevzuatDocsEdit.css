@@ -1,3 +1,7 @@
+strong.doc-title {
+    line-height: 2.5rem;
+}
+
 .editable {
     padding: 20px;
 }
@@ -19,7 +23,9 @@
 }
 
 .doc_navbar {
-    font-size: 1.2rem;    
+    font-size: 1.2rem;
+    border-bottom: 1px solid #dee2e6
+     
 }
 
 .index-button {
@@ -36,7 +42,6 @@
     color: rgba(17, 38, 56, 1);
 }
 
-.text_area_field {
-    height: 180px;
-    padding: 10px;
+.form-control.text_area_field {
+    min-height: 180px;
 }
