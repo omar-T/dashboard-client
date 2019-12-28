@@ -9,6 +9,7 @@ import {handleGetMevzuatDoc} from '../store/actions/foundDocs'
 import AddTextFieldForm from './AddTextFieldForm'
 import AddNewMaddeBaslikForm from './AddNewMaddeBaslikForm'
 import AddNewMaddeForm from './AddNewMaddeForm'
+import AddNewTitleForm from './AddNewTitleForm'
 
 class MevzuatDocsEdit extends Component {
     constructor(props){
@@ -176,11 +177,13 @@ class MevzuatDocsEdit extends Component {
                 maddeId = `${docId}:gm${maddeNumber}`;
                 maddeTitle = `Geçici Madde ${maddeNumber}`;
                 break;
-            default:
+            case 'madde':
                 indexSelect = document.querySelector('#indexMaddeSelect');
                 maddeId = `${docId}:m${maddeNumber}`;
                 maddeTitle = `Madde ${maddeNumber}`;
                 break;
+            default:
+                return console.log('Something Went Wrong!');
         }
         const indexId = indexSelect.value;
 
@@ -217,6 +220,76 @@ class MevzuatDocsEdit extends Component {
                 const maddeIndexInIndex = index.findIndex(ind => ind.madde_id === indexId);
                 newText.splice(maddeIndexInText + 1, 0, newMaddeObject);
                 newIndex.splice(maddeIndexInIndex + 1, 0, newIndexObj);
+                return this.setState({
+                    text: newText,
+                    index: newIndex
+                });
+        }
+    }
+
+    handleAddNewTitle = (title, type) => {
+        console.log(title, type);
+        const {text, index} = this.state;
+        const {docId} = this.props.match.params;
+
+        let indexSelect = '';
+        let titleId = '';
+
+        let titleArr = text.filter(txt => txt.type === type)
+            .map(t => +t.id.split(':')[1].slice(2));
+        let titleNum = '';
+        if(titleArr.length !== 0){
+            titleNum = Math.max(...titleArr);
+        }
+        console.log(titleArr);
+        console.log(titleNum);
+        switch(type){
+            case 'parent_title':
+                indexSelect = document.querySelector('#indexParentSelect');
+                titleNum = titleNum === '' ? 1 : titleNum + 1;
+                titleId = `${docId}:pt${titleNum}`;
+                break;
+            case 'child_title':
+                console.log(type);
+                break;
+            default:
+                return console.log('Something Went Wrong!');
+        }
+
+        const indexId = indexSelect.value;
+
+        const newTitleObject = {
+            id: titleId,
+            type,
+            text: [{
+                text: title,
+                'degisiklik/mulga': null,
+                dps: null
+            }],
+        }
+        const newIndexObj = {
+            kanun_id: docId,
+            madde_id: titleId,
+            degisiklik: 0,
+            mulga: 0,
+            text: title
+        }
+        
+        let newText = [...text];
+        let newIndex = [...index];
+        switch(indexId){
+            case 'begin':
+                newText.unshift(newTitleObject);
+                newIndex.unshift(newIndexObj);
+                return this.setState({
+                    text: newText,
+                    index: newIndex
+                });
+            default:
+                const titleIndexInText = text.findIndex(txt => txt.id === indexId);
+                const titleIndexInIndex = index.findIndex(ind => ind.madde_id === indexId);
+                newText.splice(titleIndexInText + 1, 0, newTitleObject);
+                newIndex.splice(titleIndexInIndex + 1, 0, newIndexObj);
                 return this.setState({
                     text: newText,
                     index: newIndex
@@ -612,6 +685,7 @@ class MevzuatDocsEdit extends Component {
                                     <a className="nav-item nav-link active" id="nav-madde-tab" data-toggle="tab" href="#nav-madde" role="tab" aria-controls="nav-madde" aria-selected="true">Add Madde</a>
                                     <a className="nav-item nav-link" id="nav-ek-madde-tab" data-toggle="tab" href="#nav-ek-madde" role="tab" aria-controls="nav-ek-madde" aria-selected="false">Add Ek Madde</a>
                                     <a className="nav-item nav-link" id="nav-gecici-madde-tab" data-toggle="tab" href="#nav-gecici-madde" role="tab" aria-controls="nav-gecici-madde" aria-selected="false">Add Gecici Madde</a>
+                                    <a className="nav-item nav-link" id="nav-parent-title-tab" data-toggle="tab" href="#nav-parent-title" role="tab" aria-controls="nav-parent-title" aria-selected="false">Add Parent Title</a>
                                 </div>
                             </nav>
                             <div className="tab-content" id="nav-tabContent">
@@ -719,8 +793,30 @@ class MevzuatDocsEdit extends Component {
                                         </div>
                                         <AddNewMaddeForm
                                             type='gecici_madde'
-                                            buttonTitle='Gecici Madde'
+                                            buttonTitle='Geçici Madde'
                                             handleAdd={this.handleAddNewMadde}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="tab-pane fade container" id="nav-parent-title" role="tabpanel" aria-labelledby="nav-parent-title-tab">
+                                    <div className='row'>
+                                        <div className='col-6'>
+                                            <label htmlFor='indexParentSelect'>
+                                                Where To Add:
+                                            </label>
+                                            <select className="custom-select" id="indexParentSelect">
+                                                <option value='begin'>At The Beginning</option>
+                                                {index.map((ind, i) => 
+                                                    <option key={i} value={ind.madde_id}>
+                                                        {`After ${ind.text}`}
+                                                    </option>
+                                                )}
+                                            </select>
+                                        </div>
+                                        <AddNewTitleForm
+                                            type='parent_title'
+                                            buttonTitle='Parent Title'
+                                            handleAdd={this.handleAddNewTitle}
                                         />
                                     </div>
                                 </div>

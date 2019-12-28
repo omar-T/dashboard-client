@@ -1,10 +1,10 @@
 import React, { Component, Fragment } from 'react'
 
-export default class AddNewMaddeForm extends Component {
+export default class AddNewTitleForm extends Component {
     constructor(props){
         super(props);
         this.state = {
-            maddeNumber: ''
+            title: ''
         }
     }
 
@@ -17,31 +17,31 @@ export default class AddNewMaddeForm extends Component {
     handleAddClick = (e) => {
         e.preventDefault();
         const {type, handleAdd} = this.props;
-        const {maddeNumber} = this.state;
-        handleAdd(maddeNumber, type);
+        const {title} = this.state;
+        handleAdd(title, type);
         this.setState({
-            maddeNumber: ''
+            title: ''
         });
     }
 
     render() {
-        const {maddeNumber} = this.state;
+        const {title} = this.state;
         const {buttonTitle} = this.props;
-        
+
         return (
             <Fragment>
                 <div className='col-6'>
-                    <label htmlFor='maddeNumber'>
-                        {buttonTitle} Number:
+                    <label htmlFor='title'>
+                        {buttonTitle}:
                     </label>
                     <input
                         className='form-control'
-                        type='number'
+                        type='text'
                         required
-                        placeholder='Number...'
-                        id='maddeNumber'
-                        name='maddeNumber'
-                        value={maddeNumber}
+                        placeholder='Title...'
+                        id='title'
+                        name='title'
+                        value={title}
                         onChange={this.handleChange}
                     />
                 </div>
