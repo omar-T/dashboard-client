@@ -18,7 +18,6 @@ class MevzuatDocsEdit extends Component {
             head: '',
             text: [],
             index: [],
-            // addableMadde: [],
             editable: true
         }
     }
@@ -28,19 +27,17 @@ class MevzuatDocsEdit extends Component {
         this.props.handleGetMevzuatDoc(docId)
             .then(() => {
                 const {mevDoc} = this.props.foundDocs;
-                // const addableMadde = this.getAddableMaddeler(docId, mevDoc.text);
                 this.setState({
                     head: mevDoc.name,
                     text: mevDoc.text,
-                    index: mevDoc.index,
-                    // addableMadde
+                    index: mevDoc.index
                 });
-                console.log(mevDoc);
+                // console.log(mevDoc);
             })
             .catch(err => {
                 return;
             });
-        console.log(docId);
+        // console.log(docId);
     }
 
     componentDidUpdate(){
@@ -51,110 +48,8 @@ class MevzuatDocsEdit extends Component {
         }
     }
 
-    // shouldComponentUpdate(nextProps, nextState) {
-    //     // Only update if bricks change
-    //     return nextState.blocks.length > this.state.blocks.length;
-    // }
-
-    // handleChange = (e) => {
-    //     console.log(e.target.name);
-    //     console.log(e.target.value);
-    //     this.setState({
-    //         [e.target.name]: e.target.value
-    //     });
-    // }
-
-    // getAddableMaddeler = (docId, text) => {
-    //     // const {text} = this.state;
-    //     let maddeler = text.filter(txt => {
-    //         return txt.type === 'madde'
-    //     }).map(txt => {
-    //         // console.log(txt.id);
-    //         let maddeNum = +txt.id.split(':')[1].slice(1);
-    //         // console.log(maddeNum);
-    //         return maddeNum;
-    //     });
-
-    //     let newMaddeArr = [];
-    //     for(let i = 1; i < maddeler[maddeler.length - 1]; i++){
-    //         if(!maddeler.includes(i)){
-    //             let id = `${docId}:m${i}`;
-    //             let title = `Madde ${i}`;
-    //             newMaddeArr.push({
-    //                 id,
-    //                 title
-    //             });
-    //         }
-    //     }
-    //     console.log('new madde arr: ', newMaddeArr);
-    //     // if(newMaddeArr.length === 0){
-    //     //     return <option>You Can Add New Madde At The End Of The Doc</option>
-    //     // }
-    //     // let maddeOptions = newMaddeArr.map(madde => (
-    //     //     <option key={madde.id} value={madde.id}>{madde.title}</option>
-    //     // ));
-    //     // return maddeOptions;
-    //     return newMaddeArr;
-    // }
-
-    // handleAddMissingMadde = (e) => {
-    //     e.preventDefault();
-    //     const {text, index, addableMadde} = this.state;
-    //     const {docId} = this.props.match.params;
-    //     const newMaddeSelect = document.querySelector('#newMaddeSelect');
-    //     const maddeId = newMaddeSelect.value;
-    //     const maddeTitle = newMaddeSelect.options[newMaddeSelect.selectedIndex].innerText;
-    //     const indexSelect = document.querySelector('#indexSelect');
-    //     const indexId = indexSelect.value;
-    //     // console.log(maddeId);
-    //     // console.log(indexId);
-    //     const maddeIndex = text.findIndex(txt => txt.id === indexId);
-    //     // console.log(maddeIndex + 1);
-    //     const newMaddeObject = {
-    //         id: maddeId,
-    //         type: 'madde',
-    //         text: [],
-    //         madde_baslik: null,
-    //         title: maddeTitle
-    //     }
-    //     const newIndexObj = {
-    //         kanun_id: docId,
-    //         madde_id: maddeId,
-    //         degisiklik: 0,
-    //         mulga: 0,
-    //         text: maddeTitle
-    //     }
-    //     let newText = [...text];
-    //     let newIndex = [...index];
-    //     switch(indexId){
-    //         case 'begin':
-    //             newText.unshift(newMaddeObject);
-    //             newIndex.unshift(newIndexObj);
-    //             return this.setState({
-    //                 text: newText,
-    //                 index: newIndex
-    //             });
-    //         case 'end':
-    //             newText.push(newMaddeObject);
-    //             newIndex.push(newIndexObj);
-    //             return this.setState({
-    //                 text: newText,
-    //                 index: newIndex
-    //             });
-    //         default:
-    //             newText.splice(maddeIndex + 1, 0, newMaddeObject);
-    //             newIndex.splice(maddeIndex + 1, 0, newIndexObj);
-    //             let newAddableMadde = addableMadde.filter(madde => madde.id !== maddeId);
-    //             return this.setState({
-    //                 text: newText,
-    //                 index: newIndex,
-    //                 addableMadde: newAddableMadde
-    //             });
-    //     }
-    // }
-
     handleAddNewMadde = (maddeNumber, type) => {
-        console.log(maddeNumber);
+        // console.log(maddeNumber);
         const {text, index} = this.state;
         const {docId} = this.props.match.params;
         const {addError} = this.props;
@@ -228,29 +123,31 @@ class MevzuatDocsEdit extends Component {
     }
 
     handleAddNewTitle = (title, type) => {
-        console.log(title, type);
+        // console.log(title, type);
         const {text, index} = this.state;
         const {docId} = this.props.match.params;
 
         let indexSelect = '';
-        let titleId = '';
 
-        let titleArr = text.filter(txt => txt.type === type)
+        let titleArr = text.filter(txt => txt.type ==='parent_title' || txt.type === 'child_title')
             .map(t => +t.id.split(':')[1].slice(2));
         let titleNum = '';
         if(titleArr.length !== 0){
             titleNum = Math.max(...titleArr);
         }
-        console.log(titleArr);
-        console.log(titleNum);
+        titleNum = titleNum === '' ? 1 : titleNum + 1;
+        let titleId = `${docId}:pt${titleNum}`;
+        // console.log(titleArr);
+        // console.log(titleNum);
+
         switch(type){
             case 'parent_title':
+                // console.log('parent title');
                 indexSelect = document.querySelector('#indexParentSelect');
-                titleNum = titleNum === '' ? 1 : titleNum + 1;
-                titleId = `${docId}:pt${titleNum}`;
                 break;
             case 'child_title':
-                console.log(type);
+                // console.log('child title');
+                indexSelect = document.querySelector('#indexChildSelect');
                 break;
             default:
                 return console.log('Something Went Wrong!');
@@ -426,7 +323,7 @@ class MevzuatDocsEdit extends Component {
     handleAddNewTextField = (newTextField, txtId, index, e) => {
         const {text} = this.state;
         txtId = txtId.replace('_', ':');
-        console.log(newTextField, txtId, index);
+        // console.log(newTextField, txtId, index);
         let newText = text.map(txt => {
             if(txt.id === txtId){
                 txt.text.push({
@@ -437,7 +334,7 @@ class MevzuatDocsEdit extends Component {
             }
             return {...txt}
         });
-        console.log(newText);
+        // console.log(newText);
         this.setState({
             text: newText
         });
@@ -469,7 +366,8 @@ class MevzuatDocsEdit extends Component {
 
     prepareTitleText = (t) => {
         const {editable} = this.state;
-        let mainTitle = t.text.map((pt, ind) => {
+        let txtId = t.id.replace(':', '_');
+        let mainTitle = t.text.map((pt, ind, arr) => {
                 // const title = `<strong>${pt.text}</strong>`;
                 return (
                     <Fragment key={ind}>
@@ -477,7 +375,13 @@ class MevzuatDocsEdit extends Component {
                             <div className='float-right pt-1 pr-1'>
                                 <button className='btn btn-outline-success btn-sm' onClick={this.handleUpdate.bind(this, t.id, t.type, ind)}>Update</button>
                                 <button className='btn btn-outline-danger btn-sm ml-1' onClick={this.handleDelete.bind(this, t.id, 'parent', ind)}>Delete</button>
-                                {/* <button className='btn btn-outline-primary btn-sm'>Add New Madde</button> */}
+                                {arr.length - 1 === ind && 
+                                    <AddTextFieldForm
+                                        txtId={txtId}
+                                        index={arr.length}
+                                        handleAdd={this.handleAddNewTextField}
+                                    />
+                                }
                             </div>
                         }
                         
@@ -532,11 +436,6 @@ class MevzuatDocsEdit extends Component {
                 </Fragment>
             )
         });
-        // let maddeTitle = `<strong>${t.title}</strong>`;
-        // let maddeBaslik = '';
-        // if(t.madde_baslik){
-        //     maddeBaslik = `<strong>${t.madde_baslik.text}</strong>`;
-        // }
         return (
             <div key={t.id} id={t.id}>
                 {!editable &&
@@ -556,9 +455,6 @@ class MevzuatDocsEdit extends Component {
                                 handleAdd={this.handleAddNewMaddeBaslik}
                             />
                         }
-                        {/* {lastMaddeId === t.id && 
-                            <button className='btn btn-outline-primary btn-sm'>Add New Madde</button>
-                        } */}
                     </div>
                 }
                 <ContentEditable
@@ -686,69 +582,33 @@ class MevzuatDocsEdit extends Component {
                                     <a className="nav-item nav-link" id="nav-ek-madde-tab" data-toggle="tab" href="#nav-ek-madde" role="tab" aria-controls="nav-ek-madde" aria-selected="false">Add Ek Madde</a>
                                     <a className="nav-item nav-link" id="nav-gecici-madde-tab" data-toggle="tab" href="#nav-gecici-madde" role="tab" aria-controls="nav-gecici-madde" aria-selected="false">Add Gecici Madde</a>
                                     <a className="nav-item nav-link" id="nav-parent-title-tab" data-toggle="tab" href="#nav-parent-title" role="tab" aria-controls="nav-parent-title" aria-selected="false">Add Parent Title</a>
+                                    <a className="nav-item nav-link" id="nav-child-title-tab" data-toggle="tab" href="#nav-child-title" role="tab" aria-controls="nav-child-title" aria-selected="false">Add Child Title</a>
                                 </div>
                             </nav>
                             <div className="tab-content" id="nav-tabContent">
                                 <div className="tab-pane fade show active container" id="nav-madde" role="tabpanel" aria-labelledby="nav-madde-tab">
-                                        {/* {addableMadde.length !== 0 ?
-                                            <div className='row'>
-                                                <div className='col-6'>
-                                                    <label htmlFor='indexMissingSelect'>
-                                                        Where To Add:
-                                                    </label>
-                                                    <select className="custom-select" id="indexMissingSelect">
-                                                        {firstMaddeNum > 1 && 
-                                                            <option value='begin'>At The Beginning</option>
-                                                        }
-                                                        {newIndex.map((ind, i) => 
-                                                            <option key={i} value={ind.madde_id}>
-                                                                {`After ${ind.text}`}
-                                                            </option>
-                                                        )}
-                                                    </select>
-                                                </div>
-                                                    
-                                                <div className='col-6'>
-                                                    <label htmlFor='newMaddeSelect'>
-                                                        Choose Madde:
-                                                    </label>
-                                                    <select className="custom-select" id="newMaddeSelect">
-                                                        {addableMadde.map(madde => 
-                                                            <option key={madde.id} value={madde.id}>{madde.title}</option>
-                                                        )}
-                                                    </select>
-                                                </div>
-                                                <div className='col-6 my-3'>
-                                                    <button className='btn btn-success' onClick={this.handleAddMissingMadde}>Add Missing Madde</button>
-                                                </div>  
-                                            </div> :
-                                            <div>
-                                                <em>Nothing Missing To Add</em>
-                                                <hr/>
-                                            </div>
-                                        } */}
-                                        <div className='row'>
-                                            <div className='col-6'>
-                                                <label htmlFor='indexMaddeSelect'>
-                                                    Where To Add:
-                                                </label>
-                                                <select className="custom-select" id="indexMaddeSelect">
-                                                    {firstMaddeNum > 1 && 
-                                                        <option value='begin'>At The Beginning</option>
-                                                    }
-                                                    {index.map((ind, i) => 
-                                                        <option key={i} value={ind.madde_id}>
-                                                            {`After ${ind.text}`}
-                                                        </option>
-                                                    )}
-                                                </select>
-                                            </div>
-                                            <AddNewMaddeForm
-                                                type='madde'
-                                                buttonTitle='Madde'
-                                                handleAdd={this.handleAddNewMadde}
-                                            />
+                                    <div className='row'>
+                                        <div className='col-6'>
+                                            <label htmlFor='indexMaddeSelect'>
+                                                Where To Add:
+                                            </label>
+                                            <select className="custom-select" id="indexMaddeSelect">
+                                                {firstMaddeNum > 1 && 
+                                                    <option value='begin'>At The Beginning</option>
+                                                }
+                                                {index.map((ind, i) => 
+                                                    <option key={i} value={ind.madde_id}>
+                                                        {`After ${ind.text}`}
+                                                    </option>
+                                                )}
+                                            </select>
                                         </div>
+                                        <AddNewMaddeForm
+                                            type='madde'
+                                            buttonTitle='Madde'
+                                            handleAdd={this.handleAddNewMadde}
+                                        />
+                                    </div>
                                 </div>
                                 <div className="tab-pane fade container" id="nav-ek-madde" role="tabpanel" aria-labelledby="nav-ek-madde-tab">
                                     <div className='row'>
@@ -820,11 +680,31 @@ class MevzuatDocsEdit extends Component {
                                         />
                                     </div>
                                 </div>
+                                <div className="tab-pane fade container" id="nav-child-title" role="tabpanel" aria-labelledby="nav-child-title-tab">
+                                    <div className='row'>
+                                        <div className='col-6'>
+                                            <label htmlFor='indexChildSelect'>
+                                                Where To Add:
+                                            </label>
+                                            <select className="custom-select" id="indexChildSelect">
+                                                <option value='begin'>At The Beginning</option>
+                                                {index.map((ind, i) => 
+                                                    <option key={i} value={ind.madde_id}>
+                                                        {`After ${ind.text}`}
+                                                    </option>
+                                                )}
+                                            </select>
+                                        </div>
+                                        <AddNewTitleForm
+                                            type='child_title'
+                                            buttonTitle='Child Title'
+                                            handleAdd={this.handleAddNewTitle}
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     }
-                    {/* <h5 className='font-weight-bold' data-toggle="collapse" data-target="#collapseIndex" aria-expanded="true" aria-controls="collapseIndex">Indexes:</h5> */}
-                    
                 </div>
                 <div className='container bg-white my-2 py-3'>
                     {head !== '' &&
