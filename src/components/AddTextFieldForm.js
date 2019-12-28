@@ -19,7 +19,7 @@ export default class AddTextFieldForm extends Component {
         const {newTextField} = this.state;
         return (
             <Fragment>
-                <button className='btn btn-outline-primary btn-sm mr-1' data-toggle="modal" data-target={`#newTextFieldModal_${txtId}`}>Add Text Field</button>
+                <button className='btn btn-outline-primary btn-sm ml-1' data-toggle="modal" data-target={`#newTextFieldModal_${txtId}`}>Add Text Field</button>
                 <div className="modal fade" id={`newTextFieldModal_${txtId}`} tabIndex="-1" role="dialog" aria-labelledby={`newTextFieldModal_${txtId}`} aria-hidden="true">
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">

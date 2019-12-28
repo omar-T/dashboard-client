@@ -19,7 +19,7 @@ export default class AddNewMaddeBaslikForm extends Component {
         const {madde_baslik} = this.state;
         return (
             <Fragment>
-                <button className='btn btn-outline-primary btn-sm' data-toggle="modal" data-target={`#newMaddeBaslikModal_${txtId}`}>Add Madde Baslik</button>
+                <button className='btn btn-outline-primary btn-sm ml-1' data-toggle="modal" data-target={`#newMaddeBaslikModal_${txtId}`}>Add Madde Baslik</button>
                 <div className="modal fade" id={`newMaddeBaslikModal_${txtId}`} tabIndex="-1" role="dialog" aria-labelledby={`newMaddeBaslikModal_${txtId}`} aria-hidden="true">
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">
