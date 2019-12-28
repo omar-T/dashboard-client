@@ -4,9 +4,11 @@ import ContentEditable from 'react-contenteditable'
 import './MevzuatDocsEdit.css'
 // import SanitizeHtml from 'sanitize-html'
 import {connect} from 'react-redux'
+import {addError, removeError} from '../store/actions/errors'
 import {handleGetMevzuatDoc} from '../store/actions/foundDocs'
 import AddTextFieldForm from './AddTextFieldForm'
 import AddNewMaddeBaslikForm from './AddNewMaddeBaslikForm'
+import AddNewMaddeForm from './AddNewMaddeForm'
 
 class MevzuatDocsEdit extends Component {
     constructor(props){
@@ -15,7 +17,7 @@ class MevzuatDocsEdit extends Component {
             head: '',
             text: [],
             index: [],
-            newMaddeArr: '',
+            // addableMadde: [],
             editable: true
         }
     }
@@ -25,12 +27,12 @@ class MevzuatDocsEdit extends Component {
         this.props.handleGetMevzuatDoc(docId)
             .then(() => {
                 const {mevDoc} = this.props.foundDocs;
-                const newMaddeArr = this.getAddableMaddeler(mevDoc.text, docId);
+                // const addableMadde = this.getAddableMaddeler(docId, mevDoc.text);
                 this.setState({
                     head: mevDoc.name,
                     text: mevDoc.text,
                     index: mevDoc.index,
-                    newMaddeArr
+                    // addableMadde
                 });
                 console.log(mevDoc);
             })
@@ -38,6 +40,14 @@ class MevzuatDocsEdit extends Component {
                 return;
             });
         console.log(docId);
+    }
+
+    componentDidUpdate(){
+        if(this.props.errors.message){
+            setTimeout(() => {
+                this.props.removeError()
+            }, 4000);
+        }
     }
 
     // shouldComponentUpdate(nextProps, nextState) {
@@ -53,50 +63,134 @@ class MevzuatDocsEdit extends Component {
     //     });
     // }
 
-    getAddableMaddeler = (text, docId) => {
-        let maddeler = text.filter(txt => {
-            return txt.type === 'madde'
-        }).map(txt => {
-            // console.log(txt.id);
-            let maddeNum = +txt.id.split(':')[1].slice(1);
-            return maddeNum;
-        });
-        let newMaddeArr = [];
-        for(let i = 1; i < maddeler[maddeler.length - 1]; i++){
-            if(!maddeler.includes(i)){
-                let id = `${docId}:m${i}`;
-                let title = `Madde ${i}`;
-                newMaddeArr.push({
-                    num: i,
-                    id,
-                    title
-                });
-            }
-        }
-        // console.log(newMaddeArr);
-        // let maddeOptions = newMaddeArr.map(madde => (
-        //     <option key={madde.id} value={madde.id}>{madde.title}</option>
-        // ));
+    // getAddableMaddeler = (docId, text) => {
+    //     // const {text} = this.state;
+    //     let maddeler = text.filter(txt => {
+    //         return txt.type === 'madde'
+    //     }).map(txt => {
+    //         // console.log(txt.id);
+    //         let maddeNum = +txt.id.split(':')[1].slice(1);
+    //         // console.log(maddeNum);
+    //         return maddeNum;
+    //     });
 
-        return newMaddeArr;
-    }
+    //     let newMaddeArr = [];
+    //     for(let i = 1; i < maddeler[maddeler.length - 1]; i++){
+    //         if(!maddeler.includes(i)){
+    //             let id = `${docId}:m${i}`;
+    //             let title = `Madde ${i}`;
+    //             newMaddeArr.push({
+    //                 id,
+    //                 title
+    //             });
+    //         }
+    //     }
+    //     console.log('new madde arr: ', newMaddeArr);
+    //     // if(newMaddeArr.length === 0){
+    //     //     return <option>You Can Add New Madde At The End Of The Doc</option>
+    //     // }
+    //     // let maddeOptions = newMaddeArr.map(madde => (
+    //     //     <option key={madde.id} value={madde.id}>{madde.title}</option>
+    //     // ));
+    //     // return maddeOptions;
+    //     return newMaddeArr;
+    // }
 
-    handleAddNewMadde = (e) => {
-        e.preventDefault();
+    // handleAddMissingMadde = (e) => {
+    //     e.preventDefault();
+    //     const {text, index, addableMadde} = this.state;
+    //     const {docId} = this.props.match.params;
+    //     const newMaddeSelect = document.querySelector('#newMaddeSelect');
+    //     const maddeId = newMaddeSelect.value;
+    //     const maddeTitle = newMaddeSelect.options[newMaddeSelect.selectedIndex].innerText;
+    //     const indexSelect = document.querySelector('#indexSelect');
+    //     const indexId = indexSelect.value;
+    //     // console.log(maddeId);
+    //     // console.log(indexId);
+    //     const maddeIndex = text.findIndex(txt => txt.id === indexId);
+    //     // console.log(maddeIndex + 1);
+    //     const newMaddeObject = {
+    //         id: maddeId,
+    //         type: 'madde',
+    //         text: [],
+    //         madde_baslik: null,
+    //         title: maddeTitle
+    //     }
+    //     const newIndexObj = {
+    //         kanun_id: docId,
+    //         madde_id: maddeId,
+    //         degisiklik: 0,
+    //         mulga: 0,
+    //         text: maddeTitle
+    //     }
+    //     let newText = [...text];
+    //     let newIndex = [...index];
+    //     switch(indexId){
+    //         case 'begin':
+    //             newText.unshift(newMaddeObject);
+    //             newIndex.unshift(newIndexObj);
+    //             return this.setState({
+    //                 text: newText,
+    //                 index: newIndex
+    //             });
+    //         case 'end':
+    //             newText.push(newMaddeObject);
+    //             newIndex.push(newIndexObj);
+    //             return this.setState({
+    //                 text: newText,
+    //                 index: newIndex
+    //             });
+    //         default:
+    //             newText.splice(maddeIndex + 1, 0, newMaddeObject);
+    //             newIndex.splice(maddeIndex + 1, 0, newIndexObj);
+    //             let newAddableMadde = addableMadde.filter(madde => madde.id !== maddeId);
+    //             return this.setState({
+    //                 text: newText,
+    //                 index: newIndex,
+    //                 addableMadde: newAddableMadde
+    //             });
+    //     }
+    // }
+
+    handleAddNewMadde = (maddeNumber, type) => {
+        console.log(maddeNumber);
         const {text, index} = this.state;
         const {docId} = this.props.match.params;
-        const newMaddeSelect = document.querySelector('#newMaddeSelect');
-        const maddeId = newMaddeSelect.value;
-        const maddeTitle = newMaddeSelect.options[newMaddeSelect.selectedIndex].innerText;
-        const indexSelect = document.querySelector('#indexSelect');
+        const {addError} = this.props;
+
+        if(maddeNumber === '' || maddeNumber === '0'){
+            return addError('Please Enter A Valid Number !');
+        }
+        
+        let indexSelect = '';
+        let maddeId = '';
+        let maddeTitle = '';
+        switch(type){
+            case 'ek_madde':
+                indexSelect = document.querySelector('#indexEkSelect');
+                maddeId = `${docId}:em${maddeNumber}`;
+                maddeTitle = `Ek Madde ${maddeNumber}`;
+                break;
+            case 'gecici_madde':
+                indexSelect = document.querySelector('#indexGeciciSelect');
+                maddeId = `${docId}:gm${maddeNumber}`;
+                maddeTitle = `Geçici Madde ${maddeNumber}`;
+                break;
+            default:
+                indexSelect = document.querySelector('#indexMaddeSelect');
+                maddeId = `${docId}:m${maddeNumber}`;
+                maddeTitle = `Madde ${maddeNumber}`;
+                break;
+        }
         const indexId = indexSelect.value;
-        // console.log(maddeId);
-        // console.log(indexId);
-        const maddeIndex = text.findIndex(txt => txt.id === indexId);
-        // console.log(maddeIndex + 1);
+
+        let foundMadde = text.find(txt => txt.id === maddeId);
+        if(foundMadde){
+            return addError('This Madde Is Already Found. Please Try Again !');
+        }
         const newMaddeObject = {
             id: maddeId,
-            type: 'madde',
+            type,
             text: [],
             madde_baslik: null,
             title: maddeTitle
@@ -118,16 +212,11 @@ class MevzuatDocsEdit extends Component {
                     text: newText,
                     index: newIndex
                 });
-            case 'end':
-                newText.push(newMaddeObject);
-                newIndex.push(newIndexObj);
-                return this.setState({
-                    text: newText,
-                    index: newIndex
-                });
             default:
-                newText.splice(maddeIndex + 1, 0, newMaddeObject);
-                newIndex.splice(maddeIndex + 1, 0, newIndexObj);
+                const maddeIndexInText = text.findIndex(txt => txt.id === indexId);
+                const maddeIndexInIndex = index.findIndex(ind => ind.madde_id === indexId);
+                newText.splice(maddeIndexInText + 1, 0, newMaddeObject);
+                newIndex.splice(maddeIndexInIndex + 1, 0, newIndexObj);
                 return this.setState({
                     text: newText,
                     index: newIndex
@@ -141,18 +230,22 @@ class MevzuatDocsEdit extends Component {
         });
     }
 
-    handleDelete = (t_id, prefix, index) => {
-        const {text} = this.state;
+    handleDelete = (t_id, prefix, ind) => {
+        const {text, index} = this.state;
         let newText = [];
+        let newIndex = [];
         switch(prefix){
             case 'title':
-                console.log('I am madde title: ', t_id);
+                // console.log('I am madde title: ', t_id);
                 newText = text.filter(txt => txt.id !== t_id);
+                newIndex = index.filter(ind => ind.madde_id !== t_id);
+                // console.log('after delete index: ', newIndex);
                 return this.setState({
-                    text: newText
+                    text: newText,
+                    index: newIndex
                 });
             case 'madde_baslik':
-                console.log('I am madde baslik: ', t_id);
+                // console.log('I am madde baslik: ', t_id);
                 newText = text.map(txt => {
                     if(txt.id === t_id){
                         return {
@@ -166,11 +259,15 @@ class MevzuatDocsEdit extends Component {
                     text: newText
                 });
             default:
-                console.log('I am text: ', t_id, index);
+                // console.log('I am text: ', t_id, ind);
+                // console.log('prefix delete: ', prefix);
+                if(prefix === 'parent'){
+                    newIndex = index.filter(ind => ind.madde_id !== t_id);
+                }
                 newText = text.map(txt => {
                     if(txt.id === t_id){
-                        let newTxt = txt.text.filter((t, i) => i !== index);
-                        console.log(newTxt);
+                        let newTxt = txt.text.filter((t, i) => i !== ind);
+                        // console.log(newTxt);
                         return {
                             ...txt, 
                             text: [...newTxt]
@@ -178,9 +275,10 @@ class MevzuatDocsEdit extends Component {
                     }
                     return {...txt}
                 });
-                console.log(newText);
+                // console.log(newText);
                 return this.setState({
-                    text: newText
+                    text: newText,
+                    index: newIndex.length === 0 ? index : newIndex
                 });
         }
     }
@@ -298,26 +396,25 @@ class MevzuatDocsEdit extends Component {
 
     prepareTitleText = (t) => {
         const {editable} = this.state;
-        let mainTitle = t.text.map((pt, index) => {
+        let mainTitle = t.text.map((pt, ind) => {
                 // const title = `<strong>${pt.text}</strong>`;
                 return (
-                    <Fragment key={index}>
+                    <Fragment key={ind}>
                         {!editable &&
                             <div className='float-right pt-1 pr-1'>
-                                <button className='btn btn-outline-success btn-sm mr-1' onClick={this.handleUpdate.bind(this, t.id, t.type, index)}>Update</button>
-                                <button className='btn btn-outline-danger btn-sm mr-1' onClick={this.handleDelete.bind(this, t.id, 'text', index)}>Delete</button>
+                                <button className='btn btn-outline-success btn-sm' onClick={this.handleUpdate.bind(this, t.id, t.type, ind)}>Update</button>
+                                <button className='btn btn-outline-danger btn-sm ml-1' onClick={this.handleDelete.bind(this, t.id, 'parent', ind)}>Delete</button>
                                 {/* <button className='btn btn-outline-primary btn-sm'>Add New Madde</button> */}
                             </div>
                         }
                         
                         <ContentEditable
-                            key={index}
                             className='editable text-center font-weight-bold'
                             tagName='h4'
-                            id={index}
+                            id={ind}
                             html={pt.text}
                             disabled={editable}
-                            name={`${t.id}_${index}_${t.type}`}
+                            name={`${t.id}_${ind}_${t.type}`}
                         />
                     </Fragment>
                 )
@@ -331,33 +428,18 @@ class MevzuatDocsEdit extends Component {
         )
     }
 
-    prepareMaddeText = (t, nextMadde, prefix) => {
-        const {editable, newMaddeArr} = this.state;
+    prepareMaddeText = (t, prefix) => {
+        const {editable} = this.state;
         let txtId = t.id.replace(':', '_');
-        let addableMadde =[];
-        switch(t.type){
-            case 'madde':
-                if(nextMadde){
-                    let maddeNum = +t.id.split(':')[1].slice(1);
-                    console.log('madde num ', maddeNum);
-                    let nexMaddeNum = +nextMadde.id.split(':')[1].slice(1);
-                    console.log('next madde num ', nexMaddeNum);
-                    addableMadde = newMaddeArr.filter(madde => maddeNum < madde.num && madde.num < nexMaddeNum);
-                    console.log('can be added ', addableMadde);
-                }
-                break;
-            default:
-                break;
-        }
-        let maddeText = t.text.map((mt, index, arr) => {
+        let maddeText = t.text.map((mt, ind, arr) => {
             const txt = `<span>${mt.text}</span>`;
             return (
-                <Fragment key={index}>
+                <Fragment key={ind}>
                     {!editable &&
                         <div className='float-right pt-1 pr-1'>
-                            <button className='btn btn-outline-success btn-sm mr-1' onClick={this.handleUpdate.bind(this, t.id, t.type, index)}>Update</button>
-                            <button className='btn btn-outline-danger btn-sm mr-1' onClick={this.handleDelete.bind(this, t.id, 'text', index)}>Delete</button>
-                            {arr.length - 1 === index && 
+                            <button className='btn btn-outline-success btn-sm' onClick={this.handleUpdate.bind(this, t.id, t.type, ind)}>Update</button>
+                            <button className='btn btn-outline-danger btn-sm ml-1' onClick={this.handleDelete.bind(this, t.id, 'text', ind)}>Delete</button>
+                            {arr.length - 1 === ind && 
                                 <AddTextFieldForm
                                     txtId={txtId}
                                     index={arr.length}
@@ -367,13 +449,12 @@ class MevzuatDocsEdit extends Component {
                         </div>
                     }
                     <ContentEditable
-                        key={index}
                         className='editable'
                         tagName='p'
-                        id={index}
+                        id={ind}
                         html={txt}
                         disabled={editable}
-                        name={`${t.id}_${index}_${t.type}`}
+                        name={`${t.id}_${ind}_${t.type}`}
                     />
                 </Fragment>
             )
@@ -402,9 +483,9 @@ class MevzuatDocsEdit extends Component {
                                 handleAdd={this.handleAddNewMaddeBaslik}
                             />
                         }
-                        {(!nextMadde || (addableMadde.length !== 0)) &&
-                            <button className='btn btn-outline-primary btn-sm ml-1'>Add New Madde</button>
-                        }
+                        {/* {lastMaddeId === t.id && 
+                            <button className='btn btn-outline-primary btn-sm'>Add New Madde</button>
+                        } */}
                     </div>
                 }
                 <ContentEditable
@@ -420,8 +501,8 @@ class MevzuatDocsEdit extends Component {
                     <Fragment>
                         {!editable && 
                             <div className='float-right pt-1 pr-1'>
-                                <button className='btn btn-outline-success btn-sm mr-1' onClick={this.handleUpdate.bind(this, t.id, 'madde_baslik')}>Update</button>
-                                <button className='btn btn-outline-danger btn-sm mr-1' onClick={this.handleDelete.bind(this, t.id, 'madde_baslik')}>Delete</button>
+                                <button className='btn btn-outline-success btn-sm' onClick={this.handleUpdate.bind(this, t.id, 'madde_baslik')}>Update</button>
+                                <button className='btn btn-outline-danger btn-sm ml-1' onClick={this.handleDelete.bind(this, t.id, 'madde_baslik')}>Delete</button>
                                 {t.text.length === 0 && 
                                     <AddTextFieldForm
                                         txtId={txtId}
@@ -450,37 +531,30 @@ class MevzuatDocsEdit extends Component {
     render() {
         const {head, text, index, editable} = this.state;
         const {mevDoc} = this.props.foundDocs;
+        const {errors} = this.props;
         console.log(text);
         // let lastMaddeId = '';
         let maddeArr = [];
+        // let newIndex = [];
+        let firstMaddeNum = 0;
         if(text.length !== 0){
-            text.forEach((t, i) => {
-                if(t.type === 'madde'){
-                    maddeArr.push({
-                        ...t,
-                        index: i
-                    });
-                }
-            });
+            maddeArr = text.filter(t => t.type === 'madde');
+            firstMaddeNum = maddeArr[0].id.split(':')[1].slice(1);
             // lastMaddeId = maddeArr[maddeArr.length - 1].id;
+            // newIndex = index.filter(ind => ind.madde_id !== lastMaddeId);
+            // console.log('new index: ', newIndex);
         }
-        console.log('maddeArr: ', maddeArr);
-        let mevText = text.map((t, i) => {
+        let mevText = text.map(t => {
             switch(t.type){
                 case 'parent_title':
-                    let firstParentMadde = text.find((txt, j) => j > i && txt.type === 'madde');
-                    console.log('parent first madde', firstParentMadde);
-                    
                     return this.prepareTitleText(t);
 
                 case 'child_title':
                     return this.prepareTitleText(t);
 
                 case 'madde':
-                    let nextMadde = maddeArr.find(madde => madde.index > i);
-                    console.log('next', nextMadde);
-                    return this.prepareMaddeText(t, nextMadde, 'madde');
-
+                    return this.prepareMaddeText(t, 'madde');
+                
                 case 'ek_madde':
                     return this.prepareMaddeText(t, 'ekMadde');
                 
@@ -492,8 +566,12 @@ class MevzuatDocsEdit extends Component {
             }
         });
         // console.log(mevText);
+
         return (
             <div className='container-fluid'>
+                {errors.message && 
+                    <div className='alert alert-danger'>{errors.message}</div>
+                }
                 <div className='container bg-white py-2'>
                     <nav className='navbar doc_navbar pl-0 pb-0 mb-2'>
                         <ul className='navbar-nav mr-auto flex-row'>
@@ -502,11 +580,11 @@ class MevzuatDocsEdit extends Component {
                                     Indexes
                                 </button>
                             </li>
-                            {/* <li className='nav-item mx-3'>
+                            <li className='nav-item mx-3'>
                                 <button className='nav-link index-button' data-toggle="collapse" data-target="#collapseAddIndex" aria-expanded="true" aria-controls="collapseAddIndex">
                                     Add Index
                                 </button>
-                            </li> */}
+                            </li>
                         </ul>
                     </nav>
                     {mevDoc &&
@@ -527,61 +605,144 @@ class MevzuatDocsEdit extends Component {
                             </ul>
                         </div>
                     }
-                    {/* {mevDoc &&
+                    {mevDoc &&
                         <div id="collapseAddIndex" className="collapse">
                             <nav className='mb-2'>
                                 <div className="nav nav-tabs" id="nav-tab" role="tablist">
-                                    <a className="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Add Madde</a>
-                                    <a className="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Add Ek Madde</a>
-                                    <a className="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Add Gecici Madde</a>
+                                    <a className="nav-item nav-link active" id="nav-madde-tab" data-toggle="tab" href="#nav-madde" role="tab" aria-controls="nav-madde" aria-selected="true">Add Madde</a>
+                                    <a className="nav-item nav-link" id="nav-ek-madde-tab" data-toggle="tab" href="#nav-ek-madde" role="tab" aria-controls="nav-ek-madde" aria-selected="false">Add Ek Madde</a>
+                                    <a className="nav-item nav-link" id="nav-gecici-madde-tab" data-toggle="tab" href="#nav-gecici-madde" role="tab" aria-controls="nav-gecici-madde" aria-selected="false">Add Gecici Madde</a>
                                 </div>
                             </nav>
                             <div className="tab-content" id="nav-tabContent">
-                                <div className="tab-pane fade show active container" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                                <div className="tab-pane fade show active container" id="nav-madde" role="tabpanel" aria-labelledby="nav-madde-tab">
+                                        {/* {addableMadde.length !== 0 ?
+                                            <div className='row'>
+                                                <div className='col-6'>
+                                                    <label htmlFor='indexMissingSelect'>
+                                                        Where To Add:
+                                                    </label>
+                                                    <select className="custom-select" id="indexMissingSelect">
+                                                        {firstMaddeNum > 1 && 
+                                                            <option value='begin'>At The Beginning</option>
+                                                        }
+                                                        {newIndex.map((ind, i) => 
+                                                            <option key={i} value={ind.madde_id}>
+                                                                {`After ${ind.text}`}
+                                                            </option>
+                                                        )}
+                                                    </select>
+                                                </div>
+                                                    
+                                                <div className='col-6'>
+                                                    <label htmlFor='newMaddeSelect'>
+                                                        Choose Madde:
+                                                    </label>
+                                                    <select className="custom-select" id="newMaddeSelect">
+                                                        {addableMadde.map(madde => 
+                                                            <option key={madde.id} value={madde.id}>{madde.title}</option>
+                                                        )}
+                                                    </select>
+                                                </div>
+                                                <div className='col-6 my-3'>
+                                                    <button className='btn btn-success' onClick={this.handleAddMissingMadde}>Add Missing Madde</button>
+                                                </div>  
+                                            </div> :
+                                            <div>
+                                                <em>Nothing Missing To Add</em>
+                                                <hr/>
+                                            </div>
+                                        } */}
+                                        <div className='row'>
+                                            <div className='col-6'>
+                                                <label htmlFor='indexMaddeSelect'>
+                                                    Where To Add:
+                                                </label>
+                                                <select className="custom-select" id="indexMaddeSelect">
+                                                    {firstMaddeNum > 1 && 
+                                                        <option value='begin'>At The Beginning</option>
+                                                    }
+                                                    {index.map((ind, i) => 
+                                                        <option key={i} value={ind.madde_id}>
+                                                            {`After ${ind.text}`}
+                                                        </option>
+                                                    )}
+                                                </select>
+                                            </div>
+                                            <AddNewMaddeForm
+                                                type='madde'
+                                                buttonTitle='Madde'
+                                                handleAdd={this.handleAddNewMadde}
+                                            />
+                                        </div>
+                                </div>
+                                <div className="tab-pane fade container" id="nav-ek-madde" role="tabpanel" aria-labelledby="nav-ek-madde-tab">
                                     <div className='row'>
                                         <div className='col-6'>
-                                            <label htmlFor='newMaddeSelect'>
-                                                Choose After Which Index:
+                                            <label htmlFor='indexEkSelect'>
+                                                Where To Add:
                                             </label>
-                                            <select className="custom-select" id="indexSelect">
-                                                <option value='begin'>At The Beginning</option>
+                                            <select className="custom-select" id="indexEkSelect">
+                                                {firstMaddeNum > 1 && 
+                                                    <option value='begin'>At The Beginning</option>
+                                                }
                                                 {index.map((ind, i) => 
                                                     <option key={i} value={ind.madde_id}>
-                                                        {ind.text}
+                                                        {`After ${ind.text}`}
                                                     </option>
                                                 )}
                                             </select>
                                         </div>
-                                        <div className='col-6'>
-                                            <label htmlFor='newMaddeSelect'>
-                                                Choose Madde:
-                                            </label>
-                                            <select className="custom-select" id="newMaddeSelect">
-                                                {this.getAddableMaddeler(mevDoc.id)}
-                                            </select>
-                                        </div>
-                                        <div className='col-6 my-3'>
-                                            <button className='btn btn-success' onClick={this.handleAddNewMadde}>Add New Madde</button>
-                                        </div>
+                                        <AddNewMaddeForm
+                                            type='ek_madde'
+                                            buttonTitle='Ek Madde'
+                                            handleAdd={this.handleAddNewMadde}
+                                        />
                                     </div>
                                 </div>
-                                <div className="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">Laith</div>
-                                <div className="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">Emad</div>
+                                <div className="tab-pane fade container" id="nav-gecici-madde" role="tabpanel" aria-labelledby="nav-gecici-madde-tab">
+                                    <div className='row'>
+                                        <div className='col-6'>
+                                            <label htmlFor='indexGeciciSelect'>
+                                                Where To Add:
+                                            </label>
+                                            <select className="custom-select" id="indexGeciciSelect">
+                                                {firstMaddeNum > 1 && 
+                                                    <option value='begin'>At The Beginning</option>
+                                                }
+                                                {index.map((ind, i) => 
+                                                    <option key={i} value={ind.madde_id}>
+                                                        {`After ${ind.text}`}
+                                                    </option>
+                                                )}
+                                            </select>
+                                        </div>
+                                        <AddNewMaddeForm
+                                            type='gecici_madde'
+                                            buttonTitle='Gecici Madde'
+                                            handleAdd={this.handleAddNewMadde}
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    } */}
+                    }
                     {/* <h5 className='font-weight-bold' data-toggle="collapse" data-target="#collapseIndex" aria-expanded="true" aria-controls="collapseIndex">Indexes:</h5> */}
                     
                 </div>
                 <div className='container bg-white my-2 py-3'>
                     {head !== '' &&
-                        <h5>
-                            <strong className='doc-title '>{head}</strong>
-                            {editable ?
-                                <button className='btn btn-outline-dark float-right' onClick={this.toggleEditable}>Enable Editing</button> :
-                                <button className='btn btn-outline-danger float-right' onClick={this.toggleEditable}>Disable Editing</button>
-                            }
-                        </h5>
+                        <Fragment>
+                            <div className='float-right'>
+                                {editable ?
+                                    <button className='btn btn-outline-dark' onClick={this.toggleEditable}>Enable Editing</button> :
+                                    <button className='btn btn-outline-danger mr-1' onClick={this.toggleEditable}>Disable Editing</button>
+                                }
+                            </div>
+                            <h5>
+                                <strong className='doc-title '>{head}</strong>
+                            </h5>
+                        </Fragment>
                     }
                     <hr/>
                     {mevText}
@@ -598,4 +759,4 @@ function mapStateToProps(state){
     }
 }
 
-export default connect(mapStateToProps, {handleGetMevzuatDoc})(MevzuatDocsEdit);
+export default connect(mapStateToProps, {handleGetMevzuatDoc, addError, removeError})(MevzuatDocsEdit);
