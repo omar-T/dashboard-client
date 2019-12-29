@@ -11,11 +11,8 @@ export const add = (newIctihatRel) => ({
     newIctihatRel
 });
 
-export const remove = (mev_type, mev_id, madde_id) => ({
-    type: DELETE_RELATION,
-    mev_type,
-    mev_id,
-    madde_id
+export const remove = () => ({
+    type: DELETE_RELATION
 });
 
 export const update = (updatedIctihatRel) => ({
@@ -62,13 +59,13 @@ export const addRelation = (docId, newIctihatRel) => {
     }
 }
 
-export const removeRelation = (docId, mev_type, mev_id, madde_id) => {
+export const removeRelation = (docId) => {
     return dispatch => {
         console.log(docId);
         return new Promise((resolve, reject) => {
-            return axios.get(`https://relation-adalethanim.herokuapp.com/relation/ictihat/${docId}`)
+            return axios.delete(`http://localhost:4000/relation/ictihat/${docId}`)
                 .then(res => {
-                    dispatch(remove(mev_type, mev_id, madde_id));
+                    dispatch(remove());
                     resolve();
                 })
                 .catch(err => {
