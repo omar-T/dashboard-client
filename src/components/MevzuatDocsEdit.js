@@ -228,12 +228,7 @@ class MevzuatDocsEdit extends Component {
                 return this.setState({
                     text: newText
                 });
-            default:
-                // console.log('I am text: ', t_id, ind);
-                // console.log('prefix delete: ', prefix);
-                if(prefix === 'parent'){
-                    newIndex = index.filter(ind => ind.madde_id !== t_id);
-                }
+            case 'text':
                 newText = text.map(txt => {
                     if(txt.id === t_id){
                         let newTxt = txt.text.filter((t, i) => i !== ind);
@@ -247,20 +242,44 @@ class MevzuatDocsEdit extends Component {
                 });
                 // console.log(newText);
                 return this.setState({
+                    text: newText
+                });
+                
+            default:
+                let isTextEmpty = false;
+                newText = text.map(txt => {
+                    if(txt.id === t_id){
+                        let newTxt = txt.text.filter((t, i) => i !== ind);
+                        if(newTxt.length === 0){
+                            isTextEmpty = true;
+                        }
+                        return {
+                            ...txt,
+                            text: [...newTxt]
+                        }
+                    }
+                    return {...txt}
+                });
+                if(isTextEmpty){
+                    newText = text.filter(txt => txt.id !== t_id);
+                    newIndex = index.filter(ind => ind.madde_id !== t_id);
+                }
+                return this.setState({
                     text: newText,
                     index: newIndex.length === 0 ? index : newIndex
                 });
         }
     }
 
-    handleUpdate = (t_id, prefix, index) => {
-        const {text} = this.state;
+    handleUpdate = (t_id, prefix, ind) => {
+        const {text, index} = this.state;
         let newText = [];
-        console.log(t_id, prefix, index);
+        let newIndex = [];
+        // console.log(t_id, prefix, ind);
         switch(prefix){
             case 'title':
                 const newTitle = document.querySelector(`[name='${t_id}_title']`).innerText;
-                console.log(newTitle);
+                // console.log(newTitle);
                 newText = text.map(txt => {
                     if(txt.id === t_id){
                         return {
@@ -270,12 +289,22 @@ class MevzuatDocsEdit extends Component {
                     }
                     return {...txt}
                 });
+                newIndex = index.map(ind => {
+                    if(ind.madde_id === t_id){
+                        return {
+                            ...ind,
+                            text: newTitle
+                        }
+                    }
+                    return {...ind}
+                });
                 return this.setState({
-                    text: newText
+                    text: newText,
+                    index: newIndex
                 });
             case 'madde_baslik':
                 const newMaddeBaslik = document.querySelector(`[name='${t_id}_madde_baslik']`).innerText;
-                console.log(newMaddeBaslik);
+                // console.log(newMaddeBaslik);
                 newText = text.map(txt => {
                     if(txt.id === t_id){
                         return {
@@ -288,18 +317,35 @@ class MevzuatDocsEdit extends Component {
                     }
                     return {...txt}
                 });
+                let maddeNum = t_id.split(':')[1].slice(1);
+                let maddeText = `Madde ${maddeNum} / ${newMaddeBaslik}`;
+                newIndex = index.map(ind => {
+                    if(ind.madde_id === t_id){
+                        return {
+                            ...ind,
+                            text: maddeText
+                        }
+                    }
+                    return {...ind}
+                });
                 return this.setState({
-                    text: newText
+                    text: newText,
+                    index: newIndex
                 });
             default:
-                const updatedText = document.querySelector(`[name='${t_id}_${index}_${prefix}']`).innerText;
-                console.log(updatedText);
+                const updatedText = document.querySelector(`[name='${t_id}_${ind}_${prefix}']`).innerText;
+                if(prefix === 'parent_title'){
+                    newIndex = [...index];
+                    const parentIndex = newIndex.findIndex((ind => ind.madde_id === t_id));
+                    newIndex[parentIndex + ind].text = updatedText;
+                    // console.log(newIndex);
+                }
                 newText = text.map(txt => {
                     if(txt.id === t_id){
                         let newTxt = txt.text.map((t, i) => {
-                            console.log(txt);
-                            if(i === index){
-                                console.log('Txt ', t);
+                            // console.log(txt);
+                            if(i === ind){
+                                // console.log('Txt ', t);
                                 return {
                                     ...t,
                                     text: updatedText
@@ -315,7 +361,8 @@ class MevzuatDocsEdit extends Component {
                     return {...txt}
                 });
                 return this.setState({
-                    text: newText
+                    text: newText,
+                    index: newIndex.length === 0 ? index : newIndex
                 });
         }
     }
@@ -366,7 +413,7 @@ class MevzuatDocsEdit extends Component {
 
     prepareTitleText = (t) => {
         const {editable} = this.state;
-        let txtId = t.id.replace(':', '_');
+        const txtId = t.id.replace(':', '_');
         let mainTitle = t.text.map((pt, ind, arr) => {
                 // const title = `<strong>${pt.text}</strong>`;
                 return (
@@ -374,7 +421,7 @@ class MevzuatDocsEdit extends Component {
                         {!editable &&
                             <div className='float-right pt-1 pr-1'>
                                 <button className='btn btn-outline-success btn-sm' onClick={this.handleUpdate.bind(this, t.id, t.type, ind)}>Update</button>
-                                <button className='btn btn-outline-danger btn-sm ml-1' onClick={this.handleDelete.bind(this, t.id, 'parent', ind)}>Delete</button>
+                                <button className='btn btn-outline-danger btn-sm ml-1' onClick={this.handleDelete.bind(this, t.id, t.type, ind)}>Delete</button>
                                 {arr.length - 1 === ind && 
                                     <AddTextFieldForm
                                         txtId={txtId}
