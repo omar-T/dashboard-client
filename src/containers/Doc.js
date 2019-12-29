@@ -3,8 +3,8 @@ import './Doc.css'
 // import $ from 'jquery'
 // import axios from 'axios'
 import {connect} from 'react-redux'
-import SearchData from './SearchData'
-import Pagination from './Pagination'
+import SearchData from '../components/SearchData'
+import Pagination from '../components/Pagination'
 import {fetchDocs} from '../store/actions/foundDocs'
 import {addError, removeError} from '../store/actions/errors'
 
@@ -18,8 +18,7 @@ class Doc extends Component {
             ictihatDocs: '',
             mevzuatDocs: '',
             page: 1,
-            type: 'ictihat',
-            isChanged: false
+            type: 'ictihat'
         }
     }
 
@@ -63,13 +62,12 @@ class Doc extends Component {
             this.setState({
                 page: 1,
                 loading: true,
-                startSearch: true,
-                isChanged: false
+                startSearch: true
             });
             fetchDocs(type, search, page)
                 .then(() => {
                     const {foundDocs} = this.props;
-                    console.log(foundDocs);
+                    // console.log(foundDocs);
                     if(type === 'ictihat'){
                         this.setState({
                             ictihatDocs: foundDocs
@@ -111,19 +109,57 @@ class Doc extends Component {
     }
 
     handleType = (e) => {
-        const {type} = this.state;
-        if(e.target.name !== type){
+        const {type, search, page} = this.state;
+        const {fetchDocs} = this.props;
+        let typeName = e.target.name;
+
+        if(typeName !== type){
             document.querySelector(`button[name=${type}]`).classList.remove('active');
-            document.querySelector(`button[name=${e.target.name}]`).classList.add('active');
+            document.querySelector(`button[name=${typeName}]`).classList.add('active');
         }
+
         this.setState({
-            type: e.target.name,
-            isChanged: true
+            type: typeName
         });
+
+        if(search !== ''){
+            this.setState({
+                page: 1,
+                loading: true,
+                startSearch: true
+            });
+            
+            fetchDocs(typeName, search, page)
+                .then(() => {
+                    const {foundDocs} = this.props;
+                    // console.log('found docs in handle type', foundDocs);
+                    if(typeName === 'ictihat'){
+                        this.setState({
+                            mevzuatDocs: '',
+                            ictihatDocs: foundDocs
+                        });
+                    }else{
+                        this.setState({
+                            mevzuatDocs: foundDocs,
+                            ictihatDocs: ''
+
+                        });
+                    }
+                    this.setState({
+                        loading: false,
+                        startSearch: false
+                    });
+                })
+                .catch(() => {
+                    return;
+                });
+        }
+
+        
     }
 
     render() {
-        const {search, loading, startSearch, ictihatDocs, mevzuatDocs, page, type, isChanged} = this.state;
+        const {search, loading, startSearch, ictihatDocs, mevzuatDocs, page, type} = this.state;
         const {errors} = this.props;
         return (
             <div className='container-fluid'>
@@ -169,7 +205,6 @@ class Doc extends Component {
                         <SearchData 
                             {...this.props}
                             type={type}
-                            isChanged={isChanged}
                             foundDocs={type === 'ictihat' ? ictihatDocs : mevzuatDocs}
                             loading={loading}
                         />

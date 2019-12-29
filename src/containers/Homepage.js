@@ -9,7 +9,7 @@ import UsersTable from './UsersTable'
 import FiveDaysDocChart from '../components/FiveDaysDocChart'
 import FourWeeksDocChart from '../components/FourWeeksDocChart'
 import MostActiveUsersChart from '../components/MostActiveUsersChart'
-import Doc from '../components/Doc'
+import Doc from './Doc'
 import IctihatDocsEdit from './IctihatDocsEdit'
 import MevzuatDocsEdit from './MevzuatDocsEdit'
 

@@ -1,14 +1,14 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 
-const SearchData = ({loading, foundDocs, type, isChanged}) => {
-    console.log(loading);
+const SearchData = ({loading, foundDocs, type}) => {
+    // console.log(loading);
     if(loading){
         return <h2>Loading...</h2>
     }
 
-    console.log(foundDocs);
-    if(foundDocs.numFound !== 0 && !isChanged){
+    // console.log('found docs ', foundDocs);
+    if(foundDocs.numFound !== 0){
         return (
             <ul className='list-group mb-3'>
                 {foundDocs.docs.map(doc => (
@@ -57,10 +57,6 @@ const SearchData = ({loading, foundDocs, type, isChanged}) => {
                     </li>
                 ))}
             </ul>
-        )
-    }else if(isChanged){
-        return (
-            <div style={{color: 'red'}}>Please Press Enter To Start The Search</div>
         )
     }
     return (
