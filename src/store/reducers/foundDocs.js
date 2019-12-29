@@ -1,4 +1,4 @@
-import {LOAD_DOCS, GET_MEV_DOC, ADD_MEV_INDEX} from '../actionTypes'
+import {LOAD_DOCS, GET_MEV_DOC, SAVE_MEV_DOC} from '../actionTypes'
 
 export default (state = {}, action) => {
     switch(action.type){
@@ -6,10 +6,8 @@ export default (state = {}, action) => {
             return {...action.foundDocs};
         case GET_MEV_DOC:
             return {...state, mevDoc: action.mevDoc}
-        case ADD_MEV_INDEX:
-            console.log(action.maddeObj);
-            console.log(action.maddeIndex);
-            break;
+        case SAVE_MEV_DOC:
+            return {...state, mevDoc: action.mevDoc}
         default:
             return state;
     }

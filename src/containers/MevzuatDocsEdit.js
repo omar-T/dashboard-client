@@ -4,7 +4,8 @@ import ContentEditable from 'react-contenteditable'
 import './MevzuatDocsEdit.css'
 import {connect} from 'react-redux'
 import {addError, removeError} from '../store/actions/errors'
-import {handleGetMevzuatDoc} from '../store/actions/foundDocs'
+import {addSuccess, removeSuccess} from '../store/actions/successes'
+import {handleGetMevzuatDoc, handleSaveMevDoc} from '../store/actions/foundDocs'
 import AddTextFieldForm from '../components/AddTextFieldForm'
 import AddNewMaddeBaslikForm from '../components/AddNewMaddeBaslikForm'
 import AddNewMaddeForm from '../components/AddNewMaddeForm'
@@ -31,29 +32,31 @@ class MevzuatDocsEdit extends Component {
                     text: mevDoc.text,
                     index: mevDoc.index
                 });
-                // console.log(mevDoc);
             })
             .catch(err => {
                 return;
             });
-        // console.log(docId);
     }
 
     componentDidUpdate(){
         if(this.props.errors.message){
             setTimeout(() => {
                 this.props.removeError()
-            }, 4000);
+            }, 3000);
+        }
+        if(this.props.successes.message){
+            setTimeout(() => {
+                this.props.removeSuccess()
+            }, 3000);
         }
     }
 
     handleAddNewMadde = (maddeNumber, type) => {
-        // console.log(maddeNumber);
         const {text, index} = this.state;
         const {docId} = this.props.match.params;
-        const {addError} = this.props;
+        const {addError, addSuccess} = this.props;
 
-        if(maddeNumber === '' || maddeNumber === '0'){
+        if(maddeNumber === '' || maddeNumber === '0' || +maddeNumber < 0){
             return addError('Please Enter A Valid Number !');
         }
         
@@ -105,6 +108,7 @@ class MevzuatDocsEdit extends Component {
             case 'begin':
                 newText.unshift(newMaddeObject);
                 newIndex.unshift(newIndexObj);
+                addSuccess(`${maddeTitle} Added Successfully!`);
                 return this.setState({
                     text: newText,
                     index: newIndex
@@ -114,6 +118,7 @@ class MevzuatDocsEdit extends Component {
                 const maddeIndexInIndex = index.findIndex(ind => ind.madde_id === indexId);
                 newText.splice(maddeIndexInText + 1, 0, newMaddeObject);
                 newIndex.splice(maddeIndexInIndex + 1, 0, newIndexObj);
+                addSuccess(`${maddeTitle} Added Successfully!`);
                 return this.setState({
                     text: newText,
                     index: newIndex
@@ -125,6 +130,7 @@ class MevzuatDocsEdit extends Component {
         // console.log(title, type);
         const {text, index} = this.state;
         const {docId} = this.props.match.params;
+        const {addSuccess} = this.props;
 
         let indexSelect = '';
 
@@ -136,16 +142,12 @@ class MevzuatDocsEdit extends Component {
         }
         titleNum = titleNum === '' ? 1 : titleNum + 1;
         let titleId = `${docId}:pt${titleNum}`;
-        // console.log(titleArr);
-        // console.log(titleNum);
         
         switch(type){
             case 'parent_title':
-                // console.log('parent title');
                 indexSelect = document.querySelector('#indexParentSelect');
                 break;
             case 'child_title':
-                // console.log('child title');
                 indexSelect = document.querySelector('#indexChildSelect');
                 break;
             default:
@@ -177,6 +179,7 @@ class MevzuatDocsEdit extends Component {
             case 'begin':
                 newText.unshift(newTitleObject);
                 newIndex.unshift(newIndexObj);
+                addSuccess(`${title} Added Successfully!`);
                 return this.setState({
                     text: newText,
                     index: newIndex
@@ -186,6 +189,7 @@ class MevzuatDocsEdit extends Component {
                 const titleIndexInIndex = index.findIndex(ind => ind.madde_id === indexId);
                 newText.splice(titleIndexInText + 1, 0, newTitleObject);
                 newIndex.splice(titleIndexInIndex + 1, 0, newIndexObj);
+                addSuccess(`${title} Added Successfully!`);
                 return this.setState({
                     text: newText,
                     index: newIndex
@@ -201,20 +205,19 @@ class MevzuatDocsEdit extends Component {
 
     handleDelete = (t_id, prefix, ind) => {
         const {text, index} = this.state;
+        const {addError} = this.props;
         let newText = [];
         let newIndex = [];
         switch(prefix){
             case 'title':
-                // console.log('I am madde title: ', t_id);
                 newText = text.filter(txt => txt.id !== t_id);
                 newIndex = index.filter(ind => ind.madde_id !== t_id);
-                // console.log('after delete index: ', newIndex);
+                addError(`Madde Deleted Successfully!`);
                 return this.setState({
                     text: newText,
                     index: newIndex
                 });
             case 'madde_baslik':
-                // console.log('I am madde baslik: ', t_id);
                 newText = text.map(txt => {
                     if(txt.id === t_id){
                         return {
@@ -224,6 +227,7 @@ class MevzuatDocsEdit extends Component {
                     }
                     return {...txt}
                 });
+                addError(`Madde Baslik Deleted Successfully!`);
                 return this.setState({
                     text: newText
                 });
@@ -231,7 +235,6 @@ class MevzuatDocsEdit extends Component {
                 newText = text.map(txt => {
                     if(txt.id === t_id){
                         let newTxt = txt.text.filter((t, i) => i !== ind);
-                        // console.log(newTxt);
                         return {
                             ...txt, 
                             text: [...newTxt]
@@ -239,7 +242,7 @@ class MevzuatDocsEdit extends Component {
                     }
                     return {...txt}
                 });
-                // console.log(newText);
+                addError(`Text Deleted Successfully!`);
                 return this.setState({
                     text: newText
                 });
@@ -263,6 +266,7 @@ class MevzuatDocsEdit extends Component {
                     newText = text.filter(txt => txt.id !== t_id);
                     newIndex = index.filter(ind => ind.madde_id !== t_id);
                 }
+                addError(`Title Deleted Successfully!`);
                 return this.setState({
                     text: newText,
                     index: newIndex.length === 0 ? index : newIndex
@@ -272,13 +276,12 @@ class MevzuatDocsEdit extends Component {
 
     handleUpdate = (t_id, prefix, ind) => {
         const {text, index} = this.state;
+        const {addSuccess} = this.props;
         let newText = [];
         let newIndex = [];
-        // console.log(t_id, prefix, ind);
         switch(prefix){
             case 'title':
                 const newTitle = document.querySelector(`[name='${t_id}_title']`).innerText;
-                // console.log(newTitle);
                 newText = text.map(txt => {
                     if(txt.id === t_id){
                         return {
@@ -297,13 +300,13 @@ class MevzuatDocsEdit extends Component {
                     }
                     return {...ind}
                 });
+                addSuccess('Madde Title Updated Successfully.');
                 return this.setState({
                     text: newText,
                     index: newIndex
                 });
             case 'madde_baslik':
                 const newMaddeBaslik = document.querySelector(`[name='${t_id}_madde_baslik']`).innerText;
-                // console.log(newMaddeBaslik);
                 newText = text.map(txt => {
                     if(txt.id === t_id){
                         return {
@@ -327,6 +330,7 @@ class MevzuatDocsEdit extends Component {
                     }
                     return {...ind}
                 });
+                addSuccess('Madde Baslik Updated Successfully.');
                 return this.setState({
                     text: newText,
                     index: newIndex
@@ -337,14 +341,11 @@ class MevzuatDocsEdit extends Component {
                     newIndex = [...index];
                     const parentIndex = newIndex.findIndex((ind => ind.madde_id === t_id));
                     newIndex[parentIndex + ind].text = updatedText;
-                    // console.log(newIndex);
                 }
                 newText = text.map(txt => {
                     if(txt.id === t_id){
                         let newTxt = txt.text.map((t, i) => {
-                            // console.log(txt);
                             if(i === ind){
-                                // console.log('Txt ', t);
                                 return {
                                     ...t,
                                     text: updatedText
@@ -359,6 +360,7 @@ class MevzuatDocsEdit extends Component {
                     }
                     return {...txt}
                 });
+                addSuccess('Title Updated Successfully.');
                 return this.setState({
                     text: newText,
                     index: newIndex.length === 0 ? index : newIndex
@@ -368,8 +370,8 @@ class MevzuatDocsEdit extends Component {
 
     handleAddNewTextField = (newTextField, txtId, index, e) => {
         const {text} = this.state;
+        const {addSuccess} = this.props;
         txtId = txtId.replace('_', ':');
-        // console.log(newTextField, txtId, index);
         let newText = text.map(txt => {
             if(txt.id === txtId){
                 txt.text.push({
@@ -380,7 +382,7 @@ class MevzuatDocsEdit extends Component {
             }
             return {...txt}
         });
-        // console.log(newText);
+        addSuccess('Text Added Successfully.');
         this.setState({
             text: newText
         });
@@ -388,8 +390,9 @@ class MevzuatDocsEdit extends Component {
 
     handleAddNewMaddeBaslik = (madde_baslik, txtId, e) => {
         const {text} = this.state;
+        const {addSuccess} = this.props;
+        
         txtId = txtId.replace('_', ':');
-        console.log(madde_baslik, txtId);
         let newText = text.map(txt => {
             if(txt.id === txtId){
                 const newMaddeBaslik = {
@@ -404,7 +407,7 @@ class MevzuatDocsEdit extends Component {
             }
             return {...txt}
         });
-        console.log(newText);
+        addSuccess('Madde Baslik Added Successfully.');
         this.setState({
             text: newText
         });
@@ -414,7 +417,6 @@ class MevzuatDocsEdit extends Component {
         const {editable} = this.state;
         const txtId = t.id.replace(':', '_');
         let mainTitle = t.text.map((pt, ind, arr) => {
-                // const title = `<strong>${pt.text}</strong>`;
                 return (
                     <Fragment key={ind}>
                         {!editable &&
@@ -543,23 +545,37 @@ class MevzuatDocsEdit extends Component {
         );
     }
 
+    handleSaveDoc = (e) => {
+        e.preventDefault();
+        const {text, index} = this.state;
+        const {handleSaveMevDoc, addSuccess} = this.props;
+        const {mevDoc} = this.props.foundDocs;
+        let newMevDoc = {
+            ...mevDoc,
+            text,
+            index,
+        }
+        handleSaveMevDoc(newMevDoc)
+            .then(() => {
+                console.log('Success!');
+                addSuccess('Doc Saved Successfully.');
+            })
+            .catch(err => {
+                return;
+            });
+    }
+
     render() {
         const {head, text, index, editable} = this.state;
         const {mevDoc} = this.props.foundDocs;
-        const {errors} = this.props;
-        console.log(text);
-        // let lastMaddeId = '';
+        const {errors, successes} = this.props;
         let maddeArr = [];
-        // let newIndex = [];
         let firstMaddeNum = 0;
         if(text.length !== 0){
             maddeArr = text.filter(t => t.type === 'madde');
             firstMaddeNum = maddeArr[0].id.split(':')[1].slice(1);
-            // lastMaddeId = maddeArr[maddeArr.length - 1].id;
-            // newIndex = index.filter(ind => ind.madde_id !== lastMaddeId);
-            // console.log('new index: ', newIndex);
         }
-        let mevText = text.map(t => {
+        let mevText = text.map((t, i) => {
             switch(t.type){
                 case 'parent_title':
                     return this.prepareTitleText(t);
@@ -577,15 +593,17 @@ class MevzuatDocsEdit extends Component {
                     return this.prepareMaddeText(t, 'geciciMadde');
 
                 default:
-                    return (<br/>);
+                    return <br key={i}/>;
             }
         });
-        // console.log(mevText);
 
         return (
             <div className='container-fluid'>
                 {errors.message && 
                     <div className='alert alert-danger'>{errors.message}</div>
+                }
+                {successes.message && 
+                    <div className='alert alert-success'>{successes.message}</div>
                 }
                 <div className='container bg-white py-2'>
                     <nav className='navbar doc_navbar pl-0 pb-0 mb-2'>
@@ -758,7 +776,10 @@ class MevzuatDocsEdit extends Component {
                             <div className='float-right'>
                                 {editable ?
                                     <button className='btn btn-outline-dark' onClick={this.toggleEditable}>Enable Editing</button> :
-                                    <button className='btn btn-outline-danger mr-1' onClick={this.toggleEditable}>Disable Editing</button>
+                                    <Fragment>
+                                        <button className='btn btn-outline-success mr-1' onClick={this.handleSaveDoc}>Save Doc</button>
+                                        <button className='btn btn-outline-danger' onClick={this.toggleEditable}>Disable Editing</button>
+                                    </Fragment>
                                 }
                             </div>
                             <h5>
@@ -777,8 +798,16 @@ class MevzuatDocsEdit extends Component {
 function mapStateToProps(state){
     return {
         errors: state.errors,
+        successes: state.successes,
         foundDocs: state.foundDocs
     }
 }
 
-export default connect(mapStateToProps, {handleGetMevzuatDoc, addError, removeError})(MevzuatDocsEdit);
+export default connect(mapStateToProps, {
+    handleGetMevzuatDoc, 
+    handleSaveMevDoc, 
+    addError, 
+    removeError, 
+    addSuccess, 
+    removeSuccess
+})(MevzuatDocsEdit);

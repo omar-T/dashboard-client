@@ -27,7 +27,7 @@ export const LOAD_LOGS = 'LOAD_LOGS'
 // actions for docs
 export const LOAD_DOCS = 'LOAD_DOCS'
 export const GET_MEV_DOC = 'GET_MEV_DOC'
-export const ADD_MEV_INDEX = 'ADD_MEV_INDEX'
+export const SAVE_MEV_DOC = 'SAVE_MEV_DOC'
 
 // actions for doc relations
 export const LOAD_RELATIONS = 'LOAD_RELATIONS'
