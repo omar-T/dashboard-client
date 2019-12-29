@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {BrowserRouter as Router} from 'react-router-dom'
 import Main from './Main'
 import Navbar from './Navbar'
-import SideNavbar from './SideNavbar'
+import SideNavbar from '../components/SideNavbar'
 import Homepage from './Homepage'
 
 const App = (props) => {

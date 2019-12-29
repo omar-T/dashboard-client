@@ -6,12 +6,12 @@ import {fetchLogs} from '../store/actions/logs'
 import {fetchUsers} from '../store/actions/users'
 import AdminsTable from './AdminsTable'
 import UsersTable from './UsersTable'
-import FiveDaysDocChart from './FiveDaysDocChart'
-import FourWeeksDocChart from './FourWeeksDocChart'
-import MostActiveUsersChart from './MostActiveUsersChart'
+import FiveDaysDocChart from '../components/FiveDaysDocChart'
+import FourWeeksDocChart from '../components/FourWeeksDocChart'
+import MostActiveUsersChart from '../components/MostActiveUsersChart'
 import Doc from '../components/Doc'
-import IctihatDocsEdit from '../components/IctihatDocsEdit'
-import MevzuatDocsEdit from '../components/MevzuatDocsEdit'
+import IctihatDocsEdit from './IctihatDocsEdit'
+import MevzuatDocsEdit from './MevzuatDocsEdit'
 
 class Homepage extends Component {
     componentDidMount(){

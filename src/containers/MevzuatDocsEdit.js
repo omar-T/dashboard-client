@@ -5,10 +5,10 @@ import './MevzuatDocsEdit.css'
 import {connect} from 'react-redux'
 import {addError, removeError} from '../store/actions/errors'
 import {handleGetMevzuatDoc} from '../store/actions/foundDocs'
-import AddTextFieldForm from './AddTextFieldForm'
-import AddNewMaddeBaslikForm from './AddNewMaddeBaslikForm'
-import AddNewMaddeForm from './AddNewMaddeForm'
-import AddNewTitleForm from './AddNewTitleForm'
+import AddTextFieldForm from '../components/AddTextFieldForm'
+import AddNewMaddeBaslikForm from '../components/AddNewMaddeBaslikForm'
+import AddNewMaddeForm from '../components/AddNewMaddeForm'
+import AddNewTitleForm from '../components/AddNewTitleForm'
 
 class MevzuatDocsEdit extends Component {
     constructor(props){
