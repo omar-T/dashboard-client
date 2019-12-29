@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react'
 import {Link, Element} from 'react-scroll'
 import ContentEditable from 'react-contenteditable'
 import './MevzuatDocsEdit.css'
-// import SanitizeHtml from 'sanitize-html'
 import {connect} from 'react-redux'
 import {addError, removeError} from '../store/actions/errors'
 import {handleGetMevzuatDoc} from '../store/actions/foundDocs'
@@ -16,7 +15,7 @@ class MevzuatDocsEdit extends Component {
         super(props);
         this.state = {
             head: '',
-            text: [],
+            text: [],   
             index: [],
             editable: true
         }
@@ -139,7 +138,7 @@ class MevzuatDocsEdit extends Component {
         let titleId = `${docId}:pt${titleNum}`;
         // console.log(titleArr);
         // console.log(titleNum);
-
+        
         switch(type){
             case 'parent_title':
                 // console.log('parent title');
