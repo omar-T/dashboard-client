@@ -74,7 +74,7 @@ class Homepage extends Component {
                     <Route
                         path='/docs/:docId' render={(props) => {
                             const {type} = this.props.location.state;
-                            console.log(type);
+                            // console.log(type);
                             if(type === 'ictihat'){
                                 return <IctihatDocsEdit {...props}/>
                             }else{

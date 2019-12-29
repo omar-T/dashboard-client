@@ -6,7 +6,7 @@ import {connect} from 'react-redux'
 import Autocomplete from './Autocomplete'
 import mevzuatArr from '../mevzuatArr.json'
 import {addError, removeError} from '../store/actions/errors'
-import {fetchRelationsModel, emptyDocRelations, addRelation, removeRelation} from '../store/actions/docRelations'
+import {fetchRelationsModel, emptyDocRelations, addRelation, removeRelation, updateRelation} from '../store/actions/docRelations'
 import {handleGetMevzuatDoc} from '../store/actions/foundDocs'
 
 class DocsEdit extends Component {
@@ -26,15 +26,15 @@ class DocsEdit extends Component {
     componentDidMount(){
         const {docId} = this.props.match.params;
         const {doc} = this.props.location.state;
-        console.log(docId);
+        // console.log(docId);
         this.setState({
             loading: true
         });
         this.props.fetchRelationsModel(docId)
             .then(() => {
-                console.log(this.props.docRelations);
+                // console.log(this.props.docRelations);
                 let ictihatMev = [...this.props.docRelations.mevzuat];
-                console.log(ictihatMev);
+                // console.log(ictihatMev);
                 this.setState({
                     loading: false,
                     ictihatMev,
@@ -44,7 +44,7 @@ class DocsEdit extends Component {
             })
             .catch((err) => {
                 const {emptyDocRelations} = this.props;
-                console.log(err);
+                // console.log(err);
                 emptyDocRelations();
                 this.setState({
                     loading: false,
@@ -64,13 +64,13 @@ class DocsEdit extends Component {
 
     removeRelation = (mev_type, mev_id, madde_id) => {
         const {docId} = this.props.match.params;
-        console.log(mev_type);
-        console.log(mev_id);
-        console.log(madde_id);
+        // console.log(mev_type);
+        // console.log(mev_id);
+        // console.log(madde_id);
         this.props.removeRelation(docId, mev_type, mev_id, madde_id)
             .then(() => {
-                console.log('after remove');
-                console.log(this.props.docRelations);
+                // console.log('after remove');
+                // console.log(this.props.docRelations);
                 this.setState({
                     ictihatMev: this.props.docRelations.mevzuat
                 });
@@ -81,13 +81,13 @@ class DocsEdit extends Component {
     }
 
     handleClick = (mevDocId) => {
-        console.log(mevDocId);
+        // console.log(mevDocId);
         this.props.handleGetMevzuatDoc(mevDocId)
             .then(() => {
                 const {mevDoc} = this.props.foundDocs;
-                console.log(mevDoc.text);
+                // console.log(mevDoc.text);
                 let mevDocEntries = mevDoc.text.filter(txt => txt.type === 'madde');
-                console.log(mevDocEntries);
+                // console.log(mevDocEntries);
                 this.setState({
                     mevDocEntries
                 });
@@ -99,43 +99,128 @@ class DocsEdit extends Component {
 
     handleAddNewRelation = () => {
         const {docId} = this.props.match.params;
-        const {docRelations, addRelation, addError} = this.props;
+        const {docRelations, addRelation, updateRelation, addError} = this.props;
         const {mevDoc} = this.props.foundDocs;
         const {ictihatMev} = this.state;
         const select = document.querySelector('#inputGroupSelectEntry');
         const maddeId = select.value;
         const maddeTitle = select.options[select.selectedIndex].innerText;
-        
+        // console.log('before update ', docRelations);
         if(+maddeId === 0){
             return addError('Please Search For A Doc First !');
         }
-        console.log(ictihatMev);
+        // console.log(ictihatMev);
+        let mevzuat = [{
+            type: mevDoc.type,
+            content: [{
+                mevId: mevDoc.id,
+                mevName: mevDoc.name,
+                maddeList: [{
+                    id: maddeId,
+                    title: maddeTitle
+                }]
+            }]
+        }];
+        let newIctihatMev = [];
         if(ictihatMev !== ''){
+            let newMevzuat = [];
             let foundMev = ictihatMev.find(mev => mev.type === mevDoc.type);
-            console.log(foundMev, ' after first find');
             if(foundMev){
                 let foundContent = foundMev.content.find(cont => cont.mevId === mevDoc.id);
-                console.log(foundContent);
                 if(foundContent){
                     let foundMadde = foundContent.maddeList.find(madde => madde.id === maddeId);
-                    console.log(foundMadde);
                     if(foundMadde){
                         return addError('The Choosen Entry Is already Found... Please Choose Another.');
                     }
+                    newMevzuat = ictihatMev.map(mev => {
+                        if(mev.type === mevDoc.type){
+                            let newContent = mev.content.map(cont => {
+                                if(cont.mevId === mevDoc.id){
+                                    cont.maddeList.push({
+                                        id: maddeId,
+                                        title: maddeTitle
+                                    });
+                                    return {...cont};
+                                }
+                                return {...cont};
+                            });
+                            return {
+                                ...mev, 
+                                content: [...newContent]
+                            }
+                        }
+                        return {...mev}
+                    });
+                    return updateRelation(docId, newMevzuat)
+                        .then(() => {
+                            // console.log('after update ', this.props.docRelations);
+                            newIctihatMev = [...this.props.docRelations.mevzuat];
+                            return this.setState({
+                                ictihatMev: newIctihatMev
+                            });
+                        })
+                        .catch(err => {
+                            return;
+                        });
                 }
-            }
-        }
-        addRelation(docId, docRelations, mevDoc, maddeId, maddeTitle)
-            .then(() => {
-                console.log(this.props.docRelations);
-                let ictihatMev = [...this.props.docRelations.mevzuat];
-                this.setState({
-                    ictihatMev
+                newMevzuat = ictihatMev.map(mev => {
+                    if(mev.type === mevDoc.type){
+                        return {
+                            ...mev,
+                            content: [
+                                ...mev.content,
+                                {
+                                    mevId: mevDoc.id,
+                                    mevName: mevDoc.name,
+                                    maddeList: [{
+                                        id: maddeId,
+                                        title: maddeTitle
+                                    }]
+                                }
+                            ]
+                        }
+                    }
+                    return {...mev};
                 });
-            })
-            .catch(err => {
-                return;
-            });
+                return updateRelation(docId, newMevzuat)
+                    .then(() => {
+                        newIctihatMev = [...this.props.docRelations.mevzuat];
+                        return this.setState({
+                            ictihatMev: newIctihatMev
+                        });
+                    })
+                    .catch(err => {
+                        return;
+                    });
+            }
+            newMevzuat = [...docRelations.mevzuat, ...mevzuat];
+            return updateRelation(docId, newMevzuat)
+                .then(() => {
+                    newIctihatMev = [...this.props.docRelations.mevzuat];
+                    return this.setState({
+                        ictihatMev: newIctihatMev
+                    });
+                })
+                .catch(err => {
+                    return;
+                });
+        }else{
+            const newIctihatRel = {
+                iliskili_karar: [],
+                mevzuat,
+                relID: docId
+            }
+            return addRelation(docId, newIctihatRel)
+                .then(() => {
+                    newIctihatMev = [...this.props.docRelations.mevzuat];
+                    return this.setState({
+                        ictihatMev: newIctihatMev
+                    });
+                })
+                .catch(err => {
+                    return;
+                });
+        }
     }
 
     render() {
@@ -185,61 +270,62 @@ class DocsEdit extends Component {
             <option key={entry.id} value={entry.id}>{entry.title}</option>
         ));
         return (
-            <div className='container-fluid bg-white py-3'>
+            <div className='container-fluid  '>
                 {errors.message && 
                     <div className='alert alert-danger'>{errors.message}</div>
                 }
-                <div className='row py-3'>
-                    <div className='col-4'>
-                        <h4>Relations:</h4>
-                        {loading ? 
-                            <div>Loading...</div> : 
-                            (Object.keys(docRelations).length === 0 || ictihatMev === '') ? 
-                                <div><em>No Relations Found</em></div> :
-                                <ul className='relation-list'>
-                                    {ictihatMevList}
-                                </ul>
-                        }
+                <div className='container bg-white'>
+                    <div className='row py-3'>
+                        <div className='col-4'>
+                            <h4>Relations:</h4>
+                            {loading ? 
+                                <div>Loading...</div> : 
+                                (Object.keys(docRelations).length === 0 || ictihatMev === '') ? 
+                                    <div><em>No Relations Found</em></div> :
+                                    <ul className='relation-list'>
+                                        {ictihatMevList}
+                                    </ul>
+                            }
+                        </div>
                     </div>
-                </div>
-                
-                <button className='btn btn-success btn-sm mb-2' data-toggle="collapse" data-target="#collapseAddRelation" aria-expanded="false" aria-controls="collapseAddRelation">Add New Relation</button>
-                
-                <div className='collapse border-left border-success' id='collapseAddRelation'>
-                    <div className='card border-0'>
-                        <div className='card-body'>
-                            <div className='row'>
-                                <div className='d-flex flex-column col-6 col-lg-4'>
-                                    <label>Search Mevzuat:</label>
-                                    <Autocomplete 
-                                        suggestions={mevzuatArr}
-                                        handleClick={this.handleClick}
-                                    />
-                                </div>
-                                <div className='d-flex flex-column col-6 col-lg-4'>
-                                    <label htmlFor='inputGroupSelectEntry'>Choose Entry:</label>
-                                    <select className='custom-select' id='inputGroupSelectEntry'>
-                                        {mevDocOptions.length !== 0 ?
-                                            mevDocOptions : 
-                                            <option value='0'>Please Search First...</option>
-                                        }
-                                    </select>
-                                </div>
-                                <div className='d-flex col-6 col-lg-4 mt-2 mt-lg-0'>
-                                    <button className='btn btn-success align-self-end' onClick={this.handleAddNewRelation}>Add New Relation</button>
+                    
+                    <button className='btn btn-success btn-sm mb-2' data-toggle="collapse" data-target="#collapseAddRelation" aria-expanded="false" aria-controls="collapseAddRelation">Add New Relation</button>
+                    <div className='collapse border-left border-success' id='collapseAddRelation'>
+                        <div className='card border-0'>
+                            <div className='card-body'>
+                                <div className='row'>
+                                    <div className='d-flex flex-column col-6 col-lg-4'>
+                                        <label>Search Mevzuat:</label>
+                                        <Autocomplete 
+                                            suggestions={mevzuatArr}
+                                            handleClick={this.handleClick}
+                                        />
+                                    </div>
+                                    <div className='d-flex flex-column col-6 col-lg-4'>
+                                        <label htmlFor='inputGroupSelectEntry'>Choose Entry:</label>
+                                        <select className='custom-select' id='inputGroupSelectEntry'>
+                                            {mevDocOptions.length !== 0 ?
+                                                mevDocOptions : 
+                                                <option value='0'>Please Search First...</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div className='d-flex col-6 col-lg-4 mt-2 mt-lg-0'>
+                                        <button className='btn btn-success align-self-end' onClick={this.handleAddNewRelation}>Add New Relation</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <hr/>
-                <div>
-                    <h4><strong>{head}</strong></h4>
-                    <ContentEditable
-                        tagName='p'
-                        html={text}
-                        disabled={editable}
-                    />
+                    <hr/>    
+                    <div>
+                        <h4><strong>{head}</strong></h4>
+                        <ContentEditable
+                            tagName='p'
+                            html={text}
+                            disabled={editable}
+                        />
+                    </div>
                 </div>
             </div>
         )
@@ -254,4 +340,13 @@ function mapStateToProps(state){
     }
 }
 
-export default connect(mapStateToProps, {fetchRelationsModel, emptyDocRelations, addRelation, removeRelation, handleGetMevzuatDoc, addError, removeError})(DocsEdit);
+export default connect(mapStateToProps, {
+    fetchRelationsModel, 
+    emptyDocRelations, 
+    addRelation, 
+    removeRelation, 
+    updateRelation, 
+    handleGetMevzuatDoc, 
+    addError, 
+    removeError
+})(DocsEdit);

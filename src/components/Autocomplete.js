@@ -30,19 +30,24 @@ class Autocomplete extends Component {
     onChange = e => {
         const { suggestions } = this.props;
         let userInput = e.currentTarget.value;
-        const filteredSuggestions = suggestions.filter(suggestion => 
-            suggestion.name.toLocaleLowerCase('tr-TR').indexOf(userInput.toLocaleLowerCase('tr-TR')) > -1
-        );
-        // console.log(filteredSuggestions);
-        // Update the user input and filtered suggestions, reset the active
-        // suggestion and make sure the suggestions are shown
+        // console.log(userInput.length);
         this.setState({
-            activeSuggestion: 0,
-            filteredSuggestions,
-            showSuggestions: false,
-            chooseSuggestion: false,
             userInput: e.currentTarget.value
         });
+        if(userInput.length > 3){
+            const filteredSuggestions = suggestions.filter(suggestion => 
+                suggestion.name.toLocaleLowerCase('tr-TR').indexOf(userInput.toLocaleLowerCase('tr-TR')) > -1
+            );
+            // console.log(filteredSuggestions);
+            // Update the user input and filtered suggestions, reset the active
+            // suggestion and make sure the suggestions are shown
+            this.setState({
+                activeSuggestion: 0,
+                filteredSuggestions,
+                showSuggestions: false,
+                chooseSuggestion: false
+            });
+        }
     };
 
     // Event fired when the user clicks on a suggestion
@@ -70,7 +75,7 @@ class Autocomplete extends Component {
         const {handleClick} = this.props;
         // User pressed the enter key, update the input and close the
         // suggestions
-        console.log(filteredSuggestions.length);
+        // console.log(filteredSuggestions.length);
         if (e.keyCode === 13) {
             if(!chooseSuggestion){
                 this.setState({
@@ -78,7 +83,7 @@ class Autocomplete extends Component {
                     showSuggestions: true,
                     chooseSuggestion: true,
                 });
-                console.log('show suggestions');
+                // console.log('show suggestions');
             }else if(chooseSuggestion && filteredSuggestions.length > 0){
                 this.setState({
                     userInput: filteredSuggestions[activeSuggestion].name,
@@ -86,7 +91,7 @@ class Autocomplete extends Component {
                     showSuggestions: false,
                     chooseSuggestion: false,
                 });
-                console.log('pick suggestion');
+                // console.log('pick suggestion');
                 const docId = document.querySelector('.suggestion-active').getAttribute('data-key');
                 handleClick(docId);
             }
@@ -94,7 +99,7 @@ class Autocomplete extends Component {
         // User pressed the up arrow, decrement the index
         else if (e.keyCode === 38) {
             if (activeSuggestion === 0) {
-                console.log('from inside if arrow top', activeSuggestion);
+                // console.log('from inside if arrow top', activeSuggestion);
                 return;
             }
             this.setState({ activeSuggestion: activeSuggestion - 1 });
@@ -102,7 +107,7 @@ class Autocomplete extends Component {
         // User pressed the down arrow, increment the index
         else if (e.keyCode === 40) {
             if (activeSuggestion === filteredSuggestions.length - 1) {
-                console.log('from inside if arrow bot', activeSuggestion);
+                // console.log('from inside if arrow bot', activeSuggestion);
                 return;
             }
             this.setState({ activeSuggestion: activeSuggestion + 1 });
