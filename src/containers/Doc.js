@@ -208,11 +208,13 @@ class Doc extends Component {
                             type={type}
                             foundDocs={type === 'ictihat' ? ictihatDocs : mevzuatDocs}
                             loading={loading}
+                            search={search}
                         />
                         
                         <Pagination 
                             numFound={type === 'ictihat' ? ictihatDocs.numFound : mevzuatDocs.numFound}
                             page={page}
+                            search={search}
                             handleClickedPage={this.handleClickedPage}
                         />
                     </div>
