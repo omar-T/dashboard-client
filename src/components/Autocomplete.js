@@ -47,6 +47,10 @@ class Autocomplete extends Component {
                 showSuggestions: false,
                 chooseSuggestion: false
             });
+        }else{
+            this.setState({
+                filteredSuggestions: []
+            });
         }
     };
 

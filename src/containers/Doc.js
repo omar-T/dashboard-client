@@ -46,6 +46,11 @@ class Doc extends Component {
     }
     
     handleChange = (e) => {
+        if(e.target.value === ''){
+            this.setState({
+                startSearch: false
+            });
+        }
         this.setState({
             [e.target.name]: e.target.value
         });
@@ -78,8 +83,7 @@ class Doc extends Component {
                         });
                     }
                     this.setState({
-                        loading: false,
-                        startSearch: false
+                        loading: false
                     });
                 })
                 .catch(() => {
@@ -112,7 +116,6 @@ class Doc extends Component {
         const {type, search, page} = this.state;
         const {fetchDocs} = this.props;
         let typeName = e.target.name;
-
         if(typeName !== type){
             document.querySelector(`button[name=${type}]`).classList.remove('active');
             document.querySelector(`button[name=${typeName}]`).classList.add('active');
@@ -147,15 +150,13 @@ class Doc extends Component {
                     }
                     this.setState({
                         loading: false,
-                        startSearch: false
+                        // startSearch: false
                     });
                 })
                 .catch(() => {
                     return;
                 });
         }
-
-        
     }
 
     render() {
@@ -199,7 +200,7 @@ class Doc extends Component {
                         </ul>
                     </nav>
                 </div>
-                {(startSearch || (ictihatDocs !== '') || (mevzuatDocs !== '')) &&
+                {(startSearch) &&
                     <div>
                         <h2>Founded Docs</h2>
                         <SearchData 

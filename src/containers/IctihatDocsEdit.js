@@ -360,14 +360,14 @@ class DocsEdit extends Component {
                         <div className='card border-0'>
                             <div className='card-body'>
                                 <div className='row'>
-                                    <div className='d-flex flex-column col-12 col-lg-4'>
+                                    <div className='d-flex flex-column col-12 col-lg-6'>
                                         <label>Search Mevzuat:</label>
                                         <Autocomplete 
                                             suggestions={mevzuatArr}
                                             handleClick={this.handleClick}
                                         />
                                     </div>
-                                    <div className='d-flex flex-column col-12 col-lg-4 mt-2 mt-lg-0'>
+                                    <div className='d-flex flex-column col-12 col-lg-6 mt-2 mt-lg-0'>
                                         <label htmlFor='inputGroupSelectEntry'>Choose Entry:</label>
                                         <select className='custom-select' id='inputGroupSelectEntry'>
                                             {mevDocOptions.length !== 0 ?
@@ -376,7 +376,7 @@ class DocsEdit extends Component {
                                             }
                                         </select>
                                     </div>
-                                    <div className='d-flex col-12 col-lg-4 mt-2 mt-lg-0'>
+                                    <div className='d-flex col-12 col-lg-6 mt-2'>
                                         <button className='btn btn-success align-self-end' onClick={this.handleAddNewRelation}>Add New Relation</button>
                                     </div>
                                 </div>
