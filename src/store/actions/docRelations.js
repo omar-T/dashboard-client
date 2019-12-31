@@ -1,5 +1,6 @@
 import axios from 'axios'
 import {LOAD_RELATIONS, EMPTY_DOC_RELATIONS, ADD_RELATION, DELETE_RELATION, UPDATE_RELATION} from '../actionTypes'
+import {app_config} from '../../config'
 
 export const loadRelations = relationsModel => ({
     type: LOAD_RELATIONS,
@@ -27,14 +28,14 @@ export const emptyDocRelations = () => ({
 export const fetchRelationsModel = (docId) => {
     return dispatch => {
         return new Promise((resolve, reject) => {
-            return axios.get(`https://relation-adalethanim.herokuapp.com/relation/ictihat/${docId}`)
+            return axios.get(`${app_config.rel_api_url}/relation/ictihat/${docId}`)
                 .then(res => {
-                    console.log(res.data);
+                    // console.log(res.data);
                     dispatch(loadRelations(res.data));
                     resolve();
                 })
                 .catch(err => {
-                    console.log(err.response.data.msg);
+                    // console.log(err.response.data.msg);
                     reject(err.response.data.msg);
                 });
         });
@@ -43,17 +44,17 @@ export const fetchRelationsModel = (docId) => {
 
 export const addRelation = (docId, newIctihatRel) => {
     return dispatch => {
-        console.log(newIctihatRel);
+        // console.log(newIctihatRel);
         return new Promise((resolve, reject) => {
-            return axios.post(`http://localhost:4000/relation/ictihat/${docId}`, newIctihatRel)
+            return axios.post(`${app_config.rel_api_url}/relation/ictihat/${docId}`, newIctihatRel)
                 .then(res => {
-                    console.log(res);
+                    // console.log(res);
                     dispatch(add(newIctihatRel));
                     resolve();
                 })
                 .catch(err => {
-                    console.log(err);
-                    reject();
+                    // console.log(err);
+                    reject(err);
                 });
         });
     }
@@ -61,16 +62,16 @@ export const addRelation = (docId, newIctihatRel) => {
 
 export const removeRelation = (docId) => {
     return dispatch => {
-        console.log(docId);
+        // console.log(docId);
         return new Promise((resolve, reject) => {
-            return axios.delete(`http://localhost:4000/relation/ictihat/${docId}`)
+            return axios.delete(`${app_config.rel_api_url}/relation/ictihat/${docId}`)
                 .then(res => {
                     dispatch(remove());
                     resolve();
                 })
                 .catch(err => {
-                    console.log(err);
-                    reject();
+                    // console.log(err);
+                    reject(err);
                 });
         });
     }
@@ -78,17 +79,17 @@ export const removeRelation = (docId) => {
 
 export const updateRelation = (docId, newMev) => {
     return dispatch => {
-        console.log('from update ', newMev);
+        // console.log('from update ', newMev);
         return new Promise((resolve, reject) => {
-            return axios.put(`http://localhost:4000/relation/ictihat/${docId}`, newMev)
+            return axios.put(`${app_config.rel_api_url}/relation/ictihat/${docId}`, newMev)
                 .then(res => {
-                    console.log('from update res: ', res);
+                    // console.log('from update res: ', res);
                     dispatch(update(res.data));
                     resolve();
                 })
                 .catch(err => {
-                    console.log(err);
-                    reject();
+                    // console.log(err);
+                    reject(err);
                 });
         });
     }

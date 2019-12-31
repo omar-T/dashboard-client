@@ -1,5 +1,7 @@
 import {apiCall} from '../../services/api'
+// import axios from 'axios' 
 import {LOAD_DOCS, GET_MEV_DOC, SAVE_MEV_DOC} from '../actionTypes'
+import {app_config} from '../../config'
 
 export const loadDocs = foundDocs => ({
     type: LOAD_DOCS,
@@ -19,7 +21,7 @@ export const saveMevDoc = mevDoc => ({
 export const fetchDocs = (type, search, page) => {
     return dispatch => {
         return new Promise((resolve, reject) => {
-            return apiCall('get', `https://aislaw-dev2.herokuapp.com/search/${type}?query=${search}&page=${page}`)
+            return apiCall('get', `${app_config.api_url}/search/${type}?query=${search}&page=${page}`)
                 .then(res => {
                     // console.log(`https://aislaw-dev2.herokuapp.com/search/${type}?query=${search}&page=${page}`);
                     // console.log(res);
@@ -38,7 +40,7 @@ export const fetchDocs = (type, search, page) => {
 export const handleGetMevzuatDoc = (docId) => {
     return dispatch => {
         return new Promise((resolve, reject) => {
-            return apiCall('get', `https://aislaw-dev2.herokuapp.com/docs/dev/mevzuat/${docId}`)
+            return apiCall('get', `${app_config.api_url}/docs/dev/mevzuat/${docId}`)
                 .then(res => {
                     // console.log(res.response);
                     dispatch(getMevzuatDoc(res.response));
@@ -55,10 +57,10 @@ export const handleGetMevzuatDoc = (docId) => {
 export const handleSaveMevDoc = (mevDoc) => {
     return dispatch => {
         return new Promise((resolve, reject) => {
-            return apiCall('get', '/api/users')
+            return apiCall('put', `http://localhost:4500/mevzuat/${mevDoc.id}`, mevDoc)
                 .then(res => {
-                    console.log(mevDoc);
-                    dispatch(saveMevDoc(mevDoc));
+                    // console.log(res);
+                    dispatch(saveMevDoc(res));
                     resolve();
                 })
                 .catch(err => {

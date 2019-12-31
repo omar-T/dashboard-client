@@ -39,7 +39,6 @@ export default class AddNewTitleForm extends Component {
                         type='text'
                         required
                         placeholder='Title...'
-                        id='title'
                         name='title'
                         value={title}
                         onChange={this.handleChange}
