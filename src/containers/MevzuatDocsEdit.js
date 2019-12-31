@@ -457,6 +457,7 @@ class MevzuatDocsEdit extends Component {
         const {editable} = this.state;
         let txtId = t.id.replace(':', '_');
         let maddeText = t.text.map((mt, ind, arr) => {
+            console.log(mt['degisiklik/mulga']);
             const txt = `<span>${mt.text}</span>`;
             return (
                 <Fragment key={ind}>
@@ -489,7 +490,26 @@ class MevzuatDocsEdit extends Component {
                 {!editable &&
                     <div className='float-right pt-1 pr-1'>
                         <button className='btn btn-outline-success btn-sm' onClick={this.handleUpdate.bind(this, t.id, 'title')}>Update</button>
-                        <button className='btn btn-outline-danger btn-sm ml-1' onClick={this.handleDelete.bind(this, t.id, 'title')}>Delete</button>
+                        <button className='btn btn-outline-danger btn-sm ml-1' data-toggle='modal' data-target={`#deleteMadde_${txtId}`}>Delete</button>
+                        <div className="modal fade" id={`deleteMadde_${txtId}`} tabIndex="-1" role="dialog" aria-labelledby="deleteMaddeLabel" aria-hidden="true">
+                            <div className="modal-dialog" role="document">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <h5 className="modal-title" id="deleteMaddeLabel">CAUTIOUS:</h5>
+                                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div className="modal-body">
+                                        This action will delete the whole madde !
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button className='btn btn-danger' data-dismiss='modal' onClick={this.handleDelete.bind(this, t.id, 'title')}>Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         {t.text.length === 0 && 
                             <AddTextFieldForm
                                 txtId={txtId}
