@@ -18,7 +18,7 @@ class AdminsTable extends Component {
             password: ''
         }
     }
-
+    
     componentDidMount(){
         this.props.fetchAdmins();
     }
