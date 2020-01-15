@@ -36,7 +36,7 @@ export const createUser = (userData) => {
                     resolve();
                 })
                 .catch(err => {
-                    dispatch(removeSuccess);
+                    dispatch(removeSuccess());
                     dispatch(addError(err.message));
                     reject();
                 })
