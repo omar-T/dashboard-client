@@ -6,7 +6,8 @@ export default class AddUserModal extends Component {
         this.state = {
             name: '',
             surname: '',
-            email: ''
+            email: '',
+            password: ''
         }
     }
 
@@ -19,11 +20,19 @@ export default class AddUserModal extends Component {
     handleAdd = (e) => {
         e.preventDefault();
         const {onAdd, addError} = this.props;
-        const {name, surname, email} = this.state;
-        if(name.trim() === '' || surname.trim() === '' || email.trim() === ''){
+        const {name, surname, email, password} = this.state;
+        if(name.trim() === '' || surname.trim() === '' || email.trim() === '' || password.trim === ''){
             return addError('Please Make Sure The Fields Are Filled !');
         }
-        onAdd(this.state);
+        console.log(password);
+        const authCreds = `${email}:${password}`;
+        const accessToken = Buffer.from(authCreds).toString('base64');
+        onAdd({
+            name,
+            surname,
+            email,
+            accessToken
+        });
     }
 
     render() {
@@ -82,6 +91,19 @@ export default class AddUserModal extends Component {
                                             required
                                             onChange={this.handleChange}
                                             value={email}
+                                        />
+                                    </div>
+                                    <div className='input-group-prepend mb-3'>
+                                        <span className='input-group-text'>
+                                            <i className="fas fa-lock"></i>
+                                        </span>
+                                        <input 
+                                            className='form-control' 
+                                            type='password' 
+                                            placeholder='Password'
+                                            name='password'
+                                            required
+                                            onChange={this.handleChange}
                                         />
                                     </div>
                                 </div>
