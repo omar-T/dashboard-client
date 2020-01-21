@@ -24,7 +24,6 @@ export default class AddUserModal extends Component {
         if(name.trim() === '' || surname.trim() === '' || email.trim() === '' || password.trim === ''){
             return addError('Please Make Sure The Fields Are Filled !');
         }
-        console.log(password);
         const authCreds = `${email}:${password}`;
         const accessToken = Buffer.from(authCreds).toString('base64');
         onAdd({
@@ -33,10 +32,17 @@ export default class AddUserModal extends Component {
             email,
             accessToken
         });
+
+        this.setState({
+            name: '',
+            surname: '',
+            email: '',
+            password: ''
+        });
     }
 
     render() {
-        const {name, surname, email} = this.state;
+        const {name, surname, email, password} = this.state;
         return (
             <Fragment>
                 <button className='btn btn-success float-right' data-toggle='modal' data-target='#addUser'><i className="fas fa-plus mr-2"></i> Add New User</button>
@@ -104,6 +110,7 @@ export default class AddUserModal extends Component {
                                             name='password'
                                             required
                                             onChange={this.handleChange}
+                                            value={password}
                                         />
                                     </div>
                                 </div>
