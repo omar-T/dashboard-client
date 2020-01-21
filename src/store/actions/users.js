@@ -31,7 +31,7 @@ export const createUser = (userData) => {
         return new Promise((resolve, reject) => {
             return apiCall('post', '/api/users', userData)
                 .then(({message}) => {
-                    dispatch(removeError);
+                    dispatch(removeError());
                     dispatch(addSuccess(message));
                     resolve();
                 })

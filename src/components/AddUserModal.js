@@ -21,7 +21,7 @@ export default class AddUserModal extends Component {
         e.preventDefault();
         const {onAdd, addError} = this.props;
         const {name, surname, email, password} = this.state;
-        if(name.trim() === '' || surname.trim() === '' || email.trim() === '' || password.trim === ''){
+        if(name.trim() === '' || surname.trim() === '' || email.trim() === '' || password.trim() === ''){
             return addError('Please Make Sure The Fields Are Filled !');
         }
         const authCreds = `${email}:${password}`;
@@ -45,7 +45,7 @@ export default class AddUserModal extends Component {
         const {name, surname, email, password} = this.state;
         return (
             <Fragment>
-                <button className='btn btn-success float-right' data-toggle='modal' data-target='#addUser'><i className="fas fa-plus mr-2"></i> Add New User</button>
+                <button className='btn btn-success btn-sm float-right' data-toggle='modal' data-target='#addUser'><i className="fas fa-plus mr-2"></i> Add New User</button>
                 <div className="modal fade" id='addUser' tabIndex="-1" role="dialog" aria-labelledby="addUserLabel" aria-hidden="true">
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">

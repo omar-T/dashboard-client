@@ -3,7 +3,7 @@ import React, { Fragment } from 'react'
 const DeleteUserModal = ({user, onDelete}) => {
     return (
         <Fragment>
-            <button className='btn btn-outline-danger mr-1 mb-1 mb-md-0' data-toggle='modal' data-target={`#deleteUser_${user._id}`}>Delete</button>
+            <button className='btn btn-outline-danger btn-sm mr-1 mb-1 mb-md-0' data-toggle='modal' data-target={`#deleteUser_${user._id}`}>Delete</button>
             <div className="modal fade" id={`deleteUser_${user._id}`} tabIndex="-1" role="dialog" aria-labelledby="deleteUserLabel" aria-hidden="true">
                 <div className="modal-dialog" role="document">
                     <div className="modal-content">

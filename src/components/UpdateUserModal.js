@@ -63,7 +63,7 @@ export default class UpdateUserModal extends Component {
         const {user} = this.props;
         return (
             <Fragment>
-                <button className='btn btn-outline-success mr-1 mb-1 mb-md-0' data-toggle='modal' data-target={`#updateUser_${user._id}`}>Update</button>
+                <button className='btn btn-outline-success btn-sm mr-1 mb-1 mb-md-0' data-toggle='modal' data-target={`#updateUser_${user._id}`}>Update</button>
                 <div className="modal fade" id={`updateUser_${user._id}`} tabIndex="-1" role="dialog" aria-labelledby="updateUserLabel" aria-hidden="true">
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">

@@ -135,7 +135,7 @@ class UsersTable extends Component {
                         onUpdate={this.handleUpdate}
                         addError={addError}
                     />
-                    <button onClick={this.handleUserChart.bind(this, user._id, user.name, user.surname)} className='btn btn-outline-info mb-1 mb-md-0'>View Details</button>
+                    <button onClick={this.handleUserChart.bind(this, user._id, user.name, user.surname)} className='btn btn-outline-info btn-sm mb-1 mb-md-0'>View Details</button>
                 </td>
             </tr>
         ));
