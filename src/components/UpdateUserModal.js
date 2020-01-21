@@ -6,7 +6,8 @@ export default class UpdateUserModal extends Component {
         this.state = {
             name: '',
             surname: '',
-            email: ''
+            email: '',
+            password: ''
         }
     }
 
@@ -27,12 +28,27 @@ export default class UpdateUserModal extends Component {
 
     handleUpdate = (e) => {
         e.preventDefault();
-        const {name, surname, email} = this.state;
+        const {name, surname, email, password} = this.state;
         const {user, onUpdate, addError} = this.props;
         if(name.trim() === '' || surname.trim() === '' || email.trim() === ''){
             return addError('Please Make Sure The Fields Are Filled !');
         }
 
+        const decode = Buffer.from(user.accessToken, 'base64').toString();
+        const [oldEmail, oldPass] = decode.split(':');
+        let newAuthCred = '';
+        // handling accessToken
+        if(oldEmail !== email && (password !== '' && oldPass !== password)){
+            newAuthCred = `${email}:${password}`;
+            user.accessToken = Buffer.from(newAuthCred).toString('base64');
+        }else if(oldEmail !== email){
+            newAuthCred = `${email}:${oldPass}`;
+            user.accessToken = Buffer.from(newAuthCred).toString('base64');
+        }else if(password !== '' && oldPass !== password){
+            newAuthCred = `${oldEmail}:${password}`;
+            user.accessToken = Buffer.from(newAuthCred).toString('base64');
+        }
+        
         const newUser = {
             ...user,
             name,
@@ -99,6 +115,19 @@ export default class UpdateUserModal extends Component {
                                             required
                                             onChange={this.handleChange}
                                             value={email}
+                                        />
+                                    </div>
+                                    <div className='input-group-prepend mb-3'>
+                                        <span className='input-group-text'>
+                                            <i className="fas fa-lock"></i>
+                                        </span>
+                                        <input 
+                                            className='form-control' 
+                                            type='password' 
+                                            placeholder='Password'
+                                            name='password'
+                                            required
+                                            onChange={this.handleChange}
                                         />
                                     </div>
                                 </div>
