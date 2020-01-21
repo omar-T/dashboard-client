@@ -1,19 +1,17 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import {fetchUsers, createUser, removeUser, updateUser} from '../store/actions/users'
-import {removeSuccess} from '../store/actions/successes'
+import {removeSuccess, addSuccess} from '../store/actions/successes'
+import {removeError, addError} from '../store/actions/errors'
 import {Line} from 'react-chartjs-2'
 import Moment from 'moment'
+import UpdateUserModal from '../components/UpdateUserModal'
+import DeleteUserModal from '../components/DeleteUserModal'
+import AddUserModal from '../components/AddUserModal'
 class UsersTable extends Component {
     constructor(props){
         super(props);
         this.state = {
-            newName: '',
-            newSurname: '',
-            newEmail: '',
-            name: '',
-            surname: '',
-            email: '',
             dataFiveDays: {},
             dataFourWeeks: {},
             chartOwner: ''
@@ -30,6 +28,11 @@ class UsersTable extends Component {
                 this.props.removeSuccess();
             }, 4000);
         }
+        if(this.props.errors.message){
+            setTimeout(() => {
+                this.props.removeError();
+            }, 4000);
+        }
     }
 
     handleChange = (e) => {
@@ -38,19 +41,9 @@ class UsersTable extends Component {
         });
     }
 
-    handleAdd = () => {
-        const {newName, newSurname, newEmail} = this.state;
-        this.props.createUser({
-            name: newName,
-            surname: newSurname,
-            email: newEmail
-        })
+    handleAdd = (userData) => {
+        this.props.createUser(userData)
             .then(() => {
-                this.setState({
-                    newName: '',
-                    newSurname: '',
-                    newEmail: ''
-                });
                 this.props.fetchUsers();
             })
             .catch(() => {
@@ -58,27 +51,8 @@ class UsersTable extends Component {
             });
     }
 
-    hanldeState = (user) => {
-        this.setState({
-            name: user.name,
-            surname: user.surname,
-            email: user.email
-        });
-    }
-
-    handleUpdate = (user_id) => {
-        const {name, surname, email} = this.state;
-        this.props.updateUser({
-            name,
-            surname,
-            email,
-            _id: user_id
-        });
-        this.setState({
-            name: '',
-            surname: '',
-            email: ''
-        });
+    handleUpdate = (newUser) => {
+        this.props.updateUser(newUser);
     }
 
     getDates = (diff, type) => {
@@ -144,97 +118,23 @@ class UsersTable extends Component {
     }
 
     render() {
-        const {name, surname, email, newName, newSurname, newEmail, dataFiveDays, dataFourWeeks, chartOwner} = this.state;
-        const {users, successes, removeUser} = this.props;
+        const {dataFiveDays, dataFourWeeks, chartOwner} = this.state;
+        const {users, successes, errors, removeUser, addError} = this.props;
         let userTDS = users.map(user => (
             <tr key={user._id}>
                 <td>{user.name}</td>
                 <td>{user.surname}</td>
                 <td>{user.email}</td>
                 <td>
-                    <button className='btn btn-outline-danger mr-1 mb-1 mb-md-0' data-toggle='modal' data-target={`#deleteUser_${user._id}`}>Delete</button>
-                    <div className="modal fade" id={`deleteUser_${user._id}`} tabIndex="-1" role="dialog" aria-labelledby="deleteUserLabel" aria-hidden="true">
-                        <div className="modal-dialog" role="document">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title" id="deleteUserLabel">WARNING</h5>
-                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div className="modal-body">
-                                    Are you sure you want to delete this User ?
-                                </div>
-                                <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="button" className="btn btn-danger" data-dismiss='modal' onClick={removeUser.bind(this, user._id)}>Delete User</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <button onClick={this.hanldeState.bind(this, user)} className='btn btn-outline-success mr-1 mb-1 mb-md-0' data-toggle='modal' data-target={`#updateUser_${user._id}`}>Update</button>
-                    <div className="modal fade" id={`updateUser_${user._id}`} tabIndex="-1" role="dialog" aria-labelledby="updateUserLabel" aria-hidden="true">
-                        <div className="modal-dialog" role="document">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title" id="updateUserLabel">Update User Form</h5>
-                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <form>
-                                    <div className="modal-body">
-                                        <div className='input-group-prepend mb-3'>
-                                            <span className='input-group-text'>
-                                                <i className="far fa-user"></i>
-                                            </span>
-                                            <input 
-                                                className='form-control' 
-                                                type='text' 
-                                                placeholder='Name'
-                                                name='name'
-                                                required
-                                                onChange={this.handleChange}
-                                                value={name}
-                                            />
-                                        </div>
-                                        <div className='input-group-prepend mb-3'>
-                                            <span className='input-group-text'>
-                                                <i className="far fa-user"></i>
-                                            </span>
-                                            <input 
-                                                className='form-control' 
-                                                type='text' 
-                                                placeholder='Surname'
-                                                name='surname'
-                                                required
-                                                onChange={this.handleChange}
-                                                value={surname}
-                                            />
-                                        </div>
-                                        <div className='input-group-prepend mb-3'>
-                                            <span className='input-group-text email'>
-                                                <i className="far fa-envelope-open"></i>
-                                            </span>
-                                            <input 
-                                                className='form-control' 
-                                                type='email' 
-                                                placeholder='Email'
-                                                name='email'
-                                                required
-                                                onChange={this.handleChange}
-                                                value={email}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="modal-footer">
-                                        <button className="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button onClick={this.handleUpdate.bind(this, user._id)} className="btn btn-success" data-dismiss='modal'>Update User</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+                    <DeleteUserModal
+                        user={user}
+                        onDelete={removeUser}
+                    />
+                    <UpdateUserModal
+                        user={user}
+                        onUpdate={this.handleUpdate}
+                        addError={addError}
+                    />
                     <button onClick={this.handleUserChart.bind(this, user._id, user.name, user.surname)} className='btn btn-outline-info mb-1 mb-md-0'>View Details</button>
                 </td>
             </tr>
@@ -245,72 +145,16 @@ class UsersTable extends Component {
                     {successes.message && 
                         <div className='alert alert-success mx-3'>{successes.message}</div>
                     }
-                    <button className='btn btn-success float-right' data-toggle='modal' data-target='#addUser'><i className="fas fa-plus mr-2"></i> Add New User</button>
-                    <div className="modal fade" id='addUser' tabIndex="-1" role="dialog" aria-labelledby="addUserLabel" aria-hidden="true">
-                        <div className="modal-dialog" role="document">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title" id="addUserLabel">Add User Form</h5>
-                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <form>
-                                    <div className="modal-body">
-                                        <div className='input-group-prepend mb-3'>
-                                            <span className='input-group-text'>
-                                                <i className="far fa-user"></i>
-                                            </span>
-                                            <input 
-                                                className='form-control' 
-                                                type='text' 
-                                                placeholder='Name'
-                                                name='newName'
-                                                required
-                                                onChange={this.handleChange}
-                                                value={newName}
-                                            />
-                                        </div>
-                                        <div className='input-group-prepend mb-3'>
-                                            <span className='input-group-text'>
-                                                <i className="far fa-user"></i>
-                                            </span>
-                                            <input 
-                                                className='form-control' 
-                                                type='text' 
-                                                placeholder='Surname'
-                                                name='newSurname'
-                                                required
-                                                onChange={this.handleChange}
-                                                value={newSurname}
-                                            />
-                                        </div>
-                                        <div className='input-group-prepend mb-3'>
-                                            <span className='input-group-text email'>
-                                                <i className="far fa-envelope-open"></i>
-                                            </span>
-                                            <input 
-                                                className='form-control' 
-                                                type='email' 
-                                                placeholder='Email'
-                                                name='newEmail'
-                                                required
-                                                onChange={this.handleChange}
-                                                value={newEmail}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="modal-footer">
-                                        <button className="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button onClick={this.handleAdd} className="btn btn-success" data-dismiss='modal'>Add User</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+                    {errors.message && 
+                        <div className='alert alert-danger mx-3'>{errors.message}</div>
+                    }
+                    <AddUserModal
+                        onAdd={this.handleAdd}
+                        addError={addError}
+                    />
                     <h2>Users Table</h2>
                     <hr/>
-                    <table className='table table-responsive-sm table-hover mb-0'>
+                    <table className='table table-responsive-xm table-hover mb-0'>
                         <thead className='thead-dark'>
                             <tr>
                                 <th>Name</th>
@@ -412,8 +256,18 @@ function mapStateToProps(state){
     return {
         users: state.users,
         logs: state.logs,
-        successes: state.successes
+        successes: state.successes,
+        errors: state.errors
     }
 }
 
-export default connect(mapStateToProps, {removeSuccess, fetchUsers, createUser, removeUser, updateUser})(UsersTable);
+export default connect(mapStateToProps, {
+    removeSuccess, 
+    addSuccess, 
+    removeError, 
+    addError, 
+    fetchUsers, 
+    createUser, 
+    removeUser, 
+    updateUser
+})(UsersTable);
