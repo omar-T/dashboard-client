@@ -1,17 +1,16 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import {fetchAdmins, removeAdmin, updateAdmin} from '../store/actions/admins'
-import {createAdmin} from '../store/actions/auth'
+import {fetchAdmins, removeAdmin, updateAdmin, createAdmin} from '../store/actions/admins'
 import {removeSuccess} from '../store/actions/successes'
+import {removeError, addError} from '../store/actions/errors'
+import UpdateAdminModal from '../components/UpdateAdminModal'
+import DeleteAdminModal from '../components/DeleteAdminModal'
+import AddAdminModal from '../components/AddAdminModal'
 
 class AdminsTable extends Component {
     constructor(props){
         super(props);
         this.state = {
-            newName: '',
-            newSurname: '',
-            newEmail: '',
-            newPassword: '',
             name: '',
             surname: '',
             email: '',
@@ -29,6 +28,11 @@ class AdminsTable extends Component {
                 this.props.removeSuccess();
             }, 4000);
         }
+        if(this.props.errors.message){
+            setTimeout(() => {
+                this.props.removeError();
+            }, 4000);
+        }
     }
 
     handleChange = (e) => {
@@ -37,20 +41,9 @@ class AdminsTable extends Component {
         });
     }
 
-    handleAdd = () => {
-        this.props.createAdmin({
-            name: this.state.newName,
-            surname: this.state.newSurname,
-            email: this.state.newEmail,
-            password: this.state.newPassword
-        })
+    handleAdd = (adminData) => {
+        this.props.createAdmin(adminData)
             .then(() => {
-                this.setState({
-                    newName: '',
-                    newSurname: '',
-                    newEmail: '',
-                    newPassword: ''
-                });
                 this.props.fetchAdmins();
             })
             .catch(() => {
@@ -85,15 +78,15 @@ class AdminsTable extends Component {
     }
     
     render() {
-        const {name, surname, email, newName, newSurname, newEmail} = this.state;
-        const {admins, successes, removeAdmin, updateAdmin} = this.props;
+        const {name, surname, email} = this.state;
+        const {admins, successes, errors, removeAdmin, updateAdmin, addError} = this.props;
         let adminTDS = admins.map(admin => (
             <tr key={admin._id}>
                 <td>{admin.name}</td>
                 <td>{admin.surname}</td>
                 <td>{admin.email}</td>
                 <td>
-                    <button className='btn btn-outline-danger mr-1 mb-1 mb-lg-0' data-toggle='modal' data-target={`#deleteAdmin_${admin._id}`}>Delete</button>
+                    <button className='btn btn-outline-danger btn-sm  mr-1 mb-1 mb-lg-0' data-toggle='modal' data-target={`#deleteAdmin_${admin._id}`}>Delete</button>
                     <div className="modal fade" id={`deleteAdmin_${admin._id}`} tabIndex="-1" role="dialog" aria-labelledby="deleteAdminLabel" aria-hidden="true">
                         <div className="modal-dialog" role="document">
                             <div className="modal-content">
@@ -113,7 +106,7 @@ class AdminsTable extends Component {
                             </div>
                         </div>
                     </div>
-                    <button onClick={this.hanldeState.bind(this, admin)} className='btn btn-outline-success mr-1 mb-1 mb-lg-0' data-toggle='modal' data-target={`#updateAdmin_${admin._id}`}>Update</button>
+                    <button onClick={this.hanldeState.bind(this, admin)} className='btn btn-outline-success btn-sm mr-1 mb-1 mb-lg-0' data-toggle='modal' data-target={`#updateAdmin_${admin._id}`}>Update</button>
                     <div className="modal fade" id={`updateAdmin_${admin._id}`} tabIndex="-1" role="dialog" aria-labelledby="updateAdminLabel" aria-hidden="true">
                         <div className="modal-dialog" role="document">
                             <div className="modal-content">
@@ -190,16 +183,16 @@ class AdminsTable extends Component {
                         </div>
                     </div>
                     {admin.isActive && 
-                        <button className='btn btn-outline-danger mr-1 mb-1 mb-lg-0' onClick={updateAdmin.bind(this, {...admin, isActive: !admin.isActive})}>Deactivate</button>
+                        <button className='btn btn-outline-danger btn-sm mr-1 mb-1 mb-lg-0' onClick={updateAdmin.bind(this, {...admin, isActive: !admin.isActive})}>Deactivate</button>
                     }
                     {!admin.isActive &&
-                        <button className='btn btn-outline-warning mr-1 mb-1 mb-lg-0' onClick={updateAdmin.bind(this, {...admin, isActive: !admin.isActive})}>Activate</button>
+                        <button className='btn btn-outline-warning btn-sm mr-1 mb-1 mb-lg-0' onClick={updateAdmin.bind(this, {...admin, isActive: !admin.isActive})}>Activate</button>
                     }
                     {admin.isSuper && 
-                        <button className='btn btn-outline-dark mb-1 mb-lg-0' onClick={updateAdmin.bind(this, {...admin, isSuper: !admin.isSuper})}>Normal</button>
+                        <button className='btn btn-outline-dark btn-sm mb-1 mb-lg-0' onClick={updateAdmin.bind(this, {...admin, isSuper: !admin.isSuper})}>Normal</button>
                     }
                     {!admin.isSuper &&
-                        <button className='btn btn-outline-primary mb-1 mb-lg-0' onClick={updateAdmin.bind(this, {...admin, isSuper: !admin.isSuper})}>Super</button>
+                        <button className='btn btn-outline-primary btn-sm mb-1 mb-lg-0' onClick={updateAdmin.bind(this, {...admin, isSuper: !admin.isSuper})}>Super</button>
                     }
                 </td>
             </tr>
@@ -209,85 +202,16 @@ class AdminsTable extends Component {
                 {successes.message && 
                     <div className='alert alert-success mx-3'>{successes.message}</div>
                 }
-                <button className='btn btn-success float-right' data-toggle='modal' data-target='#addAdmin'><i className="fas fa-plus mr-2"></i> Add New Admin</button>
-                <div className="modal fade" id='addAdmin' tabIndex="-1" role="dialog" aria-labelledby="addAdminLabel" aria-hidden="true">
-                    <div className="modal-dialog" role="document">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title" id="addAdminLabel">Add Admin Form</h5>
-                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <form>
-                                <div className="modal-body">
-                                        <div className='input-group-prepend mb-3'>
-                                            <span className='input-group-text'>
-                                                <i className="far fa-user"></i>
-                                            </span>
-                                            <input 
-                                                className='form-control' 
-                                                type='text' 
-                                                placeholder='Name'
-                                                name='newName'
-                                                required
-                                                onChange={this.handleChange}
-                                                value={newName}
-                                            />
-                                        </div>
-                                        <div className='input-group-prepend mb-3'>
-                                            <span className='input-group-text'>
-                                                <i className="far fa-user"></i>
-                                            </span>
-                                            <input 
-                                                className='form-control' 
-                                                type='text' 
-                                                placeholder='Surname'
-                                                name='newSurname'
-                                                required
-                                                onChange={this.handleChange}
-                                                defaultValue={newSurname}
-                                            />
-                                        </div>
-                                        <div className='input-group-prepend mb-3'>
-                                            <span className='input-group-text email'>
-                                                <i className="far fa-envelope-open"></i>
-                                            </span>
-                                            <input 
-                                                className='form-control' 
-                                                type='email' 
-                                                placeholder='Email'
-                                                name='newEmail'
-                                                required
-                                                onChange={this.handleChange}
-                                                defaultValue={newEmail}
-                                            />
-                                        </div>
-                                        <div className='input-group-prepend mb-4'>
-                                            <span className='input-group-text'>
-                                                <i className="fas fa-lock"></i>
-                                            </span>
-                                            <input 
-                                                className='form-control' 
-                                                type='password' 
-                                                placeholder='Password'
-                                                name='newPassword'
-                                                required
-                                                onChange={this.handleChange}
-                                            />
-                                        </div>
-                                </div>
-                                <div className="modal-footer">
-                                    <button className="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button onClick={this.handleAdd} className="btn btn-success" data-dismiss='modal'>Add Admin</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+                {errors.message && 
+                    <div className='alert alert-danger mx-3'>{errors.message}</div>
+                }
+                <AddAdminModal
+                    onAdd={this.handleAdd}
+                    addError={addError}
+                />
                 <h2>Admins Table</h2>
                 <hr/>
-                <table className='table table-responsive-sm table-hover mb-0'>
+                <table className='table table-responsive-xm table-hover mb-0'>
                     <thead className='thead-dark'>
                         <tr>
                             <th>Name</th>
@@ -308,8 +232,17 @@ class AdminsTable extends Component {
 function mapStateToProps(state){
     return {
         admins: state.admins,
-        successes: state.successes
+        successes: state.successes,
+        errors: state.errors
     }
 }
 
-export default connect(mapStateToProps, {fetchAdmins, createAdmin, removeAdmin, updateAdmin, removeSuccess})(AdminsTable);
+export default connect(mapStateToProps, {
+    fetchAdmins, 
+    createAdmin, 
+    removeAdmin, 
+    updateAdmin, 
+    removeSuccess, 
+    removeError, 
+    addError
+})(AdminsTable);

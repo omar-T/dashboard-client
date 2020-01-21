@@ -26,6 +26,24 @@ export const fetchAdmins = () => {
     }
 }
 
+export const createAdmin = (adminData) => {
+    return dispatch => {
+        return new Promise((resolve, reject) => {
+            return apiCall('post', '/api/admins', adminData)
+                .then(({message}) => {
+                    dispatch(removeError());
+                    dispatch(addSuccess(message));
+                    resolve();
+                })
+                .catch(err => {
+                    dispatch(removeSuccess());
+                    dispatch(addError(err.message));
+                    reject();
+                })
+        })
+    }
+}
+
 export const removeAdmin = (admin_id) => {
     return dispatch => {
         return apiCall('delete', `/api/admins/${admin_id}`)
