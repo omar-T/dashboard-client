@@ -35,12 +35,6 @@ class UsersTable extends Component {
         }
     }
 
-    handleChange = (e) => {
-        this.setState({
-            [e.target.name]: e.target.value
-        });
-    }
-
     handleAdd = (userData) => {
         this.props.createUser(userData)
             .then(() => {

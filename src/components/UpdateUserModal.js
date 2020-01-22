@@ -11,18 +11,18 @@ export default class UpdateUserModal extends Component {
         }
     }
 
-    handleChange = (e) => {
-        this.setState({
-            [e.target.name]: e.target.value
-        });
-    }
-
     componentDidMount(){
         const {name, surname, email} = this.props.user;
         this.setState({
             name,
             surname,
             email
+        });
+    }
+
+    handleChange = (e) => {
+        this.setState({
+            [e.target.name]: e.target.value
         });
     }
 
