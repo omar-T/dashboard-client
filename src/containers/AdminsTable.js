@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import {fetchAdmins, removeAdmin, updateAdmin, createAdmin, remove} from '../store/actions/admins'
+import {fetchAdmins, removeAdmin, updateAdmin, createAdmin} from '../store/actions/admins'
 import {removeSuccess} from '../store/actions/successes'
 import {removeError, addError} from '../store/actions/errors'
 import UpdateAdminModal from '../components/UpdateAdminModal'
