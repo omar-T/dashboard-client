@@ -30,7 +30,6 @@ class Dashboard extends Component {
                 </div>
                 <div className='row my-3'>
                     <FiveDaysDocChart 
-                        logs={logs} 
                         {...this.props}
                     />
                     <FourWeeksDocChart 
