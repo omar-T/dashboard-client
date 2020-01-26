@@ -13,7 +13,7 @@ class MostActiveUsersChart extends Component {
         const {dashboardData} = this.props;
         if(dashboardData.usersData !== undefined){
             let labels = [];
-            let data =[];
+            let data = [];
             dashboardData.usersData.forEach(user => {
                 labels.push(`${user.name} ${user.surname}`);
                 data.push(user.count);
