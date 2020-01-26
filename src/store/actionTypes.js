@@ -9,6 +9,10 @@ export const REMOVE_SUCCESS = 'REMOVE_SUCCESS'
 // action for login
 export const LOGIN_ADMIN = 'LOGIN_ADMIN'
 
+// actions for dashboard data
+export const GET_COUNT = 'GET_COUNT'
+export const GET_MOST_ACTIVE_USERS = 'GET_MOST_ACTIVE_USERS'
+
 // actions for admin
 export const LOAD_ADMINS = 'LOAD_ADMINS'
 export const ADD_ADMIN = 'ADD_ADMIN'
