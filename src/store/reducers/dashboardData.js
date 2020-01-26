@@ -1,4 +1,4 @@
-import {GET_COUNT, GET_MOST_ACTIVE_USERS} from '../actionTypes'
+import {GET_COUNT, GET_MOST_ACTIVE_USERS, GET_ACTIVITY_LAST_FIVE_DAYS} from '../actionTypes'
 
 export default (state={}, action) => {
     switch(action.type){
@@ -11,6 +11,11 @@ export default (state={}, action) => {
             return {
                 ...state,
                 usersData: action.usersData
+            }
+        case GET_ACTIVITY_LAST_FIVE_DAYS:
+            return {
+                ...state,
+                fiveDaysLogs: action.fiveDaysLogs
             }
         default:
             return state;
