@@ -61,11 +61,11 @@ export const updateUser = (user) => {
             .then(({updatedUser, success}) => {
                 dispatch(update(updatedUser));
                 dispatch(addSuccess(success.message));
-                dispatch(removeError);
+                dispatch(removeError());
             })
             .catch(err => {
-                dispatch(removeSuccess);
-                dispatch(addError(addError(err.message)));
+                dispatch(removeSuccess());
+                dispatch(addError(err.message));
             });
     }
 }

@@ -7,13 +7,13 @@ export default (state = [], action) => {
         case DELETE_USER:
             return state.filter(user => user._id !== action.id);
         case UPDATE_USER:
-            let users = state.map(user => {
+            let updatedUsers = state.map(user => {
                 if(user._id === action.user._id){
                     return user = {...action.user};
                 }
                 return {...user}
             });
-            return users;
+            return updatedUsers;
         default:
             return state;
     }
