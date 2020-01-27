@@ -18,9 +18,9 @@ export const update = user => ({
     user
 });
 
-export const fetchUsers = () => {
+export const fetchUsers = (pageNumber) => {
     return dispatch => {
-        return apiCall('get', '/api/users')
+        return apiCall('get', `/api/users${pageNumber ? '?page=' + pageNumber : ''}`)
             .then(res => dispatch(loadUsers(res)))
             .catch(err => dispatch(addError(err.message)));
     }
