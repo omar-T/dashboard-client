@@ -5,8 +5,10 @@ import {Line} from 'react-chartjs-2'
 
 class LogChart extends Component {
     componentDidMount(){
-        const {handleGetActivityLastFiveDays} = this.props;
-        handleGetActivityLastFiveDays();
+        const {dashboardData, handleGetActivityLastFiveDays} = this.props;
+        if(dashboardData.fiveDaysLogs === undefined){
+            handleGetActivityLastFiveDays();
+        }
     }
 
     setData = () => {

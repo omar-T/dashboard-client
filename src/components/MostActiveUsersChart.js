@@ -5,8 +5,10 @@ import {Bar} from 'react-chartjs-2'
 
 class MostActiveUsersChart extends Component {
     componentDidMount(){
-        const {handleGetMostActiveUsers} = this.props;
-        handleGetMostActiveUsers();
+        const {dashboardData, handleGetMostActiveUsers} = this.props;
+        if(dashboardData.usersData === undefined){
+            handleGetMostActiveUsers();
+        }
     }
     
     setData = () => {

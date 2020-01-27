@@ -7,8 +7,10 @@ import MostActiveUsersChart from '../components/MostActiveUsersChart'
 
 class Dashboard extends Component {
     componentDidMount(){
-        const {handleGetUsersCount} = this.props;
-        handleGetUsersCount();
+        const {dashboardData, handleGetUsersCount} = this.props;
+        if(dashboardData.usersCount === undefined){
+            handleGetUsersCount();
+        }
     }
 
     render() {
@@ -19,7 +21,7 @@ class Dashboard extends Component {
                     <div className='col-4'>
                         <div className='card bg-light'>
                             <div className='card-body'>
-                                <span className='float-right'><i className="fas fa-users fa-4x"></i></span>
+                                <span className='float-right'><i className="fas fa-users fa-3x"></i></span>
                                 <h4 className='card-title'>Total Users</h4>
                                 <h5 className='card-text'>{dashboardData.usersCount}</h5>
                             </div>

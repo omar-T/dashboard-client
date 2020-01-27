@@ -5,8 +5,10 @@ import {Line} from 'react-chartjs-2'
 
 class FourWeeksDocChart extends Component {
     componentDidMount(){
-        const {handleGetActivityLastFourWeeks} = this.props;
-        handleGetActivityLastFourWeeks();
+        const {dashboardData, handleGetActivityLastFourWeeks} = this.props;
+        if(dashboardData.fourWeeksLogs === undefined){
+            handleGetActivityLastFourWeeks();
+        }
     }
 
     setData = () => {
