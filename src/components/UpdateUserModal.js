@@ -6,16 +6,18 @@ export default class UpdateUserModal extends Component {
         this.state = {
             name: '',
             surname: '',
+            companyName: '',
             email: '',
             password: ''
         }
     }
 
     componentDidMount(){
-        const {name, surname, email} = this.props.user;
+        const {name, surname, companyName, email} = this.props.user;
         this.setState({
             name,
             surname,
+            companyName,
             email
         });
     }
@@ -28,9 +30,9 @@ export default class UpdateUserModal extends Component {
 
     handleUpdate = (e) => {
         e.preventDefault();
-        const {name, surname, email, password} = this.state;
+        const {name, surname, companyName, email, password} = this.state;
         const {user, onUpdate, addError} = this.props;
-        if(name.trim() === '' || surname.trim() === '' || email.trim() === ''){
+        if(name.trim() === '' || surname.trim() === '' || companyName.trim() === '' || email.trim() === ''){
             return addError('Please Make Sure The Fields Are Filled !');
         }
 
@@ -53,13 +55,14 @@ export default class UpdateUserModal extends Component {
             ...user,
             name,
             surname,
+            companyName,
             email
         }
         onUpdate(newUser);
     }
 
     render() {
-        const {name, surname, email} = this.state;
+        const {name, surname, companyName, email} = this.state;
         const {user} = this.props;
         return (
             <Fragment>
@@ -101,6 +104,20 @@ export default class UpdateUserModal extends Component {
                                             required
                                             onChange={this.handleChange}
                                             value={surname}
+                                        />
+                                    </div>
+                                    <div className='input-group-prepend mb-3'>
+                                        <span className='input-group-text'>
+                                            <i class="fas fa-building"></i>
+                                        </span>
+                                        <input 
+                                            className='form-control' 
+                                            type='text' 
+                                            placeholder='Company Name'
+                                            name='companyName'
+                                            required
+                                            onChange={this.handleChange}
+                                            value={companyName}
                                         />
                                     </div>
                                     <div className='input-group-prepend mb-3'>
