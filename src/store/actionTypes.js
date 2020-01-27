@@ -27,8 +27,9 @@ export const ADD_USER = 'ADD_USER'
 export const UPDATE_USER = 'UPDATE_USER'
 export const DELETE_USER = 'DELETE_USER'
 
-// action for logs
-export const LOAD_LOGS = 'LOAD_LOGS'
+// action for user logs
+export const GET_USER_ACTIVITY_LAST_FIVE_DAYS = 'GET_USER_ACTIVITY_LAST_FIVE_DAYS'
+export const GET_USER_ACTIVITY_LAST_FOUR_WEEKS = 'GET_USER_ACTIVITY_LAST_FOUR_WEEKS'
 
 // actions for docs
 export const LOAD_DOCS = 'LOAD_DOCS'
