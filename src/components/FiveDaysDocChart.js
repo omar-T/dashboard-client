@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import Moment from 'moment'
 import {handleGetActivityLastFiveDays} from '../store/actions/dashboardData'
 import {Line} from 'react-chartjs-2'
 
@@ -9,10 +8,9 @@ class LogChart extends Component {
         const {handleGetActivityLastFiveDays} = this.props;
         handleGetActivityLastFiveDays();
     }
-    
+
     setData = () => {
         const {dashboardData} = this.props;
-        console.log(dashboardData);
         if(dashboardData.fiveDaysLogs !== undefined){
             let labels = [];
             let data = [];
