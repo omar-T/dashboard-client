@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'
 import FiveDaysUserActivity from '../containers/FiveDaysUserActivity'
 import FourWeekssUserActivity from '../containers/FourWeeksUserActivity'
 
-const UserCharts = ({user, dataFiveDays, dataFourWeeks}) => {
+const UserCharts = ({user}) => {
     return (
         <Fragment>
             <div className='bg-light p-3 mb-3'>
@@ -13,14 +13,11 @@ const UserCharts = ({user, dataFiveDays, dataFourWeeks}) => {
             <div className='row'>
                 <FiveDaysUserActivity
                     user_id={user._id}
-                    dataFiveDays={dataFiveDays}
                 />
                 <FourWeekssUserActivity
                     user_id={user._id}
-                    dataFourWeeks={dataFourWeeks}
                 />
             </div>
-
         </Fragment>
     )
 }

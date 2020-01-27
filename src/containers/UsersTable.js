@@ -13,9 +13,7 @@ class UsersTable extends Component {
     constructor(props){
         super(props);
         this.state = {
-            dataFiveDays: {},
-            dataFourWeeks: {},
-            chartOwner: ''
+            user: {}
         }
     }
 
@@ -69,60 +67,14 @@ class UsersTable extends Component {
         return dateLabels;
     }
 
-    handleUserChart = (user_id, userName, userSurname) => {
-        let labels = this.getDates(4, 'days');
-        let labels2 = this.getDates(4, 'weeks');
-        
-        let userLogs = this.props.logs.filter(l => l.userId === user_id);
-
-        let docsCount = labels.map(d => {
-            const logCount = userLogs.filter(l => Moment(l.createdAt).format('YYYY-MM-DD') === Moment(d).format('YYYY-MM-DD'));
-            return logCount.length
-        });
-
-        let docsCount2 = labels2.map((d, i, dates) => {
-            let count = 0;
-            userLogs.forEach(l => {
-                if(Moment(l.createdAt).isBetween(Moment(d), Moment(dates[i+1]))){
-                    count++;
-                }
-            });
-            return count;
-        });
-        
-        let data = {
-            labels,
-            datasets: [
-                {
-                    label: 'Document Count',
-                    borderColor: 'rgba(190, 229, 235, 1)',
-                    backgroundColor: 'rgba(190, 229, 235, 0.2)',
-                    data: docsCount
-                }
-            ]
-        }
-
-        let data2 = {
-            labels: labels2,
-            datasets: [
-                {
-                    label: 'Document Count',
-                    borderColor: 'rgba(190, 229, 235, 1)',
-                    backgroundColor: 'rgba(190, 229, 235, 0.2)',
-                    data: docsCount2
-                }
-            ]
-        }
-
+    handleUserChart = (user) => {
         this.setState({
-            dataFiveDays: data,
-            dataFourWeeks: data2,
-            chartOwner: `${userName} ${userSurname}`
+            user
         });
     }
 
     render() {
-        const {dataFiveDays, dataFourWeeks, chartOwner} = this.state;
+        const {user} = this.state;
         const {successes, errors, removeUser, addError} = this.props;
         const {allUsers, currentPage, pages} = this.props.users;
         let userTDS = [];
@@ -142,7 +94,7 @@ class UsersTable extends Component {
                             onUpdate={this.handleUpdate}
                             addError={addError}
                         />
-                        <button onClick={this.handleUserChart.bind(this, user._id, user.name, user.surname)} className='btn btn-outline-info btn-sm mb-1 mb-md-0'>View Details</button>
+                        <button onClick={this.handleUserChart.bind(this, user, user._id, user.name, user.surname)} className='btn btn-outline-info btn-sm mb-1 mb-md-0'>View Details</button>
                     </td>
                 </tr>
             ));
@@ -192,9 +144,7 @@ class UsersTable extends Component {
                     />
                 </div>
                 <UserCharts
-                    chartOwner={chartOwner}
-                    dataFiveDays={dataFiveDays}
-                    dataFourWeeks={dataFourWeeks}
+                    user={user}
                 />
             </div>
 
