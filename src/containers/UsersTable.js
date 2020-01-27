@@ -147,7 +147,6 @@ class UsersTable extends Component {
                     user={user}
                 />
             </div>
-
         )
     }
 }
