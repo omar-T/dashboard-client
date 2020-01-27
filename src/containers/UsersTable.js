@@ -8,6 +8,7 @@ import Moment from 'moment'
 import UpdateUserModal from '../components/UpdateUserModal'
 import DeleteUserModal from '../components/DeleteUserModal'
 import AddUserModal from '../components/AddUserModal'
+import TablesPagination from '../components/TablesPagination'
 class UsersTable extends Component {
     constructor(props){
         super(props);
@@ -33,6 +34,15 @@ class UsersTable extends Component {
                 this.props.removeError();
             }, 4000);
         }
+    }
+
+    handleClickedPage = (pageNumber, e) => {
+        e.preventDefault();
+        const {fetchUsers} = this.props;
+        if(pageNumber !== ''){
+            return fetchUsers(pageNumber);
+        }
+        fetchUsers();
     }
 
     handleAdd = (userData) => {
@@ -113,10 +123,11 @@ class UsersTable extends Component {
 
     render() {
         const {dataFiveDays, dataFourWeeks, chartOwner} = this.state;
-        const {users, successes, errors, removeUser, addError} = this.props;
+        const {successes, errors, removeUser, addError} = this.props;
+        const {allUsers, currentPage, pages} = this.props.users;
         let userTDS = [];
-        if(users.allUsers !== undefined){
-            userTDS = users.allUsers.map(user => (
+        if(allUsers && allUsers.length !== 0){
+            userTDS = allUsers.map(user => (
                 <tr key={user._id}>
                     <td>{user.name}</td>
                     <td>{user.surname}</td>
@@ -151,19 +162,34 @@ class UsersTable extends Component {
                     />
                     <h2>Users Table</h2>
                     <hr/>
-                    <table className='table table-responsive-xm table-hover mb-0'>
-                        <thead className='thead-dark'>
-                            <tr>
-                                <th>Name</th>
-                                <th>Surname</th>
-                                <th>Email</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {userTDS}
-                        </tbody>
-                    </table>
+                    <div className='table-responsive mb-3'>
+                        <table className='table table-hover mb-0'>
+                            <thead className='thead-dark'>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Surname</th>
+                                    <th>Email</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {userTDS.length !== 0 ? 
+                                userTDS :
+                                <tr>
+                                    <td colSpan='4'>
+                                        <em>No Users Found</em>
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                            
+                        </table>
+                    </div>
+                    <TablesPagination
+                        pages={pages}
+                        currentPage={currentPage}
+                        onClick={this.handleClickedPage}
+                    />
                 </div>
                 <div className='bg-light p-3 mb-3'>
                     <h4>Details for {chartOwner}</h4>
