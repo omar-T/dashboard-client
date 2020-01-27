@@ -3,12 +3,12 @@ import {connect} from 'react-redux'
 import {fetchUsers, createUser, removeUser, updateUser} from '../store/actions/users'
 import {removeSuccess, addSuccess} from '../store/actions/successes'
 import {removeError, addError} from '../store/actions/errors'
-import {Line} from 'react-chartjs-2'
 import Moment from 'moment'
 import UpdateUserModal from '../components/UpdateUserModal'
 import DeleteUserModal from '../components/DeleteUserModal'
 import AddUserModal from '../components/AddUserModal'
 import TablesPagination from '../components/TablesPagination'
+import UserCharts from '../components/UserCharts'
 class UsersTable extends Component {
     constructor(props){
         super(props);
@@ -191,84 +191,11 @@ class UsersTable extends Component {
                         onClick={this.handleClickedPage}
                     />
                 </div>
-                <div className='bg-light p-3 mb-3'>
-                    <h4>Details for {chartOwner}</h4>
-                </div>
-                <div className='row'>
-                    <div className='col-12 col-lg-6 mb-2 mb-lg-0'>
-                        <div className='p-4 bg-light'>
-                            <h5>Activity For Last 5 Days</h5>
-                            <hr/>
-                            <Line
-                                data={dataFiveDays}
-                                options={{
-                                    responsive: true,
-                                    scales: {
-                                        xAxes: [{
-                                            gridLines: {
-                                                drawOnChartArea: false
-                                            },
-                                            display: true,
-                                            type: 'time',
-                                            distribution: 'series',
-                                            time: {
-                                                tooltipFormat: 'DD-MM-YYYY',
-                                                unit: 'day',
-                                                stepSize: 1,
-                                                displayFormats: {
-                                                    day: 'DD MMM'
-                                                }
-                                            }
-                                        }],
-                                        yAxes: [{
-                                            ticks: {
-                                                beginAtZero: true,
-                                                maxTicksLimit: 5
-                                            }
-                                        }]
-                                    }
-                                }}
-                            />
-                        </div>
-                    </div>
-                    <div className='col-12 col-lg-6 mb-2 mb-lg-0'>
-                        <div className='p-4 bg-light'>
-                            <h5>Activity For Last 4 Weeks</h5>
-                            <hr/>
-                            <Line
-                                id='mostActiveTimes'
-                                data={dataFourWeeks}
-                                options={{
-                                    responsive: true,
-                                    scales: {
-                                        xAxes: [{
-                                            gridLines: {
-                                                drawOnChartArea: false
-                                            },
-                                            display: true,
-                                            type: 'time',
-                                            distribution: 'series',
-                                            time: {
-                                                tooltipFormat: 'DD-MM-YYYY',
-                                                unit: 'day',
-                                                stepSize: 1,
-                                                displayFormats: {
-                                                    day: 'DD MMM'
-                                                }
-                                            }
-                                        }],
-                                        yAxes: [{
-                                            ticks: {
-                                                beginAtZero: true,
-                                                maxTicksLimit: 5
-                                            }
-                                        }]
-                                    }
-                                }}
-                            />
-                        </div>
-                    </div>
-                </div>
+                <UserCharts
+                    chartOwner={chartOwner}
+                    dataFiveDays={dataFiveDays}
+                    dataFourWeeks={dataFourWeeks}
+                />
             </div>
 
         )
