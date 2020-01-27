@@ -5,7 +5,7 @@ import currentAdmin from './currentAdmin'
 import dashboardData from './dashboardData'
 import admins from './admins'
 import users from './users'
-import logs from './logs'
+import userLogs from './userLogs'
 import foundDocs from './foundDocs'
 import docRelations from './docRelations'
 
@@ -16,7 +16,7 @@ const rootReducer = combineReducers({
     dashboardData,
     admins,
     users,
-    logs,
+    userLogs,
     foundDocs,
     docRelations
 });
