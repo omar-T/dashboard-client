@@ -108,7 +108,7 @@ export default class UpdateUserModal extends Component {
                                     </div>
                                     <div className='input-group-prepend mb-3'>
                                         <span className='input-group-text'>
-                                            <i class="fas fa-building"></i>
+                                            <i className="fas fa-building"></i>
                                         </span>
                                         <input 
                                             className='form-control' 
