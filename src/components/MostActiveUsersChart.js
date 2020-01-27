@@ -36,7 +36,7 @@ class MostActiveUsersChart extends Component {
         return (
             <div className='col-12 col-lg-6 col-xl-4 mb-2 mb-lg-0'>
                 <div className='bg-light p-4'>
-                    <h4>Most Active Users</h4>
+                    <h5>Most Active Users</h5>
                     <hr/>
                     {dashboardData.usersData !== undefined && 
                         <Bar

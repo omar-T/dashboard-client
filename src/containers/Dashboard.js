@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import {fetchLogs} from '../store/actions/logs'
 import {handleGetUsersCount} from '../store/actions/dashboardData'
 import FiveDaysDocChart from '../components/FiveDaysDocChart'
 import FourWeeksDocChart from '../components/FourWeeksDocChart'
@@ -8,13 +7,12 @@ import MostActiveUsersChart from '../components/MostActiveUsersChart'
 
 class Dashboard extends Component {
     componentDidMount(){
-        const {handleGetUsersCount, fetchLogs} = this.props;
-        fetchLogs();
+        const {handleGetUsersCount} = this.props;
         handleGetUsersCount();
     }
 
     render() {
-        const {dashboardData, logs} = this.props;
+        const {dashboardData} = this.props;
         return (
             <div className='container-fluid'>
                 <div className='row'>
@@ -23,7 +21,7 @@ class Dashboard extends Component {
                             <div className='card-body'>
                                 <span className='float-right'><i className="fas fa-users fa-4x"></i></span>
                                 <h4 className='card-title'>Total Users</h4>
-                                <h3 className='card-text'>{dashboardData.usersCount}</h3>
+                                <h5 className='card-text'>{dashboardData.usersCount}</h5>
                             </div>
                         </div>
                     </div>
@@ -33,7 +31,6 @@ class Dashboard extends Component {
                         {...this.props}
                     />
                     <FourWeeksDocChart 
-                        logs={logs} 
                         {...this.props}
                     />
                     <MostActiveUsersChart 
@@ -47,9 +44,8 @@ class Dashboard extends Component {
 
 function mapStateToProps(state){
     return {
-        dashboardData: state.dashboardData,
-        logs: state.logs
+        dashboardData: state.dashboardData
     }
 }
 
-export default connect(mapStateToProps, {handleGetUsersCount, fetchLogs})(Dashboard);
+export default connect(mapStateToProps, {handleGetUsersCount})(Dashboard);

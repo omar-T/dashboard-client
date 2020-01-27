@@ -37,7 +37,7 @@ class LogChart extends Component {
         return (
             <div className='col-12 col-lg-6 col-xl-4 mb-2 mb-lg-0'>
                 <div className='bg-light p-4'>
-                    <h4>Users Activity For Last 5 Days</h4>
+                    <h5>Users Activity For Last 5 Days</h5>
                     <hr/>
                     {dashboardData.fiveDaysLogs !== undefined && 
                         <Line 
