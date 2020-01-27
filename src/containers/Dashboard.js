@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import {handleGetUsersCount} from '../store/actions/dashboardData'
-import FiveDaysDocChart from '../components/FiveDaysDocChart'
-import FourWeeksDocChart from '../components/FourWeeksDocChart'
-import MostActiveUsersChart from '../components/MostActiveUsersChart'
+import FiveDaysDocChart from './FiveDaysDocChart'
+import FourWeeksDocChart from './FourWeeksDocChart'
+import MostActiveUsersChart from './MostActiveUsersChart'
 
 class Dashboard extends Component {
     componentDidMount(){
