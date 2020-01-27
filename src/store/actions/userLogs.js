@@ -14,9 +14,9 @@ export const getUserActivityLastFourWeeks = fourWeeksLogs => ({
 
 export const handleGetUserActivityLastFiveDays = (user_id) => {
     return dispatch => {
-        return apiCall('get', '', user_id)
+        return apiCall('post', '/api/logs/userActivityLastFiveDays', {user_id})
             .then(({fiveDaysLogs}) => {
-                console.log(fiveDaysLogs);
+                dispatch(getUserActivityLastFiveDays(fiveDaysLogs));
                 dispatch(removeError());
             })
             .catch(err => dispatch(addError(err.message)));
@@ -25,7 +25,7 @@ export const handleGetUserActivityLastFiveDays = (user_id) => {
 
 export const handleGetUserActivityLastFourWeeks = (user_id) => {
     return dispatch => {
-        return apiCall('get', '', user_id)
+        return apiCall('post', '/api/logs/userActivityLastFourWeeks', {user_id})
             .then(({fourWeeksLogs}) => {
                 console.log(fourWeeksLogs);
                 dispatch(removeError());
