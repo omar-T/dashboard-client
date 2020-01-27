@@ -114,25 +114,28 @@ class UsersTable extends Component {
     render() {
         const {dataFiveDays, dataFourWeeks, chartOwner} = this.state;
         const {users, successes, errors, removeUser, addError} = this.props;
-        let userTDS = users.map(user => (
-            <tr key={user._id}>
-                <td>{user.name}</td>
-                <td>{user.surname}</td>
-                <td>{user.email}</td>
-                <td>
-                    <DeleteUserModal
-                        user={user}
-                        onDelete={removeUser}
-                    />
-                    <UpdateUserModal
-                        user={user}
-                        onUpdate={this.handleUpdate}
-                        addError={addError}
-                    />
-                    <button onClick={this.handleUserChart.bind(this, user._id, user.name, user.surname)} className='btn btn-outline-info btn-sm mb-1 mb-md-0'>View Details</button>
-                </td>
-            </tr>
-        ));
+        let userTDS = [];
+        if(users.allUsers !== undefined){
+            userTDS = users.allUsers.map(user => (
+                <tr key={user._id}>
+                    <td>{user.name}</td>
+                    <td>{user.surname}</td>
+                    <td>{user.email}</td>
+                    <td>
+                        <DeleteUserModal
+                            user={user}
+                            onDelete={removeUser}
+                        />
+                        <UpdateUserModal
+                            user={user}
+                            onUpdate={this.handleUpdate}
+                            addError={addError}
+                        />
+                        <button onClick={this.handleUserChart.bind(this, user._id, user.name, user.surname)} className='btn btn-outline-info btn-sm mb-1 mb-md-0'>View Details</button>
+                    </td>
+                </tr>
+            ));
+        }
         return (
             <div>
                 <div className='bg-light mb-3 p-3'>
