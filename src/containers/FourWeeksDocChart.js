@@ -13,24 +13,22 @@ class FourWeeksDocChart extends Component {
 
     setData = () => {
         const {dashboardData} = this.props;
-        if(dashboardData.fourWeeksLogs !== undefined){
-            let labels = [];
-            let data = [];
-            dashboardData.fourWeeksLogs.forEach(log => {
-                labels.push(log.date);
-                data.push(log.count);
-            });
-            return {
-                labels,
-                datasets: [
-                    {
-                        label: 'Document Count',
-                        borderColor: 'rgba(190, 229, 235, 1)',
-                        backgroundColor: 'rgba(190, 229, 235, 0.2)',
-                        data
-                    }
-                ]
-            }
+        let labels = [];
+        let data = [];
+        dashboardData.fourWeeksLogs.forEach(log => {
+            labels.push(log.date);
+            data.push(log.count);
+        });
+        return {
+            labels,
+            datasets: [
+                {
+                    label: 'Document Count',
+                    borderColor: 'rgba(190, 229, 235, 1)',
+                    backgroundColor: 'rgba(190, 229, 235, 0.2)',
+                    data
+                }
+            ]
         }
     }
 
@@ -41,38 +39,36 @@ class FourWeeksDocChart extends Component {
                 <div className='bg-light p-4'>
                     <h5>Users Activity For Last 4 Weeks</h5>
                     <hr/>
-                    {dashboardData.fourWeeksLogs !== undefined && 
-                        <Line 
-                            data={this.setData}
-                            options={{
-                                responsive: true,
-                                scales: {
-                                    xAxes: [{
-                                        gridLines: {
-                                            drawOnChartArea: false
-                                        },
-                                        display: true,
-                                        type: 'time',
-                                        distribution: 'series',
-                                        time: {
-                                            tooltipFormat: 'DD-MM-YYYY',
-                                            unit: 'day',
-                                            stepSize: 1,
-                                            displayFormats: {
-                                                day: 'DD MMM'
-                                            }
+                    <Line 
+                        data={dashboardData.fourWeeksLogs ? this.setData : {}}
+                        options={{
+                            responsive: true,
+                            scales: {
+                                xAxes: [{
+                                    gridLines: {
+                                        drawOnChartArea: false
+                                    },
+                                    display: true,
+                                    type: 'time',
+                                    distribution: 'series',
+                                    time: {
+                                        tooltipFormat: 'DD-MM-YYYY',
+                                        unit: 'day',
+                                        stepSize: 1,
+                                        displayFormats: {
+                                            day: 'DD MMM'
                                         }
-                                    }],
-                                    yAxes: [{
-                                        ticks: {
-                                            beginAtZero: true,
-                                            maxTicksLimit: 6
-                                        }
-                                    }]
-                                }
-                            }}
-                        />
-                    }
+                                    }
+                                }],
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true,
+                                        maxTicksLimit: 6
+                                    }
+                                }]
+                            }
+                        }}
+                    />
                 </div>
             </div>
         )
